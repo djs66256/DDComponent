@@ -12,6 +12,13 @@
 		65C9992D1D68AF5D0019780A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65C9992B1D68AF5D0019780A /* Main.storyboard */; };
 		65C9992F1D68AF5D0019780A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 65C9992E1D68AF5D0019780A /* Assets.xcassets */; };
 		65C999321D68AF5E0019780A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65C999301D68AF5E0019780A /* LaunchScreen.storyboard */; };
+		65C999411D68B9780019780A /* DDCollectionViewItemComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C999401D68B9780019780A /* DDCollectionViewItemComponent.swift */; };
+		65C999431D68BC510019780A /* DDCollectionViewSectionComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C999421D68BC510019780A /* DDCollectionViewSectionComponent.swift */; };
+		65C999471D68CF320019780A /* DDCollectionViewSectionGroupComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C999461D68CF320019780A /* DDCollectionViewSectionGroupComponent.swift */; };
+		65C999491D68F8530019780A /* DDCollectionViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C999481D68F8530019780A /* DDCollectionViewComponent.swift */; };
+		65C9994B1D6903C60019780A /* UICollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C9994A1D6903C60019780A /* UICollectionViewController.swift */; };
+		65C9994D1D69059D0019780A /* DDCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C9994C1D69059D0019780A /* DDCollectionViewController.swift */; };
+		65C9994F1D6906B40019780A /* DDTestCollectionViewItemComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C9994E1D6906B40019780A /* DDTestCollectionViewItemComponent.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +29,13 @@
 		65C9992E1D68AF5D0019780A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		65C999311D68AF5E0019780A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		65C999331D68AF5E0019780A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		65C999401D68B9780019780A /* DDCollectionViewItemComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DDCollectionViewItemComponent.swift; sourceTree = "<group>"; };
+		65C999421D68BC510019780A /* DDCollectionViewSectionComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DDCollectionViewSectionComponent.swift; sourceTree = "<group>"; };
+		65C999461D68CF320019780A /* DDCollectionViewSectionGroupComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DDCollectionViewSectionGroupComponent.swift; sourceTree = "<group>"; };
+		65C999481D68F8530019780A /* DDCollectionViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DDCollectionViewComponent.swift; sourceTree = "<group>"; };
+		65C9994A1D6903C60019780A /* UICollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UICollectionViewController.swift; sourceTree = "<group>"; };
+		65C9994C1D69059D0019780A /* DDCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DDCollectionViewController.swift; sourceTree = "<group>"; };
+		65C9994E1D6906B40019780A /* DDTestCollectionViewItemComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DDTestCollectionViewItemComponent.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,6 +52,7 @@
 		65C9991B1D68AF5D0019780A = {
 			isa = PBXGroup;
 			children = (
+				65C999391D68AF740019780A /* Class */,
 				65C999261D68AF5D0019780A /* Component */,
 				65C999251D68AF5D0019780A /* Products */,
 			);
@@ -56,12 +71,42 @@
 			children = (
 				65C999271D68AF5D0019780A /* AppDelegate.swift */,
 				65C999291D68AF5D0019780A /* ViewController.swift */,
+				65C9994E1D6906B40019780A /* DDTestCollectionViewItemComponent.swift */,
+				65C9994C1D69059D0019780A /* DDCollectionViewController.swift */,
 				65C9992B1D68AF5D0019780A /* Main.storyboard */,
 				65C9992E1D68AF5D0019780A /* Assets.xcassets */,
 				65C999301D68AF5E0019780A /* LaunchScreen.storyboard */,
 				65C999331D68AF5E0019780A /* Info.plist */,
 			);
 			path = Component;
+			sourceTree = "<group>";
+		};
+		65C999391D68AF740019780A /* Class */ = {
+			isa = PBXGroup;
+			children = (
+				65C9993A1D68AFB10019780A /* CollectionView */,
+				65C9993B1D68AFB10019780A /* TableView */,
+			);
+			path = Class;
+			sourceTree = "<group>";
+		};
+		65C9993A1D68AFB10019780A /* CollectionView */ = {
+			isa = PBXGroup;
+			children = (
+				65C999481D68F8530019780A /* DDCollectionViewComponent.swift */,
+				65C999401D68B9780019780A /* DDCollectionViewItemComponent.swift */,
+				65C999421D68BC510019780A /* DDCollectionViewSectionComponent.swift */,
+				65C999461D68CF320019780A /* DDCollectionViewSectionGroupComponent.swift */,
+				65C9994A1D6903C60019780A /* UICollectionViewController.swift */,
+			);
+			path = CollectionView;
+			sourceTree = "<group>";
+		};
+		65C9993B1D68AFB10019780A /* TableView */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = TableView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -136,8 +181,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65C999431D68BC510019780A /* DDCollectionViewSectionComponent.swift in Sources */,
 				65C9992A1D68AF5D0019780A /* ViewController.swift in Sources */,
 				65C999281D68AF5D0019780A /* AppDelegate.swift in Sources */,
+				65C9994B1D6903C60019780A /* UICollectionViewController.swift in Sources */,
+				65C9994F1D6906B40019780A /* DDTestCollectionViewItemComponent.swift in Sources */,
+				65C9994D1D69059D0019780A /* DDCollectionViewController.swift in Sources */,
+				65C999471D68CF320019780A /* DDCollectionViewSectionGroupComponent.swift in Sources */,
+				65C999491D68F8530019780A /* DDCollectionViewComponent.swift in Sources */,
+				65C999411D68B9780019780A /* DDCollectionViewItemComponent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
