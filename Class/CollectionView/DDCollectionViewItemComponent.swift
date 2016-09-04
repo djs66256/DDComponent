@@ -8,37 +8,38 @@
 
 import UIKit
 
-class DDCollectionViewItemComponent: NSObject, DDCollectionViewComponent {
-    weak var collectionView: UICollectionView?
-    var section: Int = 0
-    var item: Int = 0
+// for 1 section and 1 row
+public class DDCollectionViewItemComponent: NSObject, DDCollectionViewComponent {
+    public weak var collectionView: UICollectionView?
+    public var section: Int = 0
+    public var item: Int = 0
     
-    var indexPath: NSIndexPath {
+    public var indexPath: NSIndexPath {
         get {
             return NSIndexPath(forItem: item, inSection: section)
         }
     }
     
-    func prepareCollectionView() {
+    public func prepareCollectionView() {
         
     }
     
-    func reloadIndexPath() {
+    public func reloadIndexPath() {
     }
     
-    func reloadData() {
+    public func reloadData() {
         self.collectionView?.reloadItemsAtIndexPaths([self.indexPath])
     }
     
-    final func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    public final func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         return 1
     }
     
-    final func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    public final func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 1
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    public func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         assert(false, "Must override!!!")
         return UICollectionViewCell()
     }

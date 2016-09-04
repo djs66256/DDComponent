@@ -8,11 +8,10 @@
 
 import UIKit
 
-var DDCollectionViewRootComponentKey: Int8 = 0
+private var DDCollectionViewRootComponentKey: Int8 = 0
 
-
-extension UICollectionViewController {
-    var dd_rootComponent: DDCollectionViewRootComponent {
+public extension UICollectionViewController {
+    public var dd_rootComponent: DDCollectionViewRootComponent {
         get {
             if let comp = objc_getAssociatedObject(self, &DDCollectionViewRootComponentKey) {
                 return comp as! DDCollectionViewRootComponent
@@ -25,7 +24,7 @@ extension UICollectionViewController {
         }
     }
     
-    var dd_subComponents: [DDCollectionViewComponent] {
+    public var dd_subComponents: [DDCollectionViewComponent] {
         set {
             dd_rootComponent.subComponents = newValue
         }

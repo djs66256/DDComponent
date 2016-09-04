@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol DDCollectionViewComponent: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+public protocol DDCollectionViewComponent: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     weak var collectionView: UICollectionView? { get set }
     var section: Int { get set }
     var item: Int { get set }
@@ -17,7 +17,7 @@ protocol DDCollectionViewComponent: UICollectionViewDataSource, UICollectionView
     func reloadData()
 }
 
-extension DDCollectionViewComponent {
+public extension DDCollectionViewComponent {
     
     func itemWithRawItem(rawItem: Int) -> Int {
         return rawItem - self.item
