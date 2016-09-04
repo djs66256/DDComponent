@@ -1,5 +1,5 @@
 //
-//  DDCollectionViewComponent.swift
+//  CollectionViewComponent.swift
 //  Component
 //
 //  Created by daniel on 16/8/21.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-public protocol DDCollectionViewComponent: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+public protocol CollectionViewComponent: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     weak var collectionView: UICollectionView? { get set }
     var section: Int { get set }
     var item: Int { get set }
@@ -17,7 +17,7 @@ public protocol DDCollectionViewComponent: UICollectionViewDataSource, UICollect
     func reloadData()
 }
 
-public extension DDCollectionViewComponent {
+public extension CollectionViewComponent {
     
     func itemWithRawItem(rawItem: Int) -> Int {
         return rawItem - self.item

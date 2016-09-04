@@ -1,5 +1,5 @@
 //
-//  DDTestCollectionViewItemComponent.swift
+//  TestCollectionViewItemComponent.swift
 //  Component
 //
 //  Created by daniel on 16/8/21.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DDTestCollectionViewItemComponent: DDCollectionViewItemComponent {
+class TestCollectionViewItemComponent: CollectionViewItemComponent {
 
     override func prepareCollectionView() {
         self.collectionView?.registerClass(UICollectionViewCell.self, forCellWithReuseIdentifier: NSStringFromClass(UICollectionViewCell))

@@ -1,5 +1,5 @@
 //
-//  DDCollectionViewController.swift
+//  CollectionViewController.swift
 //  Component
 //
 //  Created by daniel on 16/8/21.
@@ -10,13 +10,13 @@ import UIKit
 
 private let reuseIdentifier = "Cell"
 
-class DDCollectionViewController: UICollectionViewController {
+class CollectionViewController: UICollectionViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let comp = DDCollectionViewItemGroupComponent()
-        comp.subComponents = [DDTestCollectionViewItemComponent(), DDTestCollectionViewItemComponent()]
+        let comp = CollectionViewItemGroupComponent()
+        comp.subComponents = [TestCollectionViewItemComponent(), TestCollectionViewItemComponent()]
         self.dd_subComponents = [comp]
     }
 

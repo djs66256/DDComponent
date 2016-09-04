@@ -1,5 +1,5 @@
 //
-//  DDCollectionViewItemComponent.swift
+//  CollectionViewItemComponent.swift
 //  Component
 //
 //  Created by daniel on 16/8/21.
@@ -9,7 +9,7 @@
 import UIKit
 
 // for 1 section and 1 row
-public class DDCollectionViewItemComponent: NSObject, DDCollectionViewComponent {
+public class CollectionViewItemComponent: NSObject, CollectionViewComponent {
     public weak var collectionView: UICollectionView?
     public var section: Int = 0
     public var item: Int = 0

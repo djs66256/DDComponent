@@ -1,5 +1,5 @@
 //
-//  DDCollectionViewSectionComponent.swift
+//  CollectionViewSectionComponent.swift
 //  Component
 //
 //  Created by daniel on 16/8/21.
@@ -9,7 +9,7 @@
 import UIKit
 
 // for 1 section and many rows
-public class DDCollectionViewSectionComponent: NSObject, DDCollectionViewComponent {
+public class CollectionViewSectionComponent: NSObject, CollectionViewComponent {
     public weak var collectionView: UICollectionView?
     public var section: Int = 0
     public var item: Int = 0
@@ -39,22 +39,22 @@ public class DDCollectionViewSectionComponent: NSObject, DDCollectionViewCompone
 }
 
 // section component combined with header and footer
-public class DDCollectionViewHeaderAndFooterSectionComponent: DDCollectionViewSectionComponent {
-    public var header: DDCollectionViewComponent? {
+public class CollectionViewHeaderAndFooterSectionComponent: CollectionViewSectionComponent {
+    public var header: CollectionViewComponent? {
         didSet {
             header?.collectionView = collectionView
             header?.item = item
             header?.section = section
         }
     }
-    public var footer: DDCollectionViewComponent? {
+    public var footer: CollectionViewComponent? {
         didSet {
             footer?.collectionView = collectionView
             footer?.item = item
             footer?.section = section
         }
     }
-    public var headerAndFooter: DDCollectionViewComponent? {
+    public var headerAndFooter: CollectionViewComponent? {
         didSet {
             headerAndFooter?.collectionView = collectionView
             headerAndFooter?.item = item
@@ -96,20 +96,20 @@ public class DDCollectionViewHeaderAndFooterSectionComponent: DDCollectionViewSe
     public func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView {
         if kind == UICollectionElementKindSectionHeader {
             if let header = header {
-                if header.respondsToSelector(#selector(DDCollectionViewComponent.collectionView(_:viewForSupplementaryElementOfKind:atIndexPath:))) {
+                if header.respondsToSelector(#selector(CollectionViewComponent.collectionView(_:viewForSupplementaryElementOfKind:atIndexPath:))) {
                     return header.collectionView!(collectionView, viewForSupplementaryElementOfKind: kind, atIndexPath: indexPath)
                 }
             }
         }
         if kind == UICollectionElementKindSectionFooter {
             if let footer = footer {
-                if footer.respondsToSelector(#selector(DDCollectionViewComponent.collectionView(_:viewForSupplementaryElementOfKind:atIndexPath:))) {
+                if footer.respondsToSelector(#selector(CollectionViewComponent.collectionView(_:viewForSupplementaryElementOfKind:atIndexPath:))) {
                     return footer.collectionView!(collectionView, viewForSupplementaryElementOfKind: kind, atIndexPath: indexPath)
                 }
             }
         }
         if let hf = headerAndFooter {
-            if hf.respondsToSelector(#selector(DDCollectionViewComponent.collectionView(_:viewForSupplementaryElementOfKind:atIndexPath:))) {
+            if hf.respondsToSelector(#selector(CollectionViewComponent.collectionView(_:viewForSupplementaryElementOfKind:atIndexPath:))) {
                 return hf.collectionView!(collectionView, viewForSupplementaryElementOfKind: kind, atIndexPath: indexPath)
             }
         }
@@ -118,12 +118,12 @@ public class DDCollectionViewHeaderAndFooterSectionComponent: DDCollectionViewSe
     
     public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         if let header = header {
-            if header.respondsToSelector(#selector(DDCollectionViewComponent.collectionView(_:layout:referenceSizeForHeaderInSection:))) {
+            if header.respondsToSelector(#selector(CollectionViewComponent.collectionView(_:layout:referenceSizeForHeaderInSection:))) {
                 return header.collectionView!(collectionView, layout: collectionViewLayout, referenceSizeForHeaderInSection: section)
             }
         }
         if let hf = headerAndFooter {
-            if hf.respondsToSelector(#selector(DDCollectionViewComponent.collectionView(_:layout:referenceSizeForHeaderInSection:))) {
+            if hf.respondsToSelector(#selector(CollectionViewComponent.collectionView(_:layout:referenceSizeForHeaderInSection:))) {
                 return hf.collectionView!(collectionView, layout: collectionViewLayout, referenceSizeForHeaderInSection: section)
             }
         }
@@ -132,12 +132,12 @@ public class DDCollectionViewHeaderAndFooterSectionComponent: DDCollectionViewSe
     
     public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
         if let footer = footer {
-            if footer.respondsToSelector(#selector(DDCollectionViewComponent.collectionView(_:layout:referenceSizeForFooterInSection:))) {
+            if footer.respondsToSelector(#selector(CollectionViewComponent.collectionView(_:layout:referenceSizeForFooterInSection:))) {
                 return footer.collectionView!(collectionView, layout: collectionViewLayout, referenceSizeForFooterInSection: section)
             }
         }
         if let hf = headerAndFooter {
-            if hf.respondsToSelector(#selector(DDCollectionViewComponent.collectionView(_:layout:referenceSizeForFooterInSection:))) {
+            if hf.respondsToSelector(#selector(CollectionViewComponent.collectionView(_:layout:referenceSizeForFooterInSection:))) {
                 return hf.collectionView!(collectionView, layout: collectionViewLayout, referenceSizeForFooterInSection: section)
             }
         }
@@ -147,8 +147,8 @@ public class DDCollectionViewHeaderAndFooterSectionComponent: DDCollectionViewSe
 }
 
 // for many item components
-public class DDCollectionViewItemGroupComponent: DDCollectionViewHeaderAndFooterSectionComponent {
-    public var subComponents = [DDCollectionViewComponent]() {
+public class CollectionViewItemGroupComponent: CollectionViewHeaderAndFooterSectionComponent {
+    public var subComponents = [CollectionViewComponent]() {
         didSet {
             subComponents.forEach { (comp) in
                 comp.collectionView = collectionView

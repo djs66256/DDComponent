@@ -1,5 +1,5 @@
 //
-//  DDCollectionViewSectionGroupComponent.swift
+//  CollectionViewSectionGroupComponent.swift
 //  Component
 //
 //  Created by daniel on 16/8/21.
@@ -9,8 +9,8 @@
 import UIKit
 
 // for many section components
-public class DDCollectionViewSectionGroupComponent: NSObject, DDCollectionViewComponent {
-    public var subComponents = [DDCollectionViewComponent]() {
+public class CollectionViewSectionGroupComponent: NSObject, CollectionViewComponent {
+    public var subComponents = [CollectionViewComponent]() {
         didSet {
             subComponents.forEach { (comp) in
                 comp.collectionView = collectionView
@@ -204,9 +204,9 @@ public class DDCollectionViewSectionGroupComponent: NSObject, DDCollectionViewCo
     }
 }
 
-public class DDCollectionViewRootComponent: DDCollectionViewSectionGroupComponent {
+public class CollectionViewRootComponent: CollectionViewSectionGroupComponent {
     
-    public override var subComponents: [DDCollectionViewComponent] {
+    public override var subComponents: [CollectionViewComponent] {
         didSet {
             subComponents.forEach { (comp) in
                 comp.collectionView = collectionView
