@@ -17,7 +17,7 @@ public extension UICollectionViewController {
                 return comp as! CollectionViewRootComponent
             }
             else {
-                let comp = CollectionViewRootComponent(collectionView: self.collectionView)
+                let comp = CollectionViewRootComponent(collectionView: self.collectionView!)
                 objc_setAssociatedObject(self, &CollectionViewRootComponentKey, comp, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
                 return comp
             }

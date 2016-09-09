@@ -9,7 +9,8 @@
 import UIKit
 
 public protocol CollectionViewComponent: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    weak var collectionView: UICollectionView? { get set }
+    weak var superComponent: CollectionViewComponent? { get set }
+    var collectionView: UICollectionView? { get }
     var section: Int { get set }
     var item: Int { get set }
     func prepareCollectionView()
@@ -19,17 +20,17 @@ public protocol CollectionViewComponent: UICollectionViewDataSource, UICollectio
 
 public extension CollectionViewComponent {
     
-    func itemWithRawItem(rawItem: Int) -> Int {
+    func item(rawItem: Int) -> Int {
         return rawItem - self.item
     }
-    func rawItemWithItem(item: Int) -> Int {
+    func rawItem(item: Int) -> Int {
         return item + self.item
     }
     
-    func sectionWithRawSection(rawSection: Int) -> Int {
+    func section(rawSection: Int) -> Int {
         return rawSection - self.section
     }
-    func rawSectionWithSection(section: Int) -> Int {
+    func rawSection(section: Int) -> Int {
         return section + self.section
     }
 }
