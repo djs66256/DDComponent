@@ -20,6 +20,11 @@ open class CollectionViewSectionComponent: NSObject, CollectionViewComponent {
     open var item: Int = 0
     open var sectionInset: UIEdgeInsets = UIEdgeInsets.zero
     
+    private func __for_swift3() {
+        collectionView?.delegate = self
+        collectionView?.dataSource = self
+    }
+    
     open func prepareCollectionView() {
     }
     
@@ -64,11 +69,11 @@ open class CollectionViewHeaderAndFooterSectionComponent: CollectionViewSectionC
             footer?.superComponent = self
         }
     }
-    open var headerAndFooter: CollectionViewComponent? {
+    open var headerFooter: CollectionViewComponent? {
         didSet {
-            headerAndFooter?.item = item
-            headerAndFooter?.section = section
-            headerAndFooter?.superComponent = self
+            headerFooter?.item = item
+            headerFooter?.section = section
+            headerFooter?.superComponent = self
         }
     }
     
@@ -76,18 +81,18 @@ open class CollectionViewHeaderAndFooterSectionComponent: CollectionViewSectionC
         super.reloadIndexPath()
         header?.item = item
         footer?.item = item
-        headerAndFooter?.item = item
+        headerFooter?.item = item
         
         header?.section = section
         footer?.section = section
-        headerAndFooter?.section = section
+        headerFooter?.section = section
     }
     
     open override func prepareCollectionView() {
         super.prepareCollectionView()
         header?.prepareCollectionView()
         footer?.prepareCollectionView()
-        headerAndFooter?.prepareCollectionView()
+        headerFooter?.prepareCollectionView()
     }
     
     open override func reloadData() {
@@ -110,7 +115,7 @@ open class CollectionViewHeaderAndFooterSectionComponent: CollectionViewSectionC
                 }
             }
         }
-        if let hf = headerAndFooter {
+        if let hf = headerFooter {
             if hf.responds(to: #selector(CollectionViewComponent.collectionView(_:viewForSupplementaryElementOfKind:at:))) {
                 return hf.collectionView!(collectionView, viewForSupplementaryElementOfKind: kind, at: indexPath)
             }
@@ -124,7 +129,7 @@ open class CollectionViewHeaderAndFooterSectionComponent: CollectionViewSectionC
                 return header.collectionView!(collectionView, layout: collectionViewLayout, referenceSizeForHeaderInSection: section)
             }
         }
-        if let hf = headerAndFooter {
+        if let hf = headerFooter {
             if hf.responds(to: #selector(CollectionViewComponent.collectionView(_:layout:referenceSizeForHeaderInSection:))) {
                 return hf.collectionView!(collectionView, layout: collectionViewLayout, referenceSizeForHeaderInSection: section)
             }
@@ -138,7 +143,7 @@ open class CollectionViewHeaderAndFooterSectionComponent: CollectionViewSectionC
                 return footer.collectionView!(collectionView, layout: collectionViewLayout, referenceSizeForFooterInSection: section)
             }
         }
-        if let hf = headerAndFooter {
+        if let hf = headerFooter {
             if hf.responds(to: #selector(CollectionViewComponent.collectionView(_:layout:referenceSizeForFooterInSection:))) {
                 return hf.collectionView!(collectionView, layout: collectionViewLayout, referenceSizeForFooterInSection: section)
             }
@@ -155,7 +160,6 @@ open class CollectionViewItemGroupComponent: CollectionViewHeaderAndFooterSectio
             subComponents.forEach { (comp) in
                 comp.superComponent = self
             }
-            reloadIndexPath()
         }
     }
     
@@ -180,6 +184,19 @@ open class CollectionViewItemGroupComponent: CollectionViewHeaderAndFooterSectio
         }
     }
     
+    private func component(atItem: Int) -> CollectionViewComponent? {
+        var preComp: CollectionViewComponent?
+        for comp in subComponents {
+            if let preComp = preComp {
+                if preComp.item <= atItem && comp.item > atItem {
+                    return preComp
+                }
+            }
+            preComp = comp
+        }
+        return preComp
+    }
+    
     open override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         var number = 0
         for comp in subComponents {
@@ -189,95 +206,112 @@ open class CollectionViewItemGroupComponent: CollectionViewHeaderAndFooterSectio
     }
     
     open override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        return self.subComponents[item(rawItem: indexPath.item)].collectionView(collectionView, cellForItemAt: indexPath)
+        if let comp = component(atItem: indexPath.item) {
+            return comp.collectionView(collectionView, cellForItemAt: indexPath)
+        }
+        else {
+            return super.collectionView(collectionView, cellForItemAt: indexPath)
+        }
     }
     
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: IndexPath) -> CGSize {
-        let comp: UICollectionViewDelegateFlowLayout = subComponents[item(rawItem: indexPath.item)]
-        if comp.responds(to: #selector(UICollectionViewDelegateFlowLayout.collectionView(_:layout:sizeForItemAt:))) {
-            return comp.collectionView!(collectionView, layout: collectionViewLayout, sizeForItemAt: indexPath)
+        if let comp: UICollectionViewDelegateFlowLayout = component(atItem: indexPath.item) {
+            if comp.responds(to: #selector(UICollectionViewDelegateFlowLayout.collectionView(_:layout:sizeForItemAt:))) {
+                return comp.collectionView!(collectionView, layout: collectionViewLayout, sizeForItemAt: indexPath)
+            }
         }
         return CGSize.zero
     }
     
     open func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAtIndexPath indexPath: IndexPath) -> Bool {
-        let comp: UICollectionViewDelegate = subComponents[item(rawItem: indexPath.item)]
-        if comp.responds(to: #selector(UICollectionViewDelegate.collectionView(_:shouldHighlightItemAt:))) {
-            return comp.collectionView!(collectionView, shouldHighlightItemAt: indexPath)
+        if let comp: UICollectionViewDelegate = component(atItem: indexPath.item) {
+            if comp.responds(to: #selector(UICollectionViewDelegate.collectionView(_:shouldHighlightItemAt:))) {
+                return comp.collectionView!(collectionView, shouldHighlightItemAt: indexPath)
+            }
         }
         return true
     }
     
     open func collectionView(_ collectionView: UICollectionView, didHighlightItemAtIndexPath indexPath: IndexPath) {
-        let comp: UICollectionViewDelegate = subComponents[item(rawItem: indexPath.item)]
-        if comp.responds(to: #selector(UICollectionViewDelegate.collectionView(_:didHighlightItemAt:))) {
-            return comp.collectionView!(collectionView, didHighlightItemAt: indexPath)
+        if let comp: UICollectionViewDelegate = component(atItem: indexPath.item) {
+            if comp.responds(to: #selector(UICollectionViewDelegate.collectionView(_:didHighlightItemAt:))) {
+                return comp.collectionView!(collectionView, didHighlightItemAt: indexPath)
+            }
         }
     }
     
     open func collectionView(_ collectionView: UICollectionView, didUnhighlightItemAtIndexPath indexPath: IndexPath) {
-        let comp: UICollectionViewDelegate = subComponents[item(rawItem: indexPath.item)]
-        if comp.responds(to: #selector(UICollectionViewDelegate.collectionView(_:didUnhighlightItemAt:))) {
-            return comp.collectionView!(collectionView, didUnhighlightItemAt: indexPath)
+        if let comp: UICollectionViewDelegate = component(atItem: indexPath.item) {
+            if comp.responds(to: #selector(UICollectionViewDelegate.collectionView(_:didUnhighlightItemAt:))) {
+                return comp.collectionView!(collectionView, didUnhighlightItemAt: indexPath)
+            }
         }
     }
     
     open func collectionView(_ collectionView: UICollectionView, shouldSelectItemAtIndexPath indexPath: IndexPath) -> Bool {
-        let comp: UICollectionViewDelegate = subComponents[item(rawItem: indexPath.item)]
-        if comp.responds(to: #selector(UICollectionViewDelegate.collectionView(_:shouldSelectItemAt:))) {
-            return comp.collectionView!(collectionView, shouldSelectItemAt: indexPath)
+        if let comp: UICollectionViewDelegate = component(atItem: indexPath.item) {
+            if comp.responds(to: #selector(UICollectionViewDelegate.collectionView(_:shouldSelectItemAt:))) {
+                return comp.collectionView!(collectionView, shouldSelectItemAt: indexPath)
+            }
         }
         return true
     }
     
     func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAtIndexPath indexPath: IndexPath) -> Bool {
-        let comp: UICollectionViewDelegate = subComponents[item(rawItem: indexPath.item)]
-        if comp.responds(to: #selector(UICollectionViewDelegate.collectionView(_:shouldDeselectItemAt:))) {
-            return comp.collectionView!(collectionView, shouldDeselectItemAt: indexPath)
+        if let comp: UICollectionViewDelegate = component(atItem: indexPath.item) {
+            if comp.responds(to: #selector(UICollectionViewDelegate.collectionView(_:shouldDeselectItemAt:))) {
+                return comp.collectionView!(collectionView, shouldDeselectItemAt: indexPath)
+            }
         }
         return true
     }
     
     open func collectionView(_ collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: IndexPath) {
-        let comp: UICollectionViewDelegate = subComponents[item(rawItem: indexPath.item)]
-        if comp.responds(to: #selector(UICollectionViewDelegate.collectionView(_:didSelectItemAt:))) {
-            return comp.collectionView!(collectionView, didSelectItemAt: indexPath)
+        if let comp: UICollectionViewDelegate = component(atItem: indexPath.item) {
+            if comp.responds(to: #selector(UICollectionViewDelegate.collectionView(_:didSelectItemAt:))) {
+                return comp.collectionView!(collectionView, didSelectItemAt: indexPath)
+            }
         }
     }
     
     open func collectionView(_ collectionView: UICollectionView, didDeselectItemAtIndexPath indexPath: IndexPath) {
-        let comp: UICollectionViewDelegate = subComponents[item(rawItem: indexPath.item)]
-        if comp.responds(to: #selector(UICollectionViewDelegate.collectionView(_:didDeselectItemAt:))) {
-            return comp.collectionView!(collectionView, didDeselectItemAt: indexPath)
+        if let comp: UICollectionViewDelegate = component(atItem: indexPath.item) {
+            if comp.responds(to: #selector(UICollectionViewDelegate.collectionView(_:didDeselectItemAt:))) {
+                return comp.collectionView!(collectionView, didDeselectItemAt: indexPath)
+            }
         }
     }
     
     
     open func collectionView(_ collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: IndexPath) {
-        let comp: UICollectionViewDelegate = subComponents[item(rawItem: indexPath.item)]
-        if comp.responds(to: #selector(UICollectionViewDelegate.collectionView(_:willDisplay:forItemAt:))) {
-            return comp.collectionView!(collectionView, willDisplay: cell, forItemAt: indexPath)
+        if let comp: UICollectionViewDelegate = component(atItem: indexPath.item) {
+            if comp.responds(to: #selector(UICollectionViewDelegate.collectionView(_:willDisplay:forItemAt:))) {
+                return comp.collectionView!(collectionView, willDisplay: cell, forItemAt: indexPath)
+            }
         }
     }
     
     open func collectionView(_ collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, atIndexPath indexPath: IndexPath) {
-        let comp: UICollectionViewDelegate = subComponents[item(rawItem: indexPath.item)]
-        if comp.responds(to: #selector(UICollectionViewDelegate.collectionView(_:willDisplaySupplementaryView:forElementKind:at:))) {
-            return comp.collectionView!(collectionView, willDisplaySupplementaryView: view, forElementKind: elementKind, at: indexPath)
+        if let comp: UICollectionViewDelegate = component(atItem: indexPath.item) {
+            if comp.responds(to: #selector(UICollectionViewDelegate.collectionView(_:willDisplaySupplementaryView:forElementKind:at:))) {
+                return comp.collectionView!(collectionView, willDisplaySupplementaryView: view, forElementKind: elementKind, at: indexPath)
+            }
         }
     }
     
     open func collectionView(_ collectionView: UICollectionView, didEndDisplayingCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: IndexPath) {
-        let comp: UICollectionViewDelegate = subComponents[item(rawItem: indexPath.item)]
-        if comp.responds(to: #selector(UICollectionViewDelegate.collectionView(_:didEndDisplaying:forItemAt:))) {
-            return comp.collectionView!(collectionView, didEndDisplaying: cell, forItemAt: indexPath)
+        if let comp: UICollectionViewDelegate = component(atItem: indexPath.item) {
+            if comp.responds(to: #selector(UICollectionViewDelegate.collectionView(_:didEndDisplaying:forItemAt:))) {
+                return comp.collectionView!(collectionView, didEndDisplaying: cell, forItemAt: indexPath)
+            }
         }
     }
     
     open func collectionView(_ collectionView: UICollectionView, didEndDisplayingSupplementaryView view: UICollectionReusableView, forElementOfKind elementKind: String, atIndexPath indexPath: IndexPath) {
-        let comp: UICollectionViewDelegate = subComponents[item(rawItem: indexPath.item)]
-        if comp.responds(to: #selector(UICollectionViewDelegate.collectionView(_:didEndDisplayingSupplementaryView:forElementOfKind:at:))) {
-            return comp.collectionView!(collectionView, didEndDisplayingSupplementaryView: view, forElementOfKind: elementKind, at: indexPath)
+        if let comp: UICollectionViewDelegate = component(atItem: indexPath.item) {
+            if comp.responds(to: #selector(UICollectionViewDelegate.collectionView(_:didEndDisplayingSupplementaryView:forElementOfKind:at:))) {
+                return comp.collectionView!(collectionView, didEndDisplayingSupplementaryView: view, forElementOfKind: elementKind, at: indexPath)
+            }
         }
     }
 }

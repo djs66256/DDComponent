@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "DDComponent"
-  s.version      = "0.0.2"
+  s.version      = "0.1.0"
   s.summary      = "Make a collection controller to several component"
 
   s.description  = <<-DESC
@@ -28,7 +28,7 @@ Make a collection controller to several component. Make the controller smaller.
   # s.watchos.deployment_target = "2.0"
   # s.tvos.deployment_target = "9.0"
 
-  s.source       = { :git => "https://github.com/djs66256/DDComponent.git", :tag => "0.0.2" }
+  s.source       = { :git => "https://github.com/djs66256/DDComponent.git", :tag => "#{s.version}" }
   s.source_files  = "Class", "Class/**/*.{h,m,swift}"
   s.exclude_files = "Class/Exclude"
 

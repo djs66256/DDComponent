@@ -19,7 +19,10 @@ open class CollectionViewItemComponent: NSObject, CollectionViewComponent {
     open var section: Int = 0
     open var item: Int = 0
     open var size: CGSize = CGSize.zero
-    
+    private func __for_swift3() {
+        collectionView?.delegate = self
+        collectionView?.dataSource = self
+    }
     open var indexPath: IndexPath {
         get {
             return IndexPath(item: item, section: section)
