@@ -8,17 +8,12 @@
 
 import UIKit
 
-open class TableViewSectionComponent: NSObject, TableViewComponent {
-    open weak var superComponent: TableViewComponent?
-    open var tableView: UITableView? { get { return superComponent?.tableView } }
-    open var section: Int = 0
-    open var row: Int = 0
+open class TableViewSectionComponent: TableViewBaseComponent {
     open var headerHeight: CGFloat = 0
     open var footerHeight: CGFloat = 0
     open var height: CGFloat = 0
-    open func prepareTableView() {}
-    open func reloadIndexPath() {}
-    open func updateData() {
+    
+    open override func updateData() {
         if let tableView = tableView {
             tableView.beginUpdates()
             tableView.reloadSections(IndexSet(integer: section), with: .none)
@@ -26,100 +21,219 @@ open class TableViewSectionComponent: NSObject, TableViewComponent {
         }
     }
     
-    public final func numberOfSections(in tableView: UITableView) -> Int {
+    public override final func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    open override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
     
-    open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    open override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         assert(false, "MUST override it!")
         return UITableViewCell()
     }
     
-    open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    open override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return height
     }
     
-    open func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    open override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return headerHeight
     }
     
-    open func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    open override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return footerHeight
     }
 }
 
-open class TableViewHeaderFooterSectionComponent: TableViewSectionComponent {
+open class TableViewHeaderFooterTitleComponent: TableViewSectionComponent {
     open var headerTitle: String?
     open var footerTitle: String?
     open var headerClass: AnyClass = UITableViewHeaderFooterView.self
     open var footerClass: AnyClass = UITableViewHeaderFooterView.self
     
     open override func prepareTableView() {
-        tableView?.register(headerClass, forCellReuseIdentifier: NSStringFromClass(headerClass))
-        tableView?.register(footerClass, forCellReuseIdentifier: NSStringFromClass(footerClass))
+        tableView?.register(headerClass, forHeaderFooterViewReuseIdentifier: NSStringFromClass(headerClass))
+        tableView?.register(footerClass, forHeaderFooterViewReuseIdentifier: NSStringFromClass(footerClass))
     }
     
-    open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    open override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        assert(false)
+        return UITableViewCell()
+    }
+    
+    open override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: NSStringFromClass(headerClass))
         header?.textLabel?.text = headerTitle
         return header
     }
     
-    open func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+    open override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let footer = tableView.dequeueReusableHeaderFooterView(withIdentifier: NSStringFromClass(footerClass))
         footer?.textLabel?.text = footerTitle
         return footer
     }
 }
 
+open class TableViewHeaderFooterSectionComponent: TableViewSectionComponent {
+    open var headerComponent: TableViewSectionComponent? {
+        didSet {
+            headerComponent?.superComponent = self
+        }
+    }
+    open var footerComponent: TableViewSectionComponent? {
+        didSet {
+            footerComponent?.superComponent = self
+        }
+    }
+    open var headerFooterComponent: TableViewSectionComponent? {
+        didSet {
+            headerFooterComponent?.superComponent = self
+        }
+    }
+    
+    open override var headerHeight: CGFloat {
+        set { super.headerHeight = newValue }
+        get {
+            if let header = (headerComponent ?? headerFooterComponent) {
+                return header.headerHeight
+            }
+            return super.headerHeight
+        }
+    }
+    
+    open override var footerHeight: CGFloat {
+        set { super.footerHeight = newValue }
+        get {
+            if let footer = (footerComponent ?? headerFooterComponent) {
+                return footer.footerHeight
+            }
+            return super.footerHeight
+        }
+    }
+    
+    open override func prepareTableView() {
+        super.prepareTableView()
+        headerComponent?.prepareTableView()
+        footerComponent?.prepareTableView()
+        headerFooterComponent?.prepareTableView()
+    }
+    
+    open override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if let header = (headerComponent ?? headerFooterComponent) {
+            return header.tableView(tableView, viewForHeaderInSection: section)
+        }
+        else {
+            return super.tableView(tableView, viewForHeaderInSection: section)
+        }
+    }
+    
+    open override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        if let footer = (footerComponent ?? headerFooterComponent) {
+            return footer.tableView(tableView, viewForFooterInSection: section)
+        }
+        else {
+            return super.tableView(tableView, viewForFooterInSection: section)
+        }
+    }
+    
+    public override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        if let header = (headerComponent ?? headerFooterComponent) {
+            header.tableView(tableView, willDisplayHeaderView: view, forSection: section)
+        }
+        else {
+            super.tableView(tableView, willDisplayHeaderView: view, forSection: section)
+        }
+    }
+    
+    public override func tableView(_ tableView: UITableView, didEndDisplayingHeaderView view: UIView, forSection section: Int) {
+        if let header = (headerComponent ?? headerFooterComponent) {
+            header.tableView(tableView, didEndDisplayingHeaderView: view, forSection: section)
+        }
+        else {
+            super.tableView(tableView, didEndDisplayingHeaderView: view, forSection: section)
+        }
+    }
+    
+    public override func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
+        if let footer = (footerComponent ?? headerFooterComponent) {
+            footer.tableView(tableView, willDisplayFooterView: view, forSection: section)
+        }
+        else {
+            super.tableView(tableView, willDisplayFooterView: view, forSection: section)
+        }
+    }
+    
+    public override func tableView(_ tableView: UITableView, didEndDisplayingFooterView view: UIView, forSection section: Int) {
+        if let footer = (footerComponent ?? headerFooterComponent) {
+            footer.tableView(tableView, didEndDisplayingFooterView: view, forSection: section)
+        }
+        else {
+            super.tableView(tableView, didEndDisplayingFooterView: view, forSection: section)
+        }
+    }
+}
+
 open class TableViewItemGroupComponent: TableViewHeaderFooterSectionComponent {
-    var subComponents = [TableViewComponent]() {
+    var subComponents = [TableViewBaseComponent]() {
         didSet {
             for comp in subComponents {
                 comp.superComponent = self
             }
+            prepareTableView()
         }
     }
     
-    override open func reloadIndexPath() {
+    open override func firstSection(ofSubComponent: TableViewComponent) -> Int {
+        return section
+    }
+    override open func firstRow(ofSubComponent: TableViewComponent) -> Int {
+        var row = self.row
         if let tableView = tableView {
-            super.reloadIndexPath()
-            var row = self.row
+            let section = self.section
             for comp in subComponents {
-                comp.section = self.section
-                comp.row = row
-                
-                row += comp.tableView(tableView, numberOfRowsInSection: self.section)
-                comp.reloadIndexPath()
+                if comp === ofSubComponent {
+                    return row
+                }
+                else {
+                    row += comp.tableView(tableView, numberOfRowsInSection:section)
+                }
             }
         }
+        return row
     }
     
     override open func prepareTableView() {
-        for comp in subComponents {
-            comp.prepareTableView()
+        super.prepareTableView()
+        if tableView != nil {
+            for comp in subComponents {
+                comp.prepareTableView()
+            }
         }
     }
     
-    private func component(atRow: Int) -> TableViewComponent? {
-        var preComp: TableViewComponent?
-        for comp in subComponents {
-            if let preComp = preComp {
-                if preComp.row <= atRow && comp.row > atRow {
-                    return preComp
+    private func component(atRow: Int) -> TableViewBaseComponent? {
+        if let tableView = tableView {
+            var row = self.row
+            let section = self.section
+            for comp in subComponents {
+                let count = comp.tableView(tableView, numberOfRowsInSection: section)
+                if row <= atRow && row+count > atRow {
+                    return comp
                 }
+                row += count
             }
-            preComp = comp
         }
-        return preComp
+        return nil
     }
     
     open override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return subComponents.count
+        var count = 0
+        for comp in subComponents {
+            count += comp.tableView(tableView, numberOfRowsInSection: section)
+        }
+        return count
     }
     
     open override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -130,98 +244,76 @@ open class TableViewItemGroupComponent: TableViewHeaderFooterSectionComponent {
     }
     
     // MARK: UITableView Delegate
-    open func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    open override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if let comp = component(atRow: indexPath.row) {
-            if comp.responds(to: #selector(TableViewComponent.tableView(_:willDisplay:forRowAt:))) {
-                comp.tableView!(tableView, willDisplay: cell, forRowAt: indexPath)
-            }
+            comp.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
         }
     }
     
-    open func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    open override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if let comp = component(atRow: indexPath.row) {
-            if comp.responds(to: #selector(TableViewComponent.tableView(_:didEndDisplaying:forRowAt:))) {
-                comp.tableView!(tableView, didEndDisplaying: cell, forRowAt: indexPath)
-            }
+            comp.tableView(tableView, didEndDisplaying: cell, forRowAt: indexPath)
         }
     }
     
     open override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if let comp = component(atRow: indexPath.row) {
-            if comp.responds(to: #selector(TableViewComponent.tableView(_:heightForRowAt:))) {
-                return comp.tableView!(tableView, heightForRowAt: indexPath)
-            }
-            else {
-                return super.tableView(tableView, heightForRowAt: indexPath)
+            let height = comp.tableView(tableView, heightForRowAt: indexPath)
+            if !height.isZero {
+                return height
             }
         }
-        return 0
+        return super.tableView(tableView, heightForRowAt: indexPath)
     }
     
-    open func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+    open override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
         if let comp = component(atRow: indexPath.row) {
-            if comp.responds(to: #selector(tableView(_:accessoryButtonTappedForRowWith:))) {
-                comp.tableView!(tableView, accessoryButtonTappedForRowWith: indexPath)
-            }
+            comp.tableView(tableView, accessoryButtonTappedForRowWith: indexPath)
         }
     }
     
-    open func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+    open override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
         if let comp = component(atRow: indexPath.row) {
-            if comp.responds(to: #selector(TableViewComponent.tableView(_:shouldShowMenuForRowAt:))) {
-                return comp.tableView!(tableView, shouldHighlightRowAt: indexPath)
-            }
+            return comp.tableView(tableView, shouldHighlightRowAt: indexPath)
         }
         return true
     }
     
-    open func tableView(_ tableView: UITableView, didHighlightRowAt indexPath: IndexPath) {
+    open override func tableView(_ tableView: UITableView, didHighlightRowAt indexPath: IndexPath) {
         if let comp = component(atRow: indexPath.row) {
-            if comp.responds(to: #selector(TableViewComponent.tableView(_:didHighlightRowAt:))) {
-                comp.tableView!(tableView, didHighlightRowAt: indexPath)
-            }
+            comp.tableView(tableView, didHighlightRowAt: indexPath)
         }
     }
     
-    open func tableView(_ tableView: UITableView, didUnhighlightRowAt indexPath: IndexPath) {
+    open override func tableView(_ tableView: UITableView, didUnhighlightRowAt indexPath: IndexPath) {
         if let comp = component(atRow: indexPath.row) {
-            if comp.responds(to: #selector(TableViewComponent.tableView(_:didUnhighlightRowAt:))) {
-                comp.tableView!(tableView, didUnhighlightRowAt: indexPath)
-            }
+            comp.tableView(tableView, didUnhighlightRowAt: indexPath)
         }
     }
     
-    open func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+    open override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if let comp = component(atRow: indexPath.row) {
-            if comp.responds(to: #selector(TableViewComponent.tableView(_:willSelectRowAt:))) {
-                return comp.tableView!(tableView, willSelectRowAt: indexPath)
-            }
+            return comp.tableView(tableView, willSelectRowAt: indexPath)
         }
         return indexPath
     }
     
-    open func tableView(_ tableView: UITableView, willDeselectRowAt indexPath: IndexPath) -> IndexPath? {
+    open override func tableView(_ tableView: UITableView, willDeselectRowAt indexPath: IndexPath) -> IndexPath? {
         if let comp = component(atRow: indexPath.row) {
-            if comp.responds(to: #selector(TableViewComponent.tableView(_:willDeselectRowAt:))) {
-                return comp.tableView!(tableView, willDeselectRowAt: indexPath)
-            }
+            return comp.tableView(tableView, willDeselectRowAt: indexPath)
         }
         return indexPath
     }
     
-    open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    open override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let comp = component(atRow: indexPath.row) {
-            if comp.responds(to: #selector(TableViewComponent.tableView(_:didSelectRowAt:))) {
-                comp.tableView!(tableView, didSelectRowAt: indexPath)
-            }
+            comp.tableView(tableView, didSelectRowAt: indexPath)
         }
     }
     
-    open func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+    open override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         if let comp = component(atRow: indexPath.row) {
-            if comp.responds(to: #selector(TableViewComponent.tableView(_:didDeselectRowAt:))) {
-                comp.tableView!(tableView, didDeselectRowAt: indexPath)
-            }
+            comp.tableView(tableView, didDeselectRowAt: indexPath)
         }
     }
 }

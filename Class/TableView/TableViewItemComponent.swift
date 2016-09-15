@@ -8,17 +8,16 @@
 
 import UIKit
 
-open class TableViewItemComponent: NSObject, TableViewComponent {
-    open weak var superComponent: TableViewComponent?
-    open var tableView: UITableView? {
-        get { return superComponent?.tableView }
-    }
+open class TableViewItemComponent: TableViewBaseComponent {
     open var height: CGFloat = 44
-    open var section: Int = 0
-    open var row: Int = 0
-    open func prepareTableView() {}
-    open func reloadIndexPath() {}
-    open func updateData() {
+    open override func firstSection(ofSubComponent: TableViewComponent) -> Int {
+        return section
+    }
+    open override func firstRow(ofSubComponent: TableViewComponent) -> Int {
+        return row
+    }
+    
+    open override func updateData() {
         if let tableView = tableView {
             tableView.beginUpdates()
             tableView.reloadRows(at: [IndexPath(row: row, section: section)], with: .none)
@@ -26,20 +25,20 @@ open class TableViewItemComponent: NSObject, TableViewComponent {
         }
     }
     
-    public final func numberOfSections(in tableView: UITableView) -> Int {
+    public override final func numberOfSections(in tableView: UITableView) -> Int {
         return 1;
     }
     
-    public final func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    public override final func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1;
     }
     
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         assert(false, "MUST override it!")
         return UITableViewCell()
     }
     
-    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    open override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return height
     }
 }

@@ -16,10 +16,23 @@ class DDTestTableViewComponent: TableViewItemComponent {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return tableView.dequeueReusableCell(withIdentifier: NSStringFromClass(UITableViewCell.self), for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: NSStringFromClass(UITableViewCell.self), for: indexPath)
+        cell.textLabel?.text = "(\(section), \(row))"
+        return cell
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if !(rawSection(section: 0) == indexPath.section && rawRow(row: 0) == indexPath.row
+            && section == indexPath.section && row == indexPath.row) {
+            UIAlertView(title: nil, message: "(\(section), \(row))", delegate: nil, cancelButtonTitle: "cancel").show()
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 10
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 10
     }
 }
