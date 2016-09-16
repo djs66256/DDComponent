@@ -13,7 +13,7 @@ open class TableViewSectionComponent: TableViewBaseComponent {
     open var footerHeight: CGFloat = 0
     open var height: CGFloat = 0
     
-    open override func updateData() {
+    open override func reloadData() {
         if let tableView = tableView {
             tableView.beginUpdates()
             tableView.reloadSections(IndexSet(integer: section), with: .none)
@@ -47,11 +47,43 @@ open class TableViewSectionComponent: TableViewBaseComponent {
     }
 }
 
+public extension TableViewSectionComponent {
+    public func headerHeight(_ height: CGFloat) -> Self {
+        self.headerHeight = height
+        return self
+    }
+    public func footerHeight(_ height: CGFloat) -> Self {
+        self.footerHeight = height
+        return self
+    }
+    public func height(_ height: CGFloat) -> Self {
+        self.height = height
+        return self
+    }
+}
+
 open class TableViewHeaderFooterTitleComponent: TableViewSectionComponent {
     open var headerTitle: String?
     open var footerTitle: String?
     open var headerClass: AnyClass = UITableViewHeaderFooterView.self
     open var footerClass: AnyClass = UITableViewHeaderFooterView.self
+    
+    public func headerTitle(_ title: String) -> Self {
+        self.headerTitle = title
+        return self
+    }
+    public func footerTitle(_ title: String) -> Self {
+        self.footerTitle = title
+        return self
+    }
+    public func headerClass(_ cls: AnyClass) -> Self {
+        self.headerClass = cls
+        return self
+    }
+    public func footerClass(_ cls: AnyClass) -> Self {
+        self.footerClass = cls
+        return self
+    }
     
     open override func prepareTableView() {
         tableView?.register(headerClass, forHeaderFooterViewReuseIdentifier: NSStringFromClass(headerClass))

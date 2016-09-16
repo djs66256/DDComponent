@@ -48,7 +48,7 @@ open class TableViewSectionGroupComponent: TableViewBaseComponent {
         return section
     }
     
-    open override func updateData() {
+    open override func reloadData() {
         if let tableView = tableView {
             tableView.beginUpdates()
             let maxSection = section + numberOfSections(in: tableView)
@@ -232,12 +232,7 @@ open class TableViewRootComponent: TableViewSectionGroupComponent {
         }
     }
     
-    open override func updateData() {
-        tableView?.reloadData()
-    }
-    
-    open func reloadData() {
-        prepareTableView()
+    open override func reloadData() {
         tableView?.reloadData()
     }
 }

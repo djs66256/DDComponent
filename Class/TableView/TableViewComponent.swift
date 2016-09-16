@@ -13,7 +13,7 @@ public protocol TableViewComponent : UITableViewDataSource, UITableViewDelegate 
     var tableView: UITableView? { get }
     func prepareTableView()
 //    func reloadIndexPath()
-    func updateData()
+    func reloadData()
     
     // for subComponent
     func firstRow(ofSubComponent: TableViewComponent) -> Int
@@ -23,7 +23,7 @@ public protocol TableViewComponent : UITableViewDataSource, UITableViewDelegate 
 open class TableViewBaseComponent: NSObject, TableViewComponent {
     open weak var superComponent: TableViewComponent?
     open func prepareTableView() {}
-    open func updateData() {}
+    open func reloadData() {}
     
     open func firstRow(ofSubComponent: TableViewComponent) -> Int {
         return 0

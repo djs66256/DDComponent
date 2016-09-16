@@ -17,12 +17,17 @@ open class TableViewItemComponent: TableViewBaseComponent {
         return row
     }
     
-    open override func updateData() {
+    open override func reloadData() {
         if let tableView = tableView {
             tableView.beginUpdates()
             tableView.reloadRows(at: [IndexPath(row: row, section: section)], with: .none)
             tableView.endUpdates()
         }
+    }
+    
+    public func height(_ height: CGFloat) -> Self {
+        self.height = height
+        return self
     }
     
     public override final func numberOfSections(in tableView: UITableView) -> Int {
