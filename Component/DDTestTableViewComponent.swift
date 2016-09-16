@@ -22,8 +22,7 @@ class DDTestTableViewComponent: TableViewItemComponent {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if !(section(index: 0) == indexPath.section && row(index: 0) == indexPath.row
-            && section == indexPath.section && row == indexPath.row) {
+        if !(section == indexPath.section && row == indexPath.row) {
             UIAlertView(title: nil, message: "(\(section), \(row))", delegate: nil, cancelButtonTitle: "cancel").show()
         }
     }

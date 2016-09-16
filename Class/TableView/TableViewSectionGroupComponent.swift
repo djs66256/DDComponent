@@ -17,6 +17,14 @@ open class TableViewSectionGroupComponent: TableViewBaseComponent {
             prepareTableView()
         }
     }
+    
+    open func index(section: Int) -> Int {
+        return section - self.section
+    }
+    open func section(index: Int) -> Int {
+        return index + self.section
+    }
+    
     open override func prepareTableView() {
         if tableView != nil {
             for comp in subComponents {

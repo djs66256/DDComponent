@@ -185,6 +185,13 @@ open class TableViewItemGroupComponent: TableViewHeaderFooterSectionComponent {
         }
     }
     
+    open func index(row: Int) -> Int {
+        return row - self.row
+    }
+    open func row(index: Int) -> Int {
+        return index + self.row
+    }
+    
     open override func firstSection(ofSubComponent: TableViewComponent) -> Int {
         return section
     }

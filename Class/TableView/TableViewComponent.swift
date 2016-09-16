@@ -48,20 +48,6 @@ open class TableViewBaseComponent: NSObject, TableViewComponent {
         }
     }
     
-    open func index(row: Int) -> Int {
-        return row - self.row
-    }
-    open func row(index: Int) -> Int {
-        return index + self.row
-    }
-    
-    open func index(section: Int) -> Int {
-        return section - self.section
-    }
-    open func section(index: Int) -> Int {
-        return index + self.section
-    }
-    
     // MARK: DataSource
     open func numberOfSections(in tableView: UITableView) -> Int {
         return 0
