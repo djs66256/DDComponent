@@ -230,6 +230,7 @@ open class TableViewRootComponent: TableViewSectionGroupComponent {
         tableViewInstance = tableView
         super.init()
         if bind {
+            scrollDelegate = tableView.delegate
             tableView.delegate = self
             tableView.dataSource = self
         }
@@ -237,5 +238,94 @@ open class TableViewRootComponent: TableViewSectionGroupComponent {
     
     open override func reloadData() {
         tableView?.reloadData()
+    }
+    
+    // MARK: ScrollViewDelegate
+    public func scrollDelegate(_ delegate: UIScrollViewDelegate) -> Self {
+        scrollDelegate = delegate
+        return self
+    }
+    
+    private weak var scrollDelegate: UIScrollViewDelegate?
+    
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if let delegate = scrollDelegate {
+            if delegate.responds(to: #selector(delegate.scrollViewDidScroll(_:))) {
+                delegate.scrollViewDidScroll!(scrollView)
+            }
+        }
+    }
+    
+    public func scrollViewDidZoom(_ scrollView: UIScrollView) {
+        if let delegate = scrollDelegate {
+            if delegate.responds(to: #selector(delegate.scrollViewDidZoom(_:))) {
+                delegate.scrollViewDidZoom!(scrollView)
+            }
+        }
+    }
+    
+    public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        if let delegate = scrollDelegate {
+            if delegate.responds(to: #selector(delegate.scrollViewWillBeginDragging(_:))) {
+                delegate.scrollViewWillBeginDragging!(scrollView)
+            }
+        }
+    }
+    
+    public func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        if let delegate = scrollDelegate {
+            if delegate.responds(to: #selector(delegate.scrollViewWillEndDragging(_:withVelocity:targetContentOffset:))) {
+                delegate.scrollViewWillEndDragging!(scrollView, withVelocity: velocity, targetContentOffset: targetContentOffset)
+            }
+        }
+    }
+    
+    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if let delegate = scrollDelegate {
+            if delegate.responds(to: #selector(delegate.scrollViewDidEndDragging(_:willDecelerate:))) {
+                delegate.scrollViewDidEndDragging!(scrollView, willDecelerate: decelerate)
+            }
+        }
+    }
+    
+    public func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
+        if let delegate = scrollDelegate {
+            if delegate.responds(to: #selector(delegate.scrollViewWillBeginDecelerating(_:))) {
+                delegate.scrollViewWillBeginDecelerating!(scrollView)
+            }
+        }
+    }
+    
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if let delegate = scrollDelegate {
+            if delegate.responds(to: #selector(delegate.scrollViewDidEndDecelerating(_:))) {
+                delegate.scrollViewDidEndDecelerating!(scrollView)
+            }
+        }
+    }
+    
+    public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        if let delegate = scrollDelegate {
+            if delegate.responds(to: #selector(delegate.scrollViewDidEndScrollingAnimation(_:))) {
+                delegate.scrollViewDidEndScrollingAnimation!(scrollView)
+            }
+        }
+    }
+    
+    public func scrollViewShouldScrollToTop(_ scrollView: UIScrollView) -> Bool {
+        if let delegate = scrollDelegate {
+            if delegate.responds(to: #selector(delegate.scrollViewShouldScrollToTop(_:))) {
+                return delegate.scrollViewShouldScrollToTop!(scrollView)
+            }
+        }
+        return true
+    }
+    
+    public func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {
+        if let delegate = scrollDelegate {
+            if delegate.responds(to: #selector(delegate.scrollViewDidScrollToTop(_:))) {
+                delegate.scrollViewDidScrollToTop!(scrollView)
+            }
+        }
     }
 }
