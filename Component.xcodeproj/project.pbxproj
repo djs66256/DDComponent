@@ -14,7 +14,6 @@
 		650DFA3E1D85C0C6003112BF /* DDTestTableViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650DFA3D1D85C0C6003112BF /* DDTestTableViewComponent.swift */; };
 		650DFA401D85C12E003112BF /* DDTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650DFA3F1D85C12E003112BF /* DDTableViewController.swift */; };
 		656C7B8D1D966E5A009BC4B5 /* TableViewStatusComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656C7B8C1D966E5A009BC4B5 /* TableViewStatusComponent.swift */; };
-		656C7B8F1D966ECE009BC4B5 /* ComponentState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656C7B8E1D966ECE009BC4B5 /* ComponentState.swift */; };
 		656C7B911D967EBC009BC4B5 /* CollectionViewStatusComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656C7B901D967EBC009BC4B5 /* CollectionViewStatusComponent.swift */; };
 		65C999281D68AF5D0019780A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C999271D68AF5D0019780A /* AppDelegate.swift */; };
 		65C9992A1D68AF5D0019780A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C999291D68AF5D0019780A /* ViewController.swift */; };
@@ -38,7 +37,6 @@
 		650DFA3D1D85C0C6003112BF /* DDTestTableViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DDTestTableViewComponent.swift; sourceTree = "<group>"; };
 		650DFA3F1D85C12E003112BF /* DDTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DDTableViewController.swift; sourceTree = "<group>"; };
 		656C7B8C1D966E5A009BC4B5 /* TableViewStatusComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewStatusComponent.swift; sourceTree = "<group>"; };
-		656C7B8E1D966ECE009BC4B5 /* ComponentState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComponentState.swift; sourceTree = "<group>"; };
 		656C7B901D967EBC009BC4B5 /* CollectionViewStatusComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewStatusComponent.swift; sourceTree = "<group>"; };
 		65C999241D68AF5D0019780A /* Component.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Component.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		65C999271D68AF5D0019780A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -106,7 +104,6 @@
 			children = (
 				65C9993A1D68AFB10019780A /* CollectionView */,
 				65C9993B1D68AFB10019780A /* TableView */,
-				656C7B8E1D966ECE009BC4B5 /* ComponentState.swift */,
 			);
 			path = Class;
 			sourceTree = "<group>";
@@ -211,7 +208,6 @@
 			files = (
 				65C999431D68BC510019780A /* CollectionViewSectionComponent.swift in Sources */,
 				650DFA401D85C12E003112BF /* DDTableViewController.swift in Sources */,
-				656C7B8F1D966ECE009BC4B5 /* ComponentState.swift in Sources */,
 				650DFA3A1D849161003112BF /* TableViewSectionComponent.swift in Sources */,
 				656C7B8D1D966E5A009BC4B5 /* TableViewStatusComponent.swift in Sources */,
 				65C9992A1D68AF5D0019780A /* ViewController.swift in Sources */,

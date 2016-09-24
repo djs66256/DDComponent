@@ -10,6 +10,7 @@ import UIKit
 
 open
 class TableViewStatusComponent: TableViewBaseComponent {
+    public typealias ComponentState = String
     private var stateStore = [ComponentState: TableViewBaseComponent]()
     
     public var state: ComponentState? {

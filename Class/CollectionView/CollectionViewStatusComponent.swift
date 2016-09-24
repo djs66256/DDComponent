@@ -10,6 +10,7 @@ import UIKit
 
 open
 class CollectionViewStatusComponent: CollectionViewBaseComponent {
+    public typealias ComponentState = String
     private var stateStore = [ComponentState: CollectionViewBaseComponent]()
     
     public var state: ComponentState? {
