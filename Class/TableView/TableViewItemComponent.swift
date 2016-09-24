@@ -10,6 +10,12 @@ import UIKit
 
 open class TableViewItemComponent: TableViewBaseComponent {
     open var height: CGFloat = 44
+    
+    public func height(_ height: CGFloat) -> Self {
+        self.height = height
+        return self
+    }
+    
     open override func firstSection(ofSubComponent: TableViewComponent) -> Int {
         return section
     }
@@ -25,10 +31,6 @@ open class TableViewItemComponent: TableViewBaseComponent {
         }
     }
     
-    public func height(_ height: CGFloat) -> Self {
-        self.height = height
-        return self
-    }
     
     public override final func numberOfSections(in tableView: UITableView) -> Int {
         return 1;
