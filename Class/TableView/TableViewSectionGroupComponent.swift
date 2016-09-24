@@ -11,10 +11,13 @@ import UIKit
 open class TableViewSectionGroupComponent: TableViewBaseComponent {
     open var subComponents = [TableViewBaseComponent]() {
         didSet {
+            let shouldPrepare = self.tableView != nil
             for comp in subComponents {
                 comp.superComponent = self
+                if shouldPrepare {
+                    comp.prepareTableView()
+                }
             }
-            prepareTableView()
         }
     }
     
@@ -52,7 +55,7 @@ open class TableViewSectionGroupComponent: TableViewBaseComponent {
         if let tableView = tableView {
             tableView.beginUpdates()
             let maxSection = section + numberOfSections(in: tableView)
-            tableView.reloadSections(IndexSet(integersIn: section...maxSection), with: .none)
+            tableView.reloadSections(IndexSet(integersIn: section..<maxSection), with: .none)
             tableView.endUpdates()
         }
     }

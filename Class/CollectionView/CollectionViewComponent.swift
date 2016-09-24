@@ -16,7 +16,7 @@ public protocol CollectionViewComponent: UICollectionViewDataSource, UICollectio
     func reloadData()
     
     // for subComponent
-    func firstRow(ofSubComponent: CollectionViewComponent) -> Int
+    func firstItem(ofSubComponent: CollectionViewComponent) -> Int
     func firstSection(ofSubComponent: CollectionViewComponent) -> Int
 }
 
@@ -44,9 +44,9 @@ open class CollectionViewBaseComponent: NSObject, CollectionViewComponent {
             return superComponent?.collectionView
         }
     }
-    open var row: Int {
+    open var item: Int {
         get {
-            return superComponent?.firstRow(ofSubComponent: self) ?? 0
+            return superComponent?.firstItem(ofSubComponent: self) ?? 0
         }
     }
     
@@ -58,7 +58,9 @@ open class CollectionViewBaseComponent: NSObject, CollectionViewComponent {
     
     open func prepareCollectionView() { }
     open func reloadData() { }
-    open func firstRow(ofSubComponent: CollectionViewComponent) -> Int {
+    
+    // TODO: may return Int?
+    open func firstItem(ofSubComponent: CollectionViewComponent) -> Int {
         return 0
     }
     open func firstSection(ofSubComponent: CollectionViewComponent) -> Int {

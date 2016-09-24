@@ -16,12 +16,13 @@ open class TableViewSectionComponent: TableViewBaseComponent {
     open override func reloadData() {
         if let tableView = tableView {
             tableView.beginUpdates()
-            tableView.reloadSections(IndexSet(integer: section), with: .none)
+            let count = numberOfSections(in: tableView)
+            tableView.reloadSections(IndexSet(integersIn: section..<(section+count)), with: .none)
             tableView.endUpdates()
         }
     }
     
-    public override final func numberOfSections(in tableView: UITableView) -> Int {
+    open override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
@@ -210,24 +211,20 @@ open class TableViewHeaderFooterSectionComponent: TableViewSectionComponent {
 open class TableViewItemGroupComponent: TableViewHeaderFooterSectionComponent {
     var subComponents = [TableViewBaseComponent]() {
         didSet {
+            let shouldPrepare = self.tableView != nil
             for comp in subComponents {
                 comp.superComponent = self
+                if shouldPrepare {
+                    comp.prepareTableView()
+                }
             }
-            prepareTableView()
         }
-    }
-    
-    open func index(row: Int) -> Int {
-        return row - self.row
-    }
-    open func row(index: Int) -> Int {
-        return index + self.row
     }
     
     open override func firstSection(ofSubComponent: TableViewComponent) -> Int {
         return section
     }
-    override open func firstRow(ofSubComponent: TableViewComponent) -> Int {
+    open override func firstRow(ofSubComponent: TableViewComponent) -> Int {
         var row = self.row
         if let tableView = tableView {
             let section = self.section

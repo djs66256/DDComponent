@@ -24,7 +24,7 @@ public extension UICollectionViewController {
         }
     }
     
-    public var dd_subComponents: [CollectionViewComponent] {
+    public var dd_subComponents: [CollectionViewBaseComponent] {
         set {
             dd_rootComponent.subComponents = newValue
         }

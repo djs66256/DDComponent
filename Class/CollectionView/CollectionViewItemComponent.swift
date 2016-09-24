@@ -9,51 +9,45 @@
 import UIKit
 
 // for 1 section and 1 row
-open class CollectionViewItemComponent: NSObject, CollectionViewComponent {
-    open weak var superComponent: CollectionViewComponent?
-    open var collectionView: UICollectionView? {
-        get {
-            return superComponent?.collectionView
-        }
-    }
-    open var section: Int = 0
-    open var item: Int = 0
-    open var size: CGSize = CGSize.zero
-    private func __for_swift3() {
-        collectionView?.delegate = self
-        collectionView?.dataSource = self
-    }
-    open var indexPath: IndexPath {
-        get {
-            return IndexPath(item: item, section: section)
-        }
+open class CollectionViewItemComponent: CollectionViewBaseComponent {
+    open var size: CGSize?
+    
+    public func size(_ size: CGSize) -> Self {
+        self.size = size
+        return self
     }
     
-    open func prepareCollectionView() {
-        
+    open override func firstSection(ofSubComponent: CollectionViewComponent) -> Int {
+        return section
     }
     
-    open func reloadIndexPath() {
+    open override func firstItem(ofSubComponent: CollectionViewComponent) -> Int {
+        return item
     }
     
-    open func reloadData() {
-        self.collectionView?.reloadItems(at: [self.indexPath])
+    open override func reloadData() {
+        self.collectionView?.reloadItems(at: [IndexPath(item: item, section: section)])
     }
     
-    public final func numberOfSections(in collectionView: UICollectionView) -> Int {
+    public final override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
     
-    public final func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    public final override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 1
     }
     
-    open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    open override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         assert(false, "Must override!!!")
         return UICollectionViewCell()
     }
     
-    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return size
+    open override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        if let size = size {
+            return size
+        }
+        else {
+            return super.collectionView(collectionView, layout: collectionViewLayout, sizeForItemAt: indexPath)
+        }
     }
 }

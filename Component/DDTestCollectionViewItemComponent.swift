@@ -24,7 +24,7 @@ class TestCollectionViewItemComponent: CollectionViewItemComponent {
         return CGSize(width: 80, height: 80);
     }
     
-    open func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    open override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("\(indexPath)")
     }
 }
