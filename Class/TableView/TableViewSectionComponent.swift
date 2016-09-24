@@ -113,16 +113,25 @@ open class TableViewHeaderFooterSectionComponent: TableViewSectionComponent {
     open var headerComponent: TableViewSectionComponent? {
         didSet {
             headerComponent?.superComponent = self
+            if self.tableView != nil {
+                headerComponent?.prepareTableView()
+            }
         }
     }
     open var footerComponent: TableViewSectionComponent? {
         didSet {
             footerComponent?.superComponent = self
+            if self.tableView != nil {
+                footerComponent?.prepareTableView()
+            }
         }
     }
     open var headerFooterComponent: TableViewSectionComponent? {
         didSet {
             headerFooterComponent?.superComponent = self
+            if self.tableView != nil {
+                headerFooterComponent?.prepareTableView()
+            }
         }
     }
     
@@ -148,9 +157,11 @@ open class TableViewHeaderFooterSectionComponent: TableViewSectionComponent {
     
     open override func prepareTableView() {
         super.prepareTableView()
-        headerComponent?.prepareTableView()
-        footerComponent?.prepareTableView()
-        headerFooterComponent?.prepareTableView()
+        if self.tableView != nil {
+            headerComponent?.prepareTableView()
+            footerComponent?.prepareTableView()
+            headerFooterComponent?.prepareTableView()
+        }
     }
     
     open override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
