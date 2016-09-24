@@ -12,30 +12,12 @@ public protocol CollectionViewComponent: UICollectionViewDataSource, UICollectio
     weak var superComponent: CollectionViewComponent? { get set }
     var collectionView: UICollectionView? { get }
     func prepareCollectionView()
-//    func reloadIndexPath()
     func reloadData()
     
     // for subComponent
     func firstItem(ofSubComponent: CollectionViewComponent) -> Int
     func firstSection(ofSubComponent: CollectionViewComponent) -> Int
 }
-
-//public extension CollectionViewComponent {
-//    
-//    func item(rawItem: Int) -> Int {
-//        return rawItem - self.item
-//    }
-//    func rawItem(item: Int) -> Int {
-//        return item + self.item
-//    }
-//    
-//    func section(rawSection: Int) -> Int {
-//        return rawSection - self.section
-//    }
-//    func rawSection(section: Int) -> Int {
-//        return section + self.section
-//    }
-//}
 
 open class CollectionViewBaseComponent: NSObject, CollectionViewComponent {
     public weak var superComponent: CollectionViewComponent?
@@ -58,6 +40,16 @@ open class CollectionViewBaseComponent: NSObject, CollectionViewComponent {
     
     open func prepareCollectionView() { }
     open func reloadData() { }
+    open func reloadData(animated: Bool) {
+        if animated {
+            reloadData()
+        }
+        else {
+            UIView.performWithoutAnimation {
+                self.reloadData()
+            }
+        }
+    }
     
     // TODO: may return Int?
     open func firstItem(ofSubComponent: CollectionViewComponent) -> Int {

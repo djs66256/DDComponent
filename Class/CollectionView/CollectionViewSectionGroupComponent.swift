@@ -22,6 +22,19 @@ open class CollectionViewSectionGroupComponent: CollectionViewBaseComponent {
         }
     }
     
+    open override func firstSection(ofSubComponent: CollectionViewComponent) -> Int {
+        var section = self.section
+        if let collectionView = collectionView {
+            for comp in subComponents {
+                if comp === ofSubComponent {
+                    return section
+                }
+                section += comp.numberOfSections(in: collectionView)
+            }
+        }
+        return section
+    }
+    
     open override func prepareCollectionView() {
         if self.collectionView != nil {
             for component in subComponents {
@@ -43,7 +56,7 @@ open class CollectionViewSectionGroupComponent: CollectionViewBaseComponent {
             var section = self.section
             for comp in subComponents {
                 let count = comp.numberOfSections(in: collectionView)
-                if section >= atSection && section+count < atSection {
+                if section <= atSection && section+count > atSection {
                     return comp
                 }
                 section += count

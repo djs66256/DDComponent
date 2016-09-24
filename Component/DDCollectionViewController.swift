@@ -17,7 +17,12 @@ class CollectionViewController: UICollectionViewController {
 
         let comp = CollectionViewItemGroupComponent()
         comp.subComponents = [TestCollectionViewItemComponent(), TestCollectionViewItemComponent()]
-        self.dd_subComponents = [comp]
+        
+        let sectionGroup = CollectionViewSectionGroupComponent()
+        let itemGroup2 = CollectionViewItemGroupComponent()
+        itemGroup2.subComponents = [TestCollectionViewItemComponent(), TestCollectionViewItemComponent()]
+        sectionGroup.subComponents = [TestCollectionViewItemComponent(), itemGroup2]
+        self.dd_subComponents = [TestCollectionViewItemComponent(), comp, sectionGroup]
     }
 
     override func didReceiveMemoryWarning() {
