@@ -7,42 +7,48 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		650DFA361D848D70003112BF /* TableViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650DFA351D848D70003112BF /* TableViewComponent.swift */; };
-		650DFA381D848EB4003112BF /* TableViewItemComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650DFA371D848EB4003112BF /* TableViewItemComponent.swift */; };
-		650DFA3A1D849161003112BF /* TableViewSectionComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650DFA391D849161003112BF /* TableViewSectionComponent.swift */; };
-		650DFA3C1D849FB9003112BF /* TableViewSectionGroupComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650DFA3B1D849FB9003112BF /* TableViewSectionGroupComponent.swift */; };
-		650DFA3E1D85C0C6003112BF /* DDTestTableViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650DFA3D1D85C0C6003112BF /* DDTestTableViewComponent.swift */; };
-		650DFA401D85C12E003112BF /* DDTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650DFA3F1D85C12E003112BF /* DDTableViewController.swift */; };
-		656C7B8D1D966E5A009BC4B5 /* TableViewStatusComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656C7B8C1D966E5A009BC4B5 /* TableViewStatusComponent.swift */; };
-		656C7B911D967EBC009BC4B5 /* CollectionViewStatusComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656C7B901D967EBC009BC4B5 /* CollectionViewStatusComponent.swift */; };
-		656C7B931D96F86E009BC4B5 /* UITableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656C7B921D96F86E009BC4B5 /* UITableViewController.swift */; };
-		657016E01D97A8EA0096EC69 /* DDComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 657016DE1D97A8EA0096EC69 /* DDComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		657016E31D97A8EA0096EC69 /* DDComponent.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 657016DC1D97A8E90096EC69 /* DDComponent.framework */; };
 		657016E41D97A8EA0096EC69 /* DDComponent.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 657016DC1D97A8E90096EC69 /* DDComponent.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		657016E91D97A9130096EC69 /* CollectionViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C999481D68F8530019780A /* CollectionViewComponent.swift */; };
-		657016EA1D97A9130096EC69 /* CollectionViewItemComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C999401D68B9780019780A /* CollectionViewItemComponent.swift */; };
-		657016EB1D97A9130096EC69 /* CollectionViewSectionComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C999421D68BC510019780A /* CollectionViewSectionComponent.swift */; };
-		657016EC1D97A9130096EC69 /* CollectionViewSectionGroupComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C999461D68CF320019780A /* CollectionViewSectionGroupComponent.swift */; };
-		657016ED1D97A9130096EC69 /* UICollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C9994A1D6903C60019780A /* UICollectionViewController.swift */; };
-		657016EE1D97A9130096EC69 /* CollectionViewStatusComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656C7B901D967EBC009BC4B5 /* CollectionViewStatusComponent.swift */; };
-		657016EF1D97A9130096EC69 /* TableViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650DFA351D848D70003112BF /* TableViewComponent.swift */; };
-		657016F01D97A9130096EC69 /* TableViewStatusComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656C7B8C1D966E5A009BC4B5 /* TableViewStatusComponent.swift */; };
-		657016F11D97A9130096EC69 /* TableViewItemComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650DFA371D848EB4003112BF /* TableViewItemComponent.swift */; };
-		657016F21D97A9130096EC69 /* TableViewSectionComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650DFA391D849161003112BF /* TableViewSectionComponent.swift */; };
-		657016F31D97A9130096EC69 /* TableViewSectionGroupComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650DFA3B1D849FB9003112BF /* TableViewSectionGroupComponent.swift */; };
-		657016F41D97A9130096EC69 /* UITableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656C7B921D96F86E009BC4B5 /* UITableViewController.swift */; };
 		65C999281D68AF5D0019780A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C999271D68AF5D0019780A /* AppDelegate.swift */; };
-		65C9992A1D68AF5D0019780A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C999291D68AF5D0019780A /* ViewController.swift */; };
 		65C9992D1D68AF5D0019780A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65C9992B1D68AF5D0019780A /* Main.storyboard */; };
 		65C9992F1D68AF5D0019780A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 65C9992E1D68AF5D0019780A /* Assets.xcassets */; };
 		65C999321D68AF5E0019780A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65C999301D68AF5E0019780A /* LaunchScreen.storyboard */; };
-		65C999411D68B9780019780A /* CollectionViewItemComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C999401D68B9780019780A /* CollectionViewItemComponent.swift */; };
-		65C999431D68BC510019780A /* CollectionViewSectionComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C999421D68BC510019780A /* CollectionViewSectionComponent.swift */; };
-		65C999471D68CF320019780A /* CollectionViewSectionGroupComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C999461D68CF320019780A /* CollectionViewSectionGroupComponent.swift */; };
-		65C999491D68F8530019780A /* CollectionViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C999481D68F8530019780A /* CollectionViewComponent.swift */; };
-		65C9994B1D6903C60019780A /* UICollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C9994A1D6903C60019780A /* UICollectionViewController.swift */; };
-		65C9994D1D69059D0019780A /* DDCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C9994C1D69059D0019780A /* DDCollectionViewController.swift */; };
-		65C9994F1D6906B40019780A /* DDTestCollectionViewItemComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C9994E1D6906B40019780A /* DDTestCollectionViewItemComponent.swift */; };
+		BE60217B1EEFC30D007A0F0E /* DDCollectionViewComponent+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = BE6021651EEFC30D007A0F0E /* DDCollectionViewComponent+Private.h */; };
+		BE60217C1EEFC30D007A0F0E /* DDCollectionViewComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = BE6021661EEFC30D007A0F0E /* DDCollectionViewComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BE60217D1EEFC30D007A0F0E /* DDCollectionViewComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = BE6021671EEFC30D007A0F0E /* DDCollectionViewComponent.m */; };
+		BE60217E1EEFC30D007A0F0E /* DDCollectionViewItemComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = BE6021681EEFC30D007A0F0E /* DDCollectionViewItemComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BE60217F1EEFC30D007A0F0E /* DDCollectionViewItemComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = BE6021691EEFC30D007A0F0E /* DDCollectionViewItemComponent.m */; };
+		BE6021801EEFC30D007A0F0E /* DDCollectionViewSectionComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = BE60216A1EEFC30D007A0F0E /* DDCollectionViewSectionComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BE6021811EEFC30D007A0F0E /* DDCollectionViewSectionComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = BE60216B1EEFC30D007A0F0E /* DDCollectionViewSectionComponent.m */; };
+		BE6021821EEFC30D007A0F0E /* DDCollectionViewSectionGroupComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = BE60216C1EEFC30D007A0F0E /* DDCollectionViewSectionGroupComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BE6021831EEFC30D007A0F0E /* DDCollectionViewSectionGroupComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = BE60216D1EEFC30D007A0F0E /* DDCollectionViewSectionGroupComponent.m */; };
+		BE6021841EEFC30D007A0F0E /* DDCollectionViewStatusComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = BE60216E1EEFC30D007A0F0E /* DDCollectionViewStatusComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BE6021851EEFC30D007A0F0E /* DDCollectionViewStatusComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = BE60216F1EEFC30D007A0F0E /* DDCollectionViewStatusComponent.m */; };
+		BE6021861EEFC30D007A0F0E /* DDComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = BE6021701EEFC30D007A0F0E /* DDComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BE6021871EEFC30D007A0F0E /* DDTableViewComponent+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = BE6021721EEFC30D007A0F0E /* DDTableViewComponent+Private.h */; };
+		BE6021881EEFC30D007A0F0E /* DDTableViewComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = BE6021731EEFC30D007A0F0E /* DDTableViewComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BE6021891EEFC30D007A0F0E /* DDTableViewComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = BE6021741EEFC30D007A0F0E /* DDTableViewComponent.m */; };
+		BE60218A1EEFC30D007A0F0E /* DDTableViewItemComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = BE6021751EEFC30D007A0F0E /* DDTableViewItemComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BE60218B1EEFC30D007A0F0E /* DDTableViewItemComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = BE6021761EEFC30D007A0F0E /* DDTableViewItemComponent.m */; };
+		BE60218C1EEFC30D007A0F0E /* DDTableViewSectionComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = BE6021771EEFC30D007A0F0E /* DDTableViewSectionComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BE60218D1EEFC30D007A0F0E /* DDTableViewSectionComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = BE6021781EEFC30D007A0F0E /* DDTableViewSectionComponent.m */; };
+		BE60218E1EEFC30D007A0F0E /* DDTableViewSectionGroupComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = BE6021791EEFC30D007A0F0E /* DDTableViewSectionGroupComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BE60218F1EEFC30D007A0F0E /* DDTableViewSectionGroupComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = BE60217A1EEFC30D007A0F0E /* DDTableViewSectionGroupComponent.m */; };
+		BE6021921EEFC50D007A0F0E /* SimpleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6021911EEFC50D007A0F0E /* SimpleViewController.swift */; };
+		BE6021961EEFC54A007A0F0E /* StatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6021951EEFC54A007A0F0E /* StatusViewController.swift */; };
+		BE6021981EEFC576007A0F0E /* HeaderFooterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6021971EEFC576007A0F0E /* HeaderFooterViewController.swift */; };
+		BE60219A1EEFC5B1007A0F0E /* SectionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6021991EEFC5B1007A0F0E /* SectionsViewController.swift */; };
+		BE60219C1EEFC5DB007A0F0E /* HeaderStatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE60219B1EEFC5DB007A0F0E /* HeaderStatusViewController.swift */; };
+		BE6021A01EEFC637007A0F0E /* HeaderComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE60219F1EEFC637007A0F0E /* HeaderComponent.swift */; };
+		BE6021A41EEFC660007A0F0E /* StatusComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6021A31EEFC660007A0F0E /* StatusComponent.swift */; };
+		BE6021A61EEFC8D7007A0F0E /* RootCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6021A51EEFC8D7007A0F0E /* RootCollectionViewController.swift */; };
+		BE6021A91EEFCA97007A0F0E /* TitleCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6021A81EEFCA97007A0F0E /* TitleCollectionViewCell.swift */; };
+		BE6021AB1EEFD950007A0F0E /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6021AA1EEFD950007A0F0E /* ImageCollectionViewCell.swift */; };
+		BE6021AD1EEFD99D007A0F0E /* TitlesComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6021AC1EEFD99D007A0F0E /* TitlesComponent.swift */; };
+		BE6021AF1EEFDA30007A0F0E /* ImagesComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6021AE1EEFDA30007A0F0E /* ImagesComponent.swift */; };
+		BE6021B11EEFDC67007A0F0E /* TextsComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6021B01EEFDC67007A0F0E /* TextsComponent.swift */; };
+		BE6021B31EEFEB1E007A0F0E /* TextCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6021B21EEFEB1E007A0F0E /* TextCollectionReusableView.swift */; };
+		BE6021B51EEFEB59007A0F0E /* FooterComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6021B41EEFEB59007A0F0E /* FooterComponent.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,32 +76,52 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		650DFA351D848D70003112BF /* TableViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewComponent.swift; sourceTree = "<group>"; };
-		650DFA371D848EB4003112BF /* TableViewItemComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewItemComponent.swift; sourceTree = "<group>"; };
-		650DFA391D849161003112BF /* TableViewSectionComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewSectionComponent.swift; sourceTree = "<group>"; };
-		650DFA3B1D849FB9003112BF /* TableViewSectionGroupComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewSectionGroupComponent.swift; sourceTree = "<group>"; };
-		650DFA3D1D85C0C6003112BF /* DDTestTableViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DDTestTableViewComponent.swift; sourceTree = "<group>"; };
-		650DFA3F1D85C12E003112BF /* DDTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DDTableViewController.swift; sourceTree = "<group>"; };
-		656C7B8C1D966E5A009BC4B5 /* TableViewStatusComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewStatusComponent.swift; sourceTree = "<group>"; };
-		656C7B901D967EBC009BC4B5 /* CollectionViewStatusComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewStatusComponent.swift; sourceTree = "<group>"; };
-		656C7B921D96F86E009BC4B5 /* UITableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITableViewController.swift; sourceTree = "<group>"; };
 		657016DC1D97A8E90096EC69 /* DDComponent.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DDComponent.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		657016DE1D97A8EA0096EC69 /* DDComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDComponent.h; sourceTree = "<group>"; };
 		657016DF1D97A8EA0096EC69 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		65C999241D68AF5D0019780A /* Component.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Component.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		65C999271D68AF5D0019780A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		65C999291D68AF5D0019780A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		65C9992C1D68AF5D0019780A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		65C9992E1D68AF5D0019780A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		65C999311D68AF5E0019780A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		65C999331D68AF5E0019780A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		65C999401D68B9780019780A /* CollectionViewItemComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewItemComponent.swift; sourceTree = "<group>"; };
-		65C999421D68BC510019780A /* CollectionViewSectionComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewSectionComponent.swift; sourceTree = "<group>"; };
-		65C999461D68CF320019780A /* CollectionViewSectionGroupComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewSectionGroupComponent.swift; sourceTree = "<group>"; };
-		65C999481D68F8530019780A /* CollectionViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewComponent.swift; sourceTree = "<group>"; };
-		65C9994A1D6903C60019780A /* UICollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UICollectionViewController.swift; sourceTree = "<group>"; };
-		65C9994C1D69059D0019780A /* DDCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DDCollectionViewController.swift; sourceTree = "<group>"; };
-		65C9994E1D6906B40019780A /* DDTestCollectionViewItemComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DDTestCollectionViewItemComponent.swift; sourceTree = "<group>"; };
+		BE6021651EEFC30D007A0F0E /* DDCollectionViewComponent+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DDCollectionViewComponent+Private.h"; sourceTree = "<group>"; };
+		BE6021661EEFC30D007A0F0E /* DDCollectionViewComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDCollectionViewComponent.h; sourceTree = "<group>"; };
+		BE6021671EEFC30D007A0F0E /* DDCollectionViewComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDCollectionViewComponent.m; sourceTree = "<group>"; };
+		BE6021681EEFC30D007A0F0E /* DDCollectionViewItemComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDCollectionViewItemComponent.h; sourceTree = "<group>"; };
+		BE6021691EEFC30D007A0F0E /* DDCollectionViewItemComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDCollectionViewItemComponent.m; sourceTree = "<group>"; };
+		BE60216A1EEFC30D007A0F0E /* DDCollectionViewSectionComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDCollectionViewSectionComponent.h; sourceTree = "<group>"; };
+		BE60216B1EEFC30D007A0F0E /* DDCollectionViewSectionComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDCollectionViewSectionComponent.m; sourceTree = "<group>"; };
+		BE60216C1EEFC30D007A0F0E /* DDCollectionViewSectionGroupComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDCollectionViewSectionGroupComponent.h; sourceTree = "<group>"; };
+		BE60216D1EEFC30D007A0F0E /* DDCollectionViewSectionGroupComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDCollectionViewSectionGroupComponent.m; sourceTree = "<group>"; };
+		BE60216E1EEFC30D007A0F0E /* DDCollectionViewStatusComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDCollectionViewStatusComponent.h; sourceTree = "<group>"; };
+		BE60216F1EEFC30D007A0F0E /* DDCollectionViewStatusComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDCollectionViewStatusComponent.m; sourceTree = "<group>"; };
+		BE6021701EEFC30D007A0F0E /* DDComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDComponent.h; sourceTree = "<group>"; };
+		BE6021721EEFC30D007A0F0E /* DDTableViewComponent+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DDTableViewComponent+Private.h"; sourceTree = "<group>"; };
+		BE6021731EEFC30D007A0F0E /* DDTableViewComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDTableViewComponent.h; sourceTree = "<group>"; };
+		BE6021741EEFC30D007A0F0E /* DDTableViewComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDTableViewComponent.m; sourceTree = "<group>"; };
+		BE6021751EEFC30D007A0F0E /* DDTableViewItemComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDTableViewItemComponent.h; sourceTree = "<group>"; };
+		BE6021761EEFC30D007A0F0E /* DDTableViewItemComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDTableViewItemComponent.m; sourceTree = "<group>"; };
+		BE6021771EEFC30D007A0F0E /* DDTableViewSectionComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDTableViewSectionComponent.h; sourceTree = "<group>"; };
+		BE6021781EEFC30D007A0F0E /* DDTableViewSectionComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDTableViewSectionComponent.m; sourceTree = "<group>"; };
+		BE6021791EEFC30D007A0F0E /* DDTableViewSectionGroupComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDTableViewSectionGroupComponent.h; sourceTree = "<group>"; };
+		BE60217A1EEFC30D007A0F0E /* DDTableViewSectionGroupComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDTableViewSectionGroupComponent.m; sourceTree = "<group>"; };
+		BE6021901EEFC39B007A0F0E /* DDCollectionBridgeHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDCollectionBridgeHeader.h; sourceTree = "<group>"; };
+		BE6021911EEFC50D007A0F0E /* SimpleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleViewController.swift; sourceTree = "<group>"; };
+		BE6021951EEFC54A007A0F0E /* StatusViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusViewController.swift; sourceTree = "<group>"; };
+		BE6021971EEFC576007A0F0E /* HeaderFooterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderFooterViewController.swift; sourceTree = "<group>"; };
+		BE6021991EEFC5B1007A0F0E /* SectionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionsViewController.swift; sourceTree = "<group>"; };
+		BE60219B1EEFC5DB007A0F0E /* HeaderStatusViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderStatusViewController.swift; sourceTree = "<group>"; };
+		BE60219F1EEFC637007A0F0E /* HeaderComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderComponent.swift; sourceTree = "<group>"; };
+		BE6021A31EEFC660007A0F0E /* StatusComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusComponent.swift; sourceTree = "<group>"; };
+		BE6021A51EEFC8D7007A0F0E /* RootCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootCollectionViewController.swift; sourceTree = "<group>"; };
+		BE6021A81EEFCA97007A0F0E /* TitleCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TitleCollectionViewCell.swift; sourceTree = "<group>"; };
+		BE6021AA1EEFD950007A0F0E /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
+		BE6021AC1EEFD99D007A0F0E /* TitlesComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TitlesComponent.swift; sourceTree = "<group>"; };
+		BE6021AE1EEFDA30007A0F0E /* ImagesComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagesComponent.swift; sourceTree = "<group>"; };
+		BE6021B01EEFDC67007A0F0E /* TextsComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextsComponent.swift; sourceTree = "<group>"; };
+		BE6021B21EEFEB1E007A0F0E /* TextCollectionReusableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextCollectionReusableView.swift; sourceTree = "<group>"; };
+		BE6021B41EEFEB59007A0F0E /* FooterComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FooterComponent.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,16 +174,16 @@
 		65C999261D68AF5D0019780A /* Component */ = {
 			isa = PBXGroup;
 			children = (
+				BE6021A71EEFCA81007A0F0E /* Cells */,
+				BE60219E1EEFC614007A0F0E /* Components */,
+				BE60219D1EEFC5FE007A0F0E /* Controllers */,
 				65C999271D68AF5D0019780A /* AppDelegate.swift */,
-				65C999291D68AF5D0019780A /* ViewController.swift */,
-				65C9994E1D6906B40019780A /* DDTestCollectionViewItemComponent.swift */,
-				65C9994C1D69059D0019780A /* DDCollectionViewController.swift */,
-				650DFA3D1D85C0C6003112BF /* DDTestTableViewComponent.swift */,
-				650DFA3F1D85C12E003112BF /* DDTableViewController.swift */,
+				BE6021A51EEFC8D7007A0F0E /* RootCollectionViewController.swift */,
 				65C9992B1D68AF5D0019780A /* Main.storyboard */,
 				65C9992E1D68AF5D0019780A /* Assets.xcassets */,
 				65C999301D68AF5E0019780A /* LaunchScreen.storyboard */,
 				65C999331D68AF5E0019780A /* Info.plist */,
+				BE6021901EEFC39B007A0F0E /* DDCollectionBridgeHeader.h */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -165,36 +191,88 @@
 		65C999391D68AF740019780A /* Class */ = {
 			isa = PBXGroup;
 			children = (
-				65C9993A1D68AFB10019780A /* CollectionView */,
-				65C9993B1D68AFB10019780A /* TableView */,
+				BE6021631EEFC30D007A0F0E /* oc */,
 			);
 			path = Class;
 			sourceTree = "<group>";
 		};
-		65C9993A1D68AFB10019780A /* CollectionView */ = {
+		BE6021631EEFC30D007A0F0E /* oc */ = {
 			isa = PBXGroup;
 			children = (
-				65C999481D68F8530019780A /* CollectionViewComponent.swift */,
-				65C999401D68B9780019780A /* CollectionViewItemComponent.swift */,
-				65C999421D68BC510019780A /* CollectionViewSectionComponent.swift */,
-				65C999461D68CF320019780A /* CollectionViewSectionGroupComponent.swift */,
-				65C9994A1D6903C60019780A /* UICollectionViewController.swift */,
-				656C7B901D967EBC009BC4B5 /* CollectionViewStatusComponent.swift */,
+				BE6021641EEFC30D007A0F0E /* Collection */,
+				BE6021701EEFC30D007A0F0E /* DDComponent.h */,
+				BE6021711EEFC30D007A0F0E /* Table */,
 			);
-			path = CollectionView;
+			path = oc;
 			sourceTree = "<group>";
 		};
-		65C9993B1D68AFB10019780A /* TableView */ = {
+		BE6021641EEFC30D007A0F0E /* Collection */ = {
 			isa = PBXGroup;
 			children = (
-				650DFA351D848D70003112BF /* TableViewComponent.swift */,
-				656C7B8C1D966E5A009BC4B5 /* TableViewStatusComponent.swift */,
-				650DFA371D848EB4003112BF /* TableViewItemComponent.swift */,
-				650DFA391D849161003112BF /* TableViewSectionComponent.swift */,
-				650DFA3B1D849FB9003112BF /* TableViewSectionGroupComponent.swift */,
-				656C7B921D96F86E009BC4B5 /* UITableViewController.swift */,
+				BE6021651EEFC30D007A0F0E /* DDCollectionViewComponent+Private.h */,
+				BE6021661EEFC30D007A0F0E /* DDCollectionViewComponent.h */,
+				BE6021671EEFC30D007A0F0E /* DDCollectionViewComponent.m */,
+				BE6021681EEFC30D007A0F0E /* DDCollectionViewItemComponent.h */,
+				BE6021691EEFC30D007A0F0E /* DDCollectionViewItemComponent.m */,
+				BE60216A1EEFC30D007A0F0E /* DDCollectionViewSectionComponent.h */,
+				BE60216B1EEFC30D007A0F0E /* DDCollectionViewSectionComponent.m */,
+				BE60216C1EEFC30D007A0F0E /* DDCollectionViewSectionGroupComponent.h */,
+				BE60216D1EEFC30D007A0F0E /* DDCollectionViewSectionGroupComponent.m */,
+				BE60216E1EEFC30D007A0F0E /* DDCollectionViewStatusComponent.h */,
+				BE60216F1EEFC30D007A0F0E /* DDCollectionViewStatusComponent.m */,
 			);
-			path = TableView;
+			path = Collection;
+			sourceTree = "<group>";
+		};
+		BE6021711EEFC30D007A0F0E /* Table */ = {
+			isa = PBXGroup;
+			children = (
+				BE6021721EEFC30D007A0F0E /* DDTableViewComponent+Private.h */,
+				BE6021731EEFC30D007A0F0E /* DDTableViewComponent.h */,
+				BE6021741EEFC30D007A0F0E /* DDTableViewComponent.m */,
+				BE6021751EEFC30D007A0F0E /* DDTableViewItemComponent.h */,
+				BE6021761EEFC30D007A0F0E /* DDTableViewItemComponent.m */,
+				BE6021771EEFC30D007A0F0E /* DDTableViewSectionComponent.h */,
+				BE6021781EEFC30D007A0F0E /* DDTableViewSectionComponent.m */,
+				BE6021791EEFC30D007A0F0E /* DDTableViewSectionGroupComponent.h */,
+				BE60217A1EEFC30D007A0F0E /* DDTableViewSectionGroupComponent.m */,
+			);
+			path = Table;
+			sourceTree = "<group>";
+		};
+		BE60219D1EEFC5FE007A0F0E /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				BE6021911EEFC50D007A0F0E /* SimpleViewController.swift */,
+				BE6021991EEFC5B1007A0F0E /* SectionsViewController.swift */,
+				BE6021951EEFC54A007A0F0E /* StatusViewController.swift */,
+				BE60219B1EEFC5DB007A0F0E /* HeaderStatusViewController.swift */,
+				BE6021971EEFC576007A0F0E /* HeaderFooterViewController.swift */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		BE60219E1EEFC614007A0F0E /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				BE60219F1EEFC637007A0F0E /* HeaderComponent.swift */,
+				BE6021B41EEFEB59007A0F0E /* FooterComponent.swift */,
+				BE6021A31EEFC660007A0F0E /* StatusComponent.swift */,
+				BE6021AC1EEFD99D007A0F0E /* TitlesComponent.swift */,
+				BE6021B01EEFDC67007A0F0E /* TextsComponent.swift */,
+				BE6021AE1EEFDA30007A0F0E /* ImagesComponent.swift */,
+			);
+			name = Components;
+			sourceTree = "<group>";
+		};
+		BE6021A71EEFCA81007A0F0E /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				BE6021A81EEFCA97007A0F0E /* TitleCollectionViewCell.swift */,
+				BE6021AA1EEFD950007A0F0E /* ImageCollectionViewCell.swift */,
+				BE6021B21EEFEB1E007A0F0E /* TextCollectionReusableView.swift */,
+			);
+			name = Cells;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -204,7 +282,18 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				657016E01D97A8EA0096EC69 /* DDComponent.h in Headers */,
+				BE60218A1EEFC30D007A0F0E /* DDTableViewItemComponent.h in Headers */,
+				BE60217C1EEFC30D007A0F0E /* DDCollectionViewComponent.h in Headers */,
+				BE60218C1EEFC30D007A0F0E /* DDTableViewSectionComponent.h in Headers */,
+				BE60217E1EEFC30D007A0F0E /* DDCollectionViewItemComponent.h in Headers */,
+				BE6021841EEFC30D007A0F0E /* DDCollectionViewStatusComponent.h in Headers */,
+				BE6021881EEFC30D007A0F0E /* DDTableViewComponent.h in Headers */,
+				BE60218E1EEFC30D007A0F0E /* DDTableViewSectionGroupComponent.h in Headers */,
+				BE6021821EEFC30D007A0F0E /* DDCollectionViewSectionGroupComponent.h in Headers */,
+				BE6021801EEFC30D007A0F0E /* DDCollectionViewSectionComponent.h in Headers */,
+				BE6021861EEFC30D007A0F0E /* DDComponent.h in Headers */,
+				BE6021871EEFC30D007A0F0E /* DDTableViewComponent+Private.h in Headers */,
+				BE60217B1EEFC30D007A0F0E /* DDCollectionViewComponent+Private.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -313,18 +402,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				657016E91D97A9130096EC69 /* CollectionViewComponent.swift in Sources */,
-				657016EA1D97A9130096EC69 /* CollectionViewItemComponent.swift in Sources */,
-				657016EB1D97A9130096EC69 /* CollectionViewSectionComponent.swift in Sources */,
-				657016EC1D97A9130096EC69 /* CollectionViewSectionGroupComponent.swift in Sources */,
-				657016ED1D97A9130096EC69 /* UICollectionViewController.swift in Sources */,
-				657016EE1D97A9130096EC69 /* CollectionViewStatusComponent.swift in Sources */,
-				657016EF1D97A9130096EC69 /* TableViewComponent.swift in Sources */,
-				657016F01D97A9130096EC69 /* TableViewStatusComponent.swift in Sources */,
-				657016F11D97A9130096EC69 /* TableViewItemComponent.swift in Sources */,
-				657016F21D97A9130096EC69 /* TableViewSectionComponent.swift in Sources */,
-				657016F31D97A9130096EC69 /* TableViewSectionGroupComponent.swift in Sources */,
-				657016F41D97A9130096EC69 /* UITableViewController.swift in Sources */,
+				BE6021811EEFC30D007A0F0E /* DDCollectionViewSectionComponent.m in Sources */,
+				BE60217D1EEFC30D007A0F0E /* DDCollectionViewComponent.m in Sources */,
+				BE6021851EEFC30D007A0F0E /* DDCollectionViewStatusComponent.m in Sources */,
+				BE60218D1EEFC30D007A0F0E /* DDTableViewSectionComponent.m in Sources */,
+				BE6021831EEFC30D007A0F0E /* DDCollectionViewSectionGroupComponent.m in Sources */,
+				BE60217F1EEFC30D007A0F0E /* DDCollectionViewItemComponent.m in Sources */,
+				BE6021891EEFC30D007A0F0E /* DDTableViewComponent.m in Sources */,
+				BE60218B1EEFC30D007A0F0E /* DDTableViewItemComponent.m in Sources */,
+				BE60218F1EEFC30D007A0F0E /* DDTableViewSectionGroupComponent.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -332,24 +418,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				65C999431D68BC510019780A /* CollectionViewSectionComponent.swift in Sources */,
-				650DFA401D85C12E003112BF /* DDTableViewController.swift in Sources */,
-				650DFA3A1D849161003112BF /* TableViewSectionComponent.swift in Sources */,
-				656C7B931D96F86E009BC4B5 /* UITableViewController.swift in Sources */,
-				656C7B8D1D966E5A009BC4B5 /* TableViewStatusComponent.swift in Sources */,
-				65C9992A1D68AF5D0019780A /* ViewController.swift in Sources */,
+				BE6021A61EEFC8D7007A0F0E /* RootCollectionViewController.swift in Sources */,
+				BE6021A91EEFCA97007A0F0E /* TitleCollectionViewCell.swift in Sources */,
+				BE6021A41EEFC660007A0F0E /* StatusComponent.swift in Sources */,
+				BE6021AD1EEFD99D007A0F0E /* TitlesComponent.swift in Sources */,
+				BE6021B51EEFEB59007A0F0E /* FooterComponent.swift in Sources */,
+				BE6021981EEFC576007A0F0E /* HeaderFooterViewController.swift in Sources */,
 				65C999281D68AF5D0019780A /* AppDelegate.swift in Sources */,
-				65C9994B1D6903C60019780A /* UICollectionViewController.swift in Sources */,
-				650DFA3E1D85C0C6003112BF /* DDTestTableViewComponent.swift in Sources */,
-				650DFA3C1D849FB9003112BF /* TableViewSectionGroupComponent.swift in Sources */,
-				656C7B911D967EBC009BC4B5 /* CollectionViewStatusComponent.swift in Sources */,
-				65C9994F1D6906B40019780A /* DDTestCollectionViewItemComponent.swift in Sources */,
-				65C9994D1D69059D0019780A /* DDCollectionViewController.swift in Sources */,
-				65C999471D68CF320019780A /* CollectionViewSectionGroupComponent.swift in Sources */,
-				650DFA381D848EB4003112BF /* TableViewItemComponent.swift in Sources */,
-				65C999491D68F8530019780A /* CollectionViewComponent.swift in Sources */,
-				65C999411D68B9780019780A /* CollectionViewItemComponent.swift in Sources */,
-				650DFA361D848D70003112BF /* TableViewComponent.swift in Sources */,
+				BE6021B31EEFEB1E007A0F0E /* TextCollectionReusableView.swift in Sources */,
+				BE6021921EEFC50D007A0F0E /* SimpleViewController.swift in Sources */,
+				BE6021AF1EEFDA30007A0F0E /* ImagesComponent.swift in Sources */,
+				BE6021961EEFC54A007A0F0E /* StatusViewController.swift in Sources */,
+				BE6021AB1EEFD950007A0F0E /* ImageCollectionViewCell.swift in Sources */,
+				BE6021A01EEFC637007A0F0E /* HeaderComponent.swift in Sources */,
+				BE6021B11EEFDC67007A0F0E /* TextsComponent.swift in Sources */,
+				BE60219C1EEFC5DB007A0F0E /* HeaderStatusViewController.swift in Sources */,
+				BE60219A1EEFC5B1007A0F0E /* SectionsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -523,12 +607,12 @@
 		65C999371D68AF5E0019780A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Component/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.djs66256.Component;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = Component/DDCollectionBridgeHeader.h;
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -536,12 +620,12 @@
 		65C999381D68AF5E0019780A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Component/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.djs66256.Component;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = Component/DDCollectionBridgeHeader.h;
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
@@ -556,6 +640,7 @@
 				657016E61D97A8EA0096EC69 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		65C9991F1D68AF5D0019780A /* Build configuration list for PBXProject "Component" */ = {
 			isa = XCConfigurationList;
