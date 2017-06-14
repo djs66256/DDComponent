@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 import UIKit
+import DDComponent
 
 class HeaderComponent: DDCollectionViewSectionComponent {
     

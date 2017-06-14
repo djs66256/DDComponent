@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 import UIKit
+import DDComponent
 
 private func AttributedText(text: String) -> NSAttributedString {
     let paragraph = NSMutableParagraphStyle()

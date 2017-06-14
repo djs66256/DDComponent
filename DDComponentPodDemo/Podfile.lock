@@ -1,0 +1,16 @@
+PODS:
+  - DDComponent (0.5.0)
+
+DEPENDENCIES:
+  - DDComponent (from `../`)
+
+EXTERNAL SOURCES:
+  DDComponent:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  DDComponent: 1bfd7bf43875efcbb7e4e54798d52b1abea353eb
+
+PODFILE CHECKSUM: 3ae6a9c8353b46d3eb15bbc4778d79e2c5fc0a6d
+
+COCOAPODS: 1.2.0

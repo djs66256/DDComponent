@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 import UIKit
+import DDComponent
 
 enum Status: String {
     case error = "error"

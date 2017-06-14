@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 import UIKit
+import DDComponent
 
 private let imageSize = CGSize(width: 80, height: 80)
 
