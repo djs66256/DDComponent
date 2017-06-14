@@ -33,7 +33,7 @@ extern const CGFloat DDComponentAutomaticDimension;
 
 @interface DDCollectionViewBaseComponent : NSObject <DDCollectionViewComponent>
 
-@property (weak, nonatomic, nullable) DDCollectionViewBaseComponent *superComponent;
+@property (weak, nonatomic, nullable) DDCollectionViewBaseComponent *superComponent NS_SWIFT_NAME(superComponent);
 @property (weak, nonatomic, nullable) DDCollectionViewRootComponent *rootComponent;
 
 /**

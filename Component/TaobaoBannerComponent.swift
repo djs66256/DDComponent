@@ -22,28 +22,30 @@
 
 import UIKit
 
-class RootCollectionViewController: UICollectionViewController {
-
-    var rootComponent: DDCollectionViewRootComponent?
+class TaobaoBannerComponent: DDCollectionViewHeaderFooterSectionComponent {
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        rootComponent = DDCollectionViewRootComponent(collectionView: self.collectionView!, bind: true);
-        
-        let cellComponent = TitlesComponent()
-        cellComponent.navigationController = self.navigationController
-        cellComponent.cellModels = [
-            TitleModel(title: "simple", controllerClass: SimpleViewController.self),
-            TitleModel(title: "sections", controllerClass: SectionsViewController.self),
-            TitleModel(title: "Header Footer", controllerClass: HeaderFooterViewController.self),
-            TitleModel(title: "Status", controllerClass: StatusViewController.self),
-            TitleModel(title: "Header Footer Status", controllerClass: HeaderStatusViewController.self),
-            TitleModel(title: "Tao Bao Example 淘宝首页例子", controllerClass: TaobaoCollectionViewController.self)
-        ]
-        
-        rootComponent?.subComponents = [cellComponent]
-        self.collectionView?.reloadData()
+    override init() {
+        super.init()
+        self.size = CGSize(width: DDComponentAutomaticDimension, height: 100)
     }
-
+    
+    override func prepareCollectionView() {
+        super.prepareCollectionView()
+        
+        self.collectionView?.register(UINib(nibName: "TaobaoBanner", bundle: nil), forCellWithReuseIdentifier: "TaobaoBanner")
+    }
+    
+    override func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TaobaoBanner", for: indexPath)
+        
+        return cell
+    }
 }

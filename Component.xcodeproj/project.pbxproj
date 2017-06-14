@@ -49,6 +49,15 @@
 		BE6021B11EEFDC67007A0F0E /* TextsComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6021B01EEFDC67007A0F0E /* TextsComponent.swift */; };
 		BE6021B31EEFEB1E007A0F0E /* TextCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6021B21EEFEB1E007A0F0E /* TextCollectionReusableView.swift */; };
 		BE6021B51EEFEB59007A0F0E /* FooterComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6021B41EEFEB59007A0F0E /* FooterComponent.swift */; };
+		BE6021B81EEFFE1F007A0F0E /* TaobaoCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6021B71EEFFE1F007A0F0E /* TaobaoCollectionViewController.swift */; };
+		BE6021BA1EEFFFDA007A0F0E /* TaobaoBannerComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6021B91EEFFFDA007A0F0E /* TaobaoBannerComponent.swift */; };
+		BE6021BC1EEFFFE9007A0F0E /* TaobaoEntriesComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6021BB1EEFFFE9007A0F0E /* TaobaoEntriesComponent.swift */; };
+		BE6021BE1EEFFFFE007A0F0E /* TaobaoGoodsComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6021BD1EEFFFFE007A0F0E /* TaobaoGoodsComponent.swift */; };
+		BE6021C01EF00029007A0F0E /* TaobaoBanner.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE6021BF1EF00029007A0F0E /* TaobaoBanner.xib */; };
+		BE9B13FE1EF0FDFA009356BF /* TaobaoGoods0.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE9B13FA1EF0FDFA009356BF /* TaobaoGoods0.xib */; };
+		BE9B13FF1EF0FDFA009356BF /* TaobaoGoods1.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE9B13FB1EF0FDFA009356BF /* TaobaoGoods1.xib */; };
+		BE9B14001EF0FDFA009356BF /* TaobaoGoods2.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE9B13FC1EF0FDFA009356BF /* TaobaoGoods2.xib */; };
+		BE9B14011EF0FDFA009356BF /* TaobaoGoods3.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE9B13FD1EF0FDFA009356BF /* TaobaoGoods3.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -122,6 +131,15 @@
 		BE6021B01EEFDC67007A0F0E /* TextsComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextsComponent.swift; sourceTree = "<group>"; };
 		BE6021B21EEFEB1E007A0F0E /* TextCollectionReusableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextCollectionReusableView.swift; sourceTree = "<group>"; };
 		BE6021B41EEFEB59007A0F0E /* FooterComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FooterComponent.swift; sourceTree = "<group>"; };
+		BE6021B71EEFFE1F007A0F0E /* TaobaoCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaobaoCollectionViewController.swift; sourceTree = "<group>"; };
+		BE6021B91EEFFFDA007A0F0E /* TaobaoBannerComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaobaoBannerComponent.swift; sourceTree = "<group>"; };
+		BE6021BB1EEFFFE9007A0F0E /* TaobaoEntriesComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaobaoEntriesComponent.swift; sourceTree = "<group>"; };
+		BE6021BD1EEFFFFE007A0F0E /* TaobaoGoodsComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaobaoGoodsComponent.swift; sourceTree = "<group>"; };
+		BE6021BF1EF00029007A0F0E /* TaobaoBanner.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TaobaoBanner.xib; sourceTree = "<group>"; };
+		BE9B13FA1EF0FDFA009356BF /* TaobaoGoods0.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TaobaoGoods0.xib; sourceTree = "<group>"; };
+		BE9B13FB1EF0FDFA009356BF /* TaobaoGoods1.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TaobaoGoods1.xib; sourceTree = "<group>"; };
+		BE9B13FC1EF0FDFA009356BF /* TaobaoGoods2.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TaobaoGoods2.xib; sourceTree = "<group>"; };
+		BE9B13FD1EF0FDFA009356BF /* TaobaoGoods3.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TaobaoGoods3.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -174,6 +192,7 @@
 		65C999261D68AF5D0019780A /* Component */ = {
 			isa = PBXGroup;
 			children = (
+				BE6021B61EEFFE07007A0F0E /* TaoBao */,
 				BE6021A71EEFCA81007A0F0E /* Cells */,
 				BE60219E1EEFC614007A0F0E /* Components */,
 				BE60219D1EEFC5FE007A0F0E /* Controllers */,
@@ -273,6 +292,22 @@
 				BE6021B21EEFEB1E007A0F0E /* TextCollectionReusableView.swift */,
 			);
 			name = Cells;
+			sourceTree = "<group>";
+		};
+		BE6021B61EEFFE07007A0F0E /* TaoBao */ = {
+			isa = PBXGroup;
+			children = (
+				BE6021B71EEFFE1F007A0F0E /* TaobaoCollectionViewController.swift */,
+				BE6021B91EEFFFDA007A0F0E /* TaobaoBannerComponent.swift */,
+				BE6021BF1EF00029007A0F0E /* TaobaoBanner.xib */,
+				BE6021BB1EEFFFE9007A0F0E /* TaobaoEntriesComponent.swift */,
+				BE6021BD1EEFFFFE007A0F0E /* TaobaoGoodsComponent.swift */,
+				BE9B13FA1EF0FDFA009356BF /* TaobaoGoods0.xib */,
+				BE9B13FB1EF0FDFA009356BF /* TaobaoGoods1.xib */,
+				BE9B13FC1EF0FDFA009356BF /* TaobaoGoods2.xib */,
+				BE9B13FD1EF0FDFA009356BF /* TaobaoGoods3.xib */,
+			);
+			name = TaoBao;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -389,7 +424,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BE9B13FF1EF0FDFA009356BF /* TaobaoGoods1.xib in Resources */,
 				65C999321D68AF5E0019780A /* LaunchScreen.storyboard in Resources */,
+				BE9B14011EF0FDFA009356BF /* TaobaoGoods3.xib in Resources */,
+				BE6021C01EF00029007A0F0E /* TaobaoBanner.xib in Resources */,
+				BE9B13FE1EF0FDFA009356BF /* TaobaoGoods0.xib in Resources */,
+				BE9B14001EF0FDFA009356BF /* TaobaoGoods2.xib in Resources */,
 				65C9992F1D68AF5D0019780A /* Assets.xcassets in Resources */,
 				65C9992D1D68AF5D0019780A /* Main.storyboard in Resources */,
 			);
@@ -421,7 +461,9 @@
 				BE6021A61EEFC8D7007A0F0E /* RootCollectionViewController.swift in Sources */,
 				BE6021A91EEFCA97007A0F0E /* TitleCollectionViewCell.swift in Sources */,
 				BE6021A41EEFC660007A0F0E /* StatusComponent.swift in Sources */,
+				BE6021BA1EEFFFDA007A0F0E /* TaobaoBannerComponent.swift in Sources */,
 				BE6021AD1EEFD99D007A0F0E /* TitlesComponent.swift in Sources */,
+				BE6021B81EEFFE1F007A0F0E /* TaobaoCollectionViewController.swift in Sources */,
 				BE6021B51EEFEB59007A0F0E /* FooterComponent.swift in Sources */,
 				BE6021981EEFC576007A0F0E /* HeaderFooterViewController.swift in Sources */,
 				65C999281D68AF5D0019780A /* AppDelegate.swift in Sources */,
@@ -430,10 +472,12 @@
 				BE6021AF1EEFDA30007A0F0E /* ImagesComponent.swift in Sources */,
 				BE6021961EEFC54A007A0F0E /* StatusViewController.swift in Sources */,
 				BE6021AB1EEFD950007A0F0E /* ImageCollectionViewCell.swift in Sources */,
+				BE6021BE1EEFFFFE007A0F0E /* TaobaoGoodsComponent.swift in Sources */,
 				BE6021A01EEFC637007A0F0E /* HeaderComponent.swift in Sources */,
 				BE6021B11EEFDC67007A0F0E /* TextsComponent.swift in Sources */,
 				BE60219C1EEFC5DB007A0F0E /* HeaderStatusViewController.swift in Sources */,
 				BE60219A1EEFC5B1007A0F0E /* SectionsViewController.swift in Sources */,
+				BE6021BC1EEFFFE9007A0F0E /* TaobaoEntriesComponent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

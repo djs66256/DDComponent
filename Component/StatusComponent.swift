@@ -30,6 +30,7 @@ enum Status: String {
 }
 
 class StatusComponent: DDCollectionViewStatusComponent {
+    
     var state: Status? {
         get {
             if self.currentState != nil {
@@ -41,6 +42,17 @@ class StatusComponent: DDCollectionViewStatusComponent {
         }
         set {
             self.currentState = newValue?.rawValue
+        }
+    }
+    
+    var emptySize: CGSize? {
+        didSet {
+            let states = [Status.error.rawValue, Status.noData.rawValue, Status.loading.rawValue]
+            for st in states {
+                if let size = self.emptySize, let comp = self.component(forState: st) as? StateComponent {
+                    comp.size = size
+                }
+            }
         }
     }
     
