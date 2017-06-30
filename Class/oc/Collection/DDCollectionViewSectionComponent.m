@@ -46,13 +46,18 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     CGSize size = self.size;
-    UIEdgeInsets inset = [self collectionView:collectionView
-                                       layout:collectionViewLayout
-                       insetForSectionAtIndex:indexPath.section];
-    if (size.width == DDComponentAutomaticDimension) {
+    BOOL autoWidth = size.width == DDComponentAutomaticDimension;
+    BOOL autoHeight = size.height == DDComponentAutomaticDimension;
+    UIEdgeInsets inset = UIEdgeInsetsZero;
+    if (autoWidth || autoHeight) {
+        inset = [self collectionView:collectionView
+                              layout:collectionViewLayout
+              insetForSectionAtIndex:indexPath.section];
+    }
+    if (autoWidth) {
         size.width = collectionView.frame.size.width - inset.left - inset.right;
     }
-    if (size.height == DDComponentAutomaticDimension) {
+    if (autoHeight) {
         size.height = collectionView.frame.size.height - inset.top - inset.bottom;
     }
     return size;
@@ -60,13 +65,18 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
     CGSize size = self.headerSize;
-    UIEdgeInsets inset = [self collectionView:collectionView
-                                       layout:collectionViewLayout
-                       insetForSectionAtIndex:section];
-    if (size.width == DDComponentAutomaticDimension) {
+    BOOL autoWidth = size.width == DDComponentAutomaticDimension;
+    BOOL autoHeight = size.height == DDComponentAutomaticDimension;
+    UIEdgeInsets inset = UIEdgeInsetsZero;
+    if (autoWidth || autoHeight) {
+        inset = [self collectionView:collectionView
+                              layout:collectionViewLayout
+              insetForSectionAtIndex:section];
+    }
+    if (autoWidth) {
         size.width = collectionView.frame.size.width - inset.left - inset.right;
     }
-    if (size.height == DDComponentAutomaticDimension) {
+    if (autoHeight) {
         size.height = collectionView.frame.size.height - inset.top - inset.bottom;
     }
     return size;
@@ -74,13 +84,18 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section {
     CGSize size = self.footerSize;
-    UIEdgeInsets inset = [self collectionView:collectionView
+    BOOL autoWidth = size.width == DDComponentAutomaticDimension;
+    BOOL autoHeight = size.height == DDComponentAutomaticDimension;
+    UIEdgeInsets inset = UIEdgeInsetsZero;
+    if (autoWidth || autoHeight) {
+        inset = [self collectionView:collectionView
                                        layout:collectionViewLayout
                        insetForSectionAtIndex:section];
-    if (size.width == DDComponentAutomaticDimension) {
+    }
+    if (autoWidth) {
         size.width = collectionView.frame.size.width - inset.left - inset.right;
     }
-    if (size.height == DDComponentAutomaticDimension) {
+    if (autoHeight) {
         size.height = collectionView.frame.size.height - inset.top - inset.bottom;
     }
     return size;

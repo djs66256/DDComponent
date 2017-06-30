@@ -35,13 +35,18 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     CGSize size = self.size;
-    UIEdgeInsets inset = [self.rootComponent collectionView:collectionView
-                                                     layout:collectionViewLayout
-                                     insetForSectionAtIndex:indexPath.section];
-    if (size.width == DDComponentAutomaticDimension) {
+    BOOL autoWidth = size.width == DDComponentAutomaticDimension;
+    BOOL autoHeight = size.height == DDComponentAutomaticDimension;
+    UIEdgeInsets inset = UIEdgeInsetsZero;
+    if (autoWidth || autoHeight) {
+        inset = [self.rootComponent collectionView:collectionView
+                                            layout:collectionViewLayout
+                            insetForSectionAtIndex:indexPath.section];
+    }
+    if (autoWidth) {
         size.width = collectionView.frame.size.width - inset.left - inset.right;
     }
-    if (size.height == DDComponentAutomaticDimension) {
+    if (autoHeight) {
         size.height = collectionView.frame.size.height - inset.top - inset.bottom;
     }
     return size;
