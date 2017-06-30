@@ -23,13 +23,15 @@
 #ifndef DDComponent_h
 #define DDComponent_h
 
-#import "DDCollectionViewItemComponent.h"
-#import "DDCollectionViewSectionComponent.h"
-#import "DDCollectionViewSectionGroupComponent.h"
-#import "DDCollectionViewStatusComponent.h"
+#import "DDCollectionComponent.h"
 
-#import "DDTableViewItemComponent.h"
-#import "DDTableViewSectionComponent.h"
-#import "DDTableViewSectionGroupComponent.h"
+//#import "DDCollectionViewItemComponent.h"
+//#import "DDCollectionViewSectionComponent.h"
+//#import "DDCollectionViewSectionGroupComponent.h"
+//#import "DDCollectionViewStatusComponent.h"
+//
+//#import "DDTableViewItemComponent.h"
+//#import "DDTableViewSectionComponent.h"
+//#import "DDTableViewSectionGroupComponent.h"
 
 #endif /* DDComponent_h */
