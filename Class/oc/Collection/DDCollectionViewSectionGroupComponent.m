@@ -50,13 +50,14 @@
 
 - (NSInteger)firstSectionOfSubComponent:(id<DDCollectionViewComponent>)subComp {
     NSInteger section = self.section;
-    if (self.collectionView) {
+    UICollectionView *collectionView = self.collectionView;
+    if (collectionView) {
         for (DDCollectionViewBaseComponent *comp in _subComponents) {
             if (comp == subComp) {
                 return section;
             }
             else {
-                section += [comp numberOfSectionsInCollectionView:self.collectionView];
+                section += [comp numberOfSectionsInCollectionView:collectionView];
             }
         }
     }
@@ -64,10 +65,11 @@
 }
 
 - (DDCollectionViewBaseComponent *)componentAtSection:(NSInteger)atSection {
-    if (self.collectionView) {
+    UICollectionView *collectionView = self.collectionView;
+    if (collectionView) {
         NSInteger section = self.section;
         for (DDCollectionViewBaseComponent *comp in _subComponents) {
-            NSInteger count = [comp numberOfSectionsInCollectionView:self.collectionView];
+            NSInteger count = [comp numberOfSectionsInCollectionView:collectionView];
             if (section <= atSection && section+count > atSection) {
                 return comp;
             }
