@@ -293,6 +293,7 @@
             [_subComponents enumerateObjectsUsingBlock:^(DDCollectionViewBaseComponent *obj, NSUInteger idx, BOOL *stop) {
                 if (obj == subComp) {
                     *stop = YES;
+                    matched = YES;
                 }
                 else {
                     if (_numberOfItemsCache.size() > idx) {
