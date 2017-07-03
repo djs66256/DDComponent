@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 #import "DDCollectionViewSectionGroupComponent.h"
-#import "DDComponentCache.h"
 #import "DDCollectionViewComponent+Cache.h"
 #import <vector>
 
