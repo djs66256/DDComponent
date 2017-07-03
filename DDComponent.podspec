@@ -29,7 +29,7 @@ Make a collection controller to several component. Make the controller smaller.
   # s.tvos.deployment_target = "9.0"
 
   s.source       = { :git => "https://github.com/djs66256/DDComponent.git", :tag => "#{s.version}" }
-  s.source_files  = "Class/oc", "Class/oc/Collection/**/*.{h,m,swift}"
+  s.source_files  = "Class/oc", "Class/oc/Collection/**/*.{h,m,mm,swift}"
   s.exclude_files = "Class/Exclude"
 
   # s.public_header_files = "Classes/**/*.h"
