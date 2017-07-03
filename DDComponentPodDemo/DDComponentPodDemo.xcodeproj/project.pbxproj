@@ -36,6 +36,7 @@
 		BE9B14631EF106D1009356BF /* TextsComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9B14421EF106D1009356BF /* TextsComponent.swift */; };
 		BE9B14641EF106D1009356BF /* TitleCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9B14431EF106D1009356BF /* TitleCollectionViewCell.swift */; };
 		BE9B14651EF106D1009356BF /* TitlesComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9B14441EF106D1009356BF /* TitlesComponent.swift */; };
+		BEAF28991F0A435B00A90856 /* ObjcComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = BEAF28981F0A435B00A90856 /* ObjcComponent.m */; };
 		EDAD731D27FE36F74E135909 /* Pods_DDComponentPodDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9139AB6CEDB4A7F7076A2419 /* Pods_DDComponentPodDemo.framework */; };
 /* End PBXBuildFile section */
 
@@ -73,6 +74,8 @@
 		BE9B14421EF106D1009356BF /* TextsComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextsComponent.swift; sourceTree = "<group>"; };
 		BE9B14431EF106D1009356BF /* TitleCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TitleCollectionViewCell.swift; sourceTree = "<group>"; };
 		BE9B14441EF106D1009356BF /* TitlesComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TitlesComponent.swift; sourceTree = "<group>"; };
+		BEAF28971F0A435B00A90856 /* ObjcComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjcComponent.h; sourceTree = "<group>"; };
+		BEAF28981F0A435B00A90856 /* ObjcComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjcComponent.m; sourceTree = "<group>"; };
 		C4FF08DF325936EE43086236 /* Pods-DDComponentPodDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DDComponentPodDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DDComponentPodDemo/Pods-DDComponentPodDemo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -155,6 +158,8 @@
 				BE9B14421EF106D1009356BF /* TextsComponent.swift */,
 				BE9B14431EF106D1009356BF /* TitleCollectionViewCell.swift */,
 				BE9B14441EF106D1009356BF /* TitlesComponent.swift */,
+				BEAF28971F0A435B00A90856 /* ObjcComponent.h */,
+				BEAF28981F0A435B00A90856 /* ObjcComponent.m */,
 			);
 			name = Component;
 			path = ../../Component;
@@ -305,6 +310,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BE9B145B1EF106D1009356BF /* TaobaoCollectionViewController.swift in Sources */,
+				BEAF28991F0A435B00A90856 /* ObjcComponent.m in Sources */,
 				BE9B14551EF106D1009356BF /* SectionsViewController.swift in Sources */,
 				BE9B14541EF106D1009356BF /* RootCollectionViewController.swift in Sources */,
 				BE9B144D1EF106D1009356BF /* FooterComponent.swift in Sources */,

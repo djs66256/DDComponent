@@ -22,11 +22,24 @@
 
 #import "DDCollectionViewComponent.h"
 #import "DDCollectionViewComponent+Private.h"
+#import "DDCollectionViewComponent+Cache.h"
 #import "DDCollectionViewSectionGroupComponent.h"
 
 const CGFloat DDComponentAutomaticDimension = CGFLOAT_MAX;
 
 @implementation DDCollectionViewBaseComponent
+@synthesize dataSourceCacheEnable=_dataSourceCacheEnable;
+@synthesize sizeCacheEnable=_sizeCacheEnable;
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _dataSourceCacheEnable = YES;
+        _sizeCacheEnable = YES;
+    }
+    return self;
+}
 
 - (DDCollectionViewRootComponent *)rootComponent {
     return self.superComponent.rootComponent;
@@ -45,6 +58,9 @@ const CGFloat DDComponentAutomaticDimension = CGFLOAT_MAX;
 }
 
 - (void)prepareCollectionView {}
+
+- (void)clearDataSourceCache {}
+- (void)clearSizeCache {}
 
 //- (void)willMoveToComponent:(DDCollectionViewBaseComponent *)component {}
 //- (void)didMoveToComponent {}

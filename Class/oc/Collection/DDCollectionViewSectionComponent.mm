@@ -22,6 +22,8 @@
 
 #import "DDCollectionViewSectionComponent.h"
 #import "DDCollectionViewComponent+Private.h"
+#import "DDCollectionViewComponent+Cache.h"
+#import <vector>
 
 @implementation DDCollectionViewSectionComponent
 
@@ -213,7 +215,9 @@
 
 @end
 
-@implementation DDCollectionViewItemGroupComponent
+@implementation DDCollectionViewItemGroupComponent {
+    std::vector<NSInteger> _numberOfItemsCache;
+}
 
 - (void)setSubComponents:(NSArray *)subComponents {
     for (DDCollectionViewBaseComponent *comp in _subComponents) {
@@ -241,15 +245,38 @@
 
 - (DDCollectionViewBaseComponent *)componentAtItem:(NSInteger)atItem {
     UICollectionView *collectionView = self.collectionView;
+    __block DDCollectionViewBaseComponent *component = nil;
     if (collectionView) {
-        NSInteger item = self.item;
-        NSInteger section = self.section;
-        for (DDCollectionViewBaseComponent *comp in _subComponents) {
-            NSInteger count = [comp collectionView:collectionView numberOfItemsInSection:section];
-            if (item <= atItem && item+count > atItem) {
-                return comp;
+        __block NSInteger item = self.item;
+        if (self.dataSourceCacheEnable) {
+            __block NSInteger section = -1; // Lazy load section.
+            [_subComponents enumerateObjectsUsingBlock:^(DDCollectionViewBaseComponent *obj, NSUInteger idx, BOOL *stop) {
+                NSInteger count = 0;
+                if (_numberOfItemsCache.size() > idx) {
+                    count = _numberOfItemsCache[idx];
+                }
+                else {
+                    if (section < 0) {
+                        section = self.section;
+                    }
+                    count = [obj collectionView:collectionView numberOfItemsInSection:section];
+                }
+                if (item <= atItem && item+count > atItem) {
+                    component = obj;
+                    *stop = YES;
+                }
+                item += count;
+            }];
+        }
+        else {
+            NSInteger section = self.section;
+            for (DDCollectionViewBaseComponent *comp in _subComponents) {
+                NSInteger count = [comp collectionView:collectionView numberOfItemsInSection:section];
+                if (item <= atItem && item+count > atItem) {
+                    return comp;
+                }
+                item += count;
             }
-            item += count;
         }
     }
     return nil;
@@ -258,14 +285,35 @@
 - (NSInteger)firstItemOfSubComponent:(id<DDCollectionViewComponent>)subComp {
     UICollectionView *collectionView = self.collectionView;
     if (collectionView) {
-        NSInteger item = self.item;
-        NSInteger section = self.section;
-        for (DDCollectionViewBaseComponent *comp in _subComponents) {
-            if (comp == subComp) {
-                return item;
-            }
-            else {
-                item += [comp collectionView:collectionView numberOfItemsInSection:section];
+        __block NSInteger item = self.item;
+        if (self.dataSourceCacheEnable) {
+            __block NSInteger section = -1; // Lazy load section.
+            [_subComponents enumerateObjectsUsingBlock:^(DDCollectionViewBaseComponent *obj, NSUInteger idx, BOOL *stop) {
+                if (obj == subComp) {
+                    *stop = YES;
+                }
+                else {
+                    if (_numberOfItemsCache.size() > idx) {
+                        item += _numberOfItemsCache[idx];
+                    }
+                    else {
+                        if (section < 0) {
+                            section = self.section;
+                        }
+                        item += [obj collectionView:collectionView numberOfItemsInSection:section];
+                    }
+                }
+            }];
+        }
+        else {
+            NSInteger section = self.section;
+            for (DDCollectionViewBaseComponent *comp in _subComponents) {
+                if (comp == subComp) {
+                    return item;
+                }
+                else {
+                    item += [comp collectionView:collectionView numberOfItemsInSection:section];
+                }
             }
         }
     }
@@ -278,8 +326,18 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     NSInteger count = 0;
-    for (DDCollectionViewBaseComponent *comp in _subComponents) {
-        count += [comp collectionView:collectionView numberOfItemsInSection:section];
+    if (self.dataSourceCacheEnable) {
+        _numberOfItemsCache.clear();
+        for (DDCollectionViewBaseComponent *comp in _subComponents) {
+            NSInteger number = [comp collectionView:collectionView numberOfItemsInSection:section];
+            count += number;
+            _numberOfItemsCache.push_back(number);
+        }
+    }
+    else {
+        for (DDCollectionViewBaseComponent *comp in _subComponents) {
+            count += [comp collectionView:collectionView numberOfItemsInSection:section];
+        }
     }
     return count;
 }

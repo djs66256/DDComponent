@@ -21,8 +21,13 @@
 // SOFTWARE.
 
 #import "DDCollectionViewSectionGroupComponent.h"
+#import "DDComponentCache.h"
+#import "DDCollectionViewComponent+Cache.h"
+#import <vector>
 
-@implementation DDCollectionViewSectionGroupComponent
+@implementation DDCollectionViewSectionGroupComponent {
+    std::vector<NSInteger> _numberOfSectionCache;
+}
 
 - (void)setSubComponents:(NSArray *)subComponents {
     for (DDCollectionViewBaseComponent *comp in _subComponents) {
@@ -49,40 +54,65 @@
 }
 
 - (NSInteger)firstSectionOfSubComponent:(id<DDCollectionViewComponent>)subComp {
-    NSInteger section = self.section;
+    __block NSInteger section = self.section;
     UICollectionView *collectionView = self.collectionView;
     if (collectionView) {
-        for (DDCollectionViewBaseComponent *comp in _subComponents) {
+        [_subComponents enumerateObjectsUsingBlock:^(DDCollectionViewBaseComponent *comp, NSUInteger idx, BOOL *stop) {
             if (comp == subComp) {
-                return section;
+                *stop = YES;
             }
             else {
-                section += [comp numberOfSectionsInCollectionView:collectionView];
+                // When dataSourceCacheEnable = NO, _numberOfSectionCache.size == 0
+                if (_numberOfSectionCache.size() > idx) {
+                    section += _numberOfSectionCache[idx];
+                }
+                else {
+                    section += [comp numberOfSectionsInCollectionView:collectionView];
+                }
             }
-        }
+        }];
     }
     return section;
 }
 
 - (DDCollectionViewBaseComponent *)componentAtSection:(NSInteger)atSection {
     UICollectionView *collectionView = self.collectionView;
+    __block DDCollectionViewBaseComponent *component = nil;
     if (collectionView) {
-        NSInteger section = self.section;
-        for (DDCollectionViewBaseComponent *comp in _subComponents) {
-            NSInteger count = [comp numberOfSectionsInCollectionView:collectionView];
+        __block NSInteger section = self.section;
+        [_subComponents enumerateObjectsUsingBlock:^(DDCollectionViewBaseComponent *comp, NSUInteger idx, BOOL *stop) {
+            NSInteger count = 0;
+            // When dataSourceCacheEnable = NO, _numberOfSectionCache.size == 0
+            if (_numberOfSectionCache.size() > idx) {
+                count = _numberOfSectionCache[idx];
+            }
+            else {
+                count = [comp numberOfSectionsInCollectionView:collectionView];
+            }
             if (section <= atSection && section+count > atSection) {
-                return comp;
+                component = comp;
+                *stop = YES;
             }
             section += count;
-        }
+        }];
     }
-    return nil;
+    return component;
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     NSInteger sections = 0;
-    for (DDCollectionViewBaseComponent *comp in _subComponents) {
-        sections += [comp numberOfSectionsInCollectionView:collectionView];
+    if (self.dataSourceCacheEnable) {
+        _numberOfSectionCache.clear();
+        for (DDCollectionViewBaseComponent *comp in _subComponents) {
+            NSInteger number = [comp numberOfSectionsInCollectionView:collectionView];
+            sections += number;
+            _numberOfSectionCache.push_back(number);
+        }
+    }
+    else {
+        for (DDCollectionViewBaseComponent *comp in _subComponents) {
+            sections += [comp numberOfSectionsInCollectionView:collectionView];
+        }
     }
     return sections;
 }
