@@ -53,11 +53,13 @@
 }
 
 - (NSInteger)firstSectionOfSubComponent:(id<DDCollectionViewComponent>)subComp {
-    __block NSInteger section = self.section;
     UICollectionView *collectionView = self.collectionView;
     if (collectionView) {
+        __block NSInteger section = self.section;
+        __block BOOL matched = NO;
         [_subComponents enumerateObjectsUsingBlock:^(DDCollectionViewBaseComponent *comp, NSUInteger idx, BOOL *stop) {
             if (comp == subComp) {
+                matched = YES;
                 *stop = YES;
             }
             else {
@@ -70,8 +72,11 @@
                 }
             }
         }];
+        if (matched) {
+            return section;
+        }
     }
-    return section;
+    return 0;
 }
 
 - (DDCollectionViewBaseComponent *)componentAtSection:(NSInteger)atSection {
