@@ -115,6 +115,7 @@
     NSInteger sections = 0;
     if (self.dataSourceCacheEnable) {
         _numberOfSectionCache.clear();
+        _numberOfSectionCache.reserve(_subComponents.count);
         for (DDCollectionViewBaseComponent *comp in _subComponents) {
             NSInteger number = [comp numberOfSectionsInCollectionView:collectionView];
             sections += number;

@@ -349,6 +349,7 @@
     NSInteger count = 0;
     if (self.dataSourceCacheEnable) {
         _numberOfItemsCache.clear();
+        _numberOfItemsCache.reserve(_subComponents.count);
         for (DDCollectionViewBaseComponent *comp in _subComponents) {
             NSInteger number = [comp collectionView:collectionView numberOfItemsInSection:section];
             count += number;
