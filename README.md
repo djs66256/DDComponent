@@ -75,6 +75,37 @@ And the other api is also the same.
 }
 ```
 
+# Debug
+
+```
+po self.rootComponent
+<DDCollectionViewRootComponent: 0x6080000bb900>
+  [SubComponents]
+    <DDComponentPodDemo.StatusComponent: 0x60800009b440>
+      -[loading] <DDComponentPodDemo.StateComponent: 0x6080001651c0>
+      *[normal] <DDCollectionViewSectionGroupComponent: 0x60800009acc0>
+          [SubComponents]
+            <DDComponentPodDemo.TaobaoBannerComponent: 0x6080001235c0>
+            <DDComponentPodDemo.TaobaoEntriesComponent: 0x6080001524e0>
+            <DDComponentPodDemo.TaobaoGoodsComponent: 0x608000151eb0>
+            <DDComponentPodDemo.TaobaoGoodsComponent: 0x608000151510>
+              [Header] <DDComponentPodDemo.HeaderComponent: 0x608000151250>
+            <DDComponentPodDemo.TaobaoGoodsComponent: 0x608000152220>
+            <DDComponentPodDemo.TaobaoGoodsComponent: 0x608000152380>
+            <DDComponentPodDemo.TaobaoGoodsComponent: 0x6080001511a0>
+            <DDComponentPodDemo.TaobaoGoodsComponent: 0x608000151b40>
+              [Header] <DDComponentPodDemo.HeaderComponent: 0x608000151ca0>
+            <DDComponentPodDemo.TaobaoGoodsComponent: 0x608000152170>
+            <DDComponentPodDemo.TaobaoGoodsComponent: 0x6080001515c0>
+            <DDComponentPodDemo.TaobaoGoodsComponent: 0x608000151a90>
+              [Header] <DDComponentPodDemo.HeaderComponent: 0x608000151f60>
+            <DDComponentPodDemo.TaobaoGoodsComponent: 0x608000151930>
+            <DDComponentPodDemo.TaobaoGoodsComponent: 0x608000151670>
+            <DDComponentPodDemo.TaobaoGoodsComponent: 0x608000152640>
+      -[error] <DDComponentPodDemo.StateComponent: 0x608000165340>
+      -[noData] <DDComponentPodDemo.StateComponent: 0x608000165400>
+```
+
 # Structure
 
 ![](./Images/structure.png)
@@ -93,3 +124,11 @@ Use `size`, `inset` first, then override the `delegate` api.
 # Some Question
 
 As use the system api, `indexPath` is the `UICollectionView`'s location. It is not the index of component's dataSource.
+
+# Revision
+
+**0.5.2** Optimize the `numberOf`. Add dataSource cache and collectionView cache.
+
+**0.5.1** Only support `UICollectionView`.
+
+**0.5.0** New DDComponent using Objective-C.
