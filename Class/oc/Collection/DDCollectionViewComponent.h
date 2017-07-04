@@ -39,7 +39,7 @@ extern const CGFloat DDComponentAutomaticDimension;
 /**
  The collection host by component. It is nil before RootComponent attach to a collectionView.
  */
-@property (readonly, nonatomic, nullable) UICollectionView *collectionView;
+@property (readonly, weak, nonatomic, nullable) UICollectionView *collectionView;
 
 /**
  Register cell should be here, and only for register! It may invoke many times.

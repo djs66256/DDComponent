@@ -133,6 +133,13 @@
 
 @implementation DDCollectionViewHeaderFooterSectionComponent
 
+- (void)setCollectionView:(UICollectionView *)collectionView {
+    [super setCollectionView:collectionView];
+    self.headerComponent.collectionView = collectionView;
+    self.footerComponent.collectionView = collectionView;
+    self.headerFooterComponent.collectionView = collectionView;
+}
+
 - (void)setHeaderComponent:(DDCollectionViewSectionComponent *)headerComponent {
     if (_headerComponent.superComponent == self) _headerComponent.superComponent = nil;
     _headerComponent = headerComponent;
@@ -232,6 +239,13 @@
             [comp prepareCollectionView];
         }
     }
+}
+
+- (void)setCollectionView:(UICollectionView *)collectionView {
+    [super setCollectionView:collectionView];
+    [_subComponents enumerateObjectsUsingBlock:^(__kindof DDCollectionViewBaseComponent * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [obj setCollectionView:collectionView];
+    }];
 }
 
 - (void)prepareCollectionView {

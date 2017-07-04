@@ -28,6 +28,7 @@
 const CGFloat DDComponentAutomaticDimension = CGFLOAT_MAX;
 
 @implementation DDCollectionViewBaseComponent
+@synthesize collectionView=_collectionView;
 @synthesize dataSourceCacheEnable=_dataSourceCacheEnable;
 @synthesize sizeCacheEnable=_sizeCacheEnable;
 
@@ -45,8 +46,13 @@ const CGFloat DDComponentAutomaticDimension = CGFLOAT_MAX;
     return self.superComponent.rootComponent;
 }
 
+- (void)setSuperComponent:(DDCollectionViewBaseComponent *)superComponent {
+    _superComponent = superComponent;
+    self.collectionView = _superComponent.collectionView;
+}
+
 - (UICollectionView *)collectionView {
-    return self.superComponent.collectionView;
+    return _collectionView ?: self.superComponent.collectionView;
 }
 
 - (NSInteger)firstItemOfSubComponent:(id<DDCollectionViewComponent>)subComp {

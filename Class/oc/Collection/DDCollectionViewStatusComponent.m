@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 #import "DDCollectionViewStatusComponent.h"
+#import "DDCollectionViewComponent+Private.h"
 
 @implementation DDCollectionViewStatusComponent {
     NSMutableDictionary<NSString *, DDCollectionViewBaseComponent *> *_componentDict;
@@ -41,6 +42,13 @@
 
 - (NSInteger)firstSectionOfSubComponent:(id<DDCollectionViewComponent>)subComp {
     return self.section;
+}
+
+- (void)setCollectionView:(UICollectionView *)collectionView {
+    [super setCollectionView:collectionView];
+    [_componentDict enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, DDCollectionViewBaseComponent * _Nonnull obj, BOOL * _Nonnull stop) {
+        [obj setCollectionView:collectionView];
+    }];
 }
 
 - (void)prepareCollectionView {
@@ -269,6 +277,13 @@
     _headerFooterComponent = headerFooterComponent;
     _headerFooterComponent.superComponent = self;
     if (self.collectionView) [_headerFooterComponent prepareCollectionView];
+}
+
+- (void)setCollectionView:(UICollectionView *)collectionView {
+    [super setCollectionView:collectionView];
+    self.headerComponent.collectionView = collectionView;
+    self.footerComponent.collectionView = collectionView;
+    self.headerFooterComponent.collectionView = collectionView;
 }
 
 - (void)prepareCollectionView {

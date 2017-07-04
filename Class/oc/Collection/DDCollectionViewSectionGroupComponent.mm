@@ -22,6 +22,7 @@
 
 #import "DDCollectionViewSectionGroupComponent.h"
 #import "DDCollectionViewComponent+Cache.h"
+#import "DDCollectionViewComponent+Private.h"
 #import <vector>
 
 @implementation DDCollectionViewSectionGroupComponent {
@@ -41,6 +42,13 @@
             [comp prepareCollectionView];
         }
     }
+}
+
+- (void)setCollectionView:(UICollectionView *)collectionView {
+    [super setCollectionView:collectionView];
+    [_subComponents enumerateObjectsUsingBlock:^(__kindof DDCollectionViewBaseComponent * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [obj setCollectionView:collectionView];
+    }];
 }
 
 - (void)prepareCollectionView {
@@ -280,7 +288,7 @@
 @end
 
 @interface DDCollectionViewRootComponent ()
-@property (nonatomic, readwrite, weak) UICollectionView *collectionView;
+//@property (nonatomic, readwrite, weak) UICollectionView *collectionView;
 @property (nonatomic, weak) id<UIScrollViewDelegate> scrollDelegate;
 @end
 
