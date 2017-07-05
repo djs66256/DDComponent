@@ -30,14 +30,14 @@ const CGFloat DDComponentAutomaticDimension = CGFLOAT_MAX;
 @implementation DDCollectionViewBaseComponent
 @synthesize collectionView=_collectionView;
 @synthesize dataSourceCacheEnable=_dataSourceCacheEnable;
-@synthesize sizeCacheEnable=_sizeCacheEnable;
+//@synthesize sizeCacheEnable=_sizeCacheEnable;
 
 - (instancetype)init
 {
     self = [super init];
     if (self) {
         _dataSourceCacheEnable = YES;
-        _sizeCacheEnable = YES;
+//        _sizeCacheEnable = YES;
     }
     return self;
 }
