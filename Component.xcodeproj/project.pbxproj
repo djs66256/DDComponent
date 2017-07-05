@@ -13,19 +13,16 @@
 		65C9992D1D68AF5D0019780A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65C9992B1D68AF5D0019780A /* Main.storyboard */; };
 		65C9992F1D68AF5D0019780A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 65C9992E1D68AF5D0019780A /* Assets.xcassets */; };
 		65C999321D68AF5E0019780A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65C999301D68AF5E0019780A /* LaunchScreen.storyboard */; };
-		BE60217B1EEFC30D007A0F0E /* DDCollectionViewComponent+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = BE6021651EEFC30D007A0F0E /* DDCollectionViewComponent+Private.h */; };
 		BE60217C1EEFC30D007A0F0E /* DDCollectionViewComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = BE6021661EEFC30D007A0F0E /* DDCollectionViewComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BE60217D1EEFC30D007A0F0E /* DDCollectionViewComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = BE6021671EEFC30D007A0F0E /* DDCollectionViewComponent.m */; };
 		BE60217E1EEFC30D007A0F0E /* DDCollectionViewItemComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = BE6021681EEFC30D007A0F0E /* DDCollectionViewItemComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BE60217F1EEFC30D007A0F0E /* DDCollectionViewItemComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = BE6021691EEFC30D007A0F0E /* DDCollectionViewItemComponent.m */; };
 		BE6021801EEFC30D007A0F0E /* DDCollectionViewSectionComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = BE60216A1EEFC30D007A0F0E /* DDCollectionViewSectionComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		BE6021811EEFC30D007A0F0E /* DDCollectionViewSectionComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = BE60216B1EEFC30D007A0F0E /* DDCollectionViewSectionComponent.m */; };
 		BE6021821EEFC30D007A0F0E /* DDCollectionViewSectionGroupComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = BE60216C1EEFC30D007A0F0E /* DDCollectionViewSectionGroupComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		BE6021831EEFC30D007A0F0E /* DDCollectionViewSectionGroupComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = BE60216D1EEFC30D007A0F0E /* DDCollectionViewSectionGroupComponent.m */; };
 		BE6021841EEFC30D007A0F0E /* DDCollectionViewStatusComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = BE60216E1EEFC30D007A0F0E /* DDCollectionViewStatusComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BE6021851EEFC30D007A0F0E /* DDCollectionViewStatusComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = BE60216F1EEFC30D007A0F0E /* DDCollectionViewStatusComponent.m */; };
 		BE6021861EEFC30D007A0F0E /* DDComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = BE6021701EEFC30D007A0F0E /* DDComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		BE6021871EEFC30D007A0F0E /* DDTableViewComponent+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = BE6021721EEFC30D007A0F0E /* DDTableViewComponent+Private.h */; };
+		BE6021871EEFC30D007A0F0E /* DDTableViewComponent+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = BE6021721EEFC30D007A0F0E /* DDTableViewComponent+Private.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BE6021881EEFC30D007A0F0E /* DDTableViewComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = BE6021731EEFC30D007A0F0E /* DDTableViewComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BE6021891EEFC30D007A0F0E /* DDTableViewComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = BE6021741EEFC30D007A0F0E /* DDTableViewComponent.m */; };
 		BE60218A1EEFC30D007A0F0E /* DDTableViewItemComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = BE6021751EEFC30D007A0F0E /* DDTableViewItemComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -54,6 +51,10 @@
 		BE6021BC1EEFFFE9007A0F0E /* TaobaoEntriesComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6021BB1EEFFFE9007A0F0E /* TaobaoEntriesComponent.swift */; };
 		BE6021BE1EEFFFFE007A0F0E /* TaobaoGoodsComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6021BD1EEFFFFE007A0F0E /* TaobaoGoodsComponent.swift */; };
 		BE6021C01EF00029007A0F0E /* TaobaoBanner.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE6021BF1EF00029007A0F0E /* TaobaoBanner.xib */; };
+		BE94B1821F0C7DD00032B713 /* DDCollectionComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = BE94B1811F0C7DD00032B713 /* DDCollectionComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BE94B1841F0C7DDA0032B713 /* DDCollectionViewComponent+Cache.h in Headers */ = {isa = PBXBuildFile; fileRef = BE94B1831F0C7DDA0032B713 /* DDCollectionViewComponent+Cache.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BE94B1861F0C7DE30032B713 /* DDCollectionViewSectionComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = BE94B1851F0C7DE30032B713 /* DDCollectionViewSectionComponent.mm */; };
+		BE94B1881F0C7DE90032B713 /* DDCollectionViewSectionGroupComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = BE94B1871F0C7DE90032B713 /* DDCollectionViewSectionGroupComponent.mm */; };
 		BE9B13FE1EF0FDFA009356BF /* TaobaoGoods0.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE9B13FA1EF0FDFA009356BF /* TaobaoGoods0.xib */; };
 		BE9B13FF1EF0FDFA009356BF /* TaobaoGoods1.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE9B13FB1EF0FDFA009356BF /* TaobaoGoods1.xib */; };
 		BE9B14001EF0FDFA009356BF /* TaobaoGoods2.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE9B13FC1EF0FDFA009356BF /* TaobaoGoods2.xib */; };
@@ -100,9 +101,7 @@
 		BE6021681EEFC30D007A0F0E /* DDCollectionViewItemComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDCollectionViewItemComponent.h; sourceTree = "<group>"; };
 		BE6021691EEFC30D007A0F0E /* DDCollectionViewItemComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDCollectionViewItemComponent.m; sourceTree = "<group>"; };
 		BE60216A1EEFC30D007A0F0E /* DDCollectionViewSectionComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDCollectionViewSectionComponent.h; sourceTree = "<group>"; };
-		BE60216B1EEFC30D007A0F0E /* DDCollectionViewSectionComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDCollectionViewSectionComponent.m; sourceTree = "<group>"; };
 		BE60216C1EEFC30D007A0F0E /* DDCollectionViewSectionGroupComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDCollectionViewSectionGroupComponent.h; sourceTree = "<group>"; };
-		BE60216D1EEFC30D007A0F0E /* DDCollectionViewSectionGroupComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDCollectionViewSectionGroupComponent.m; sourceTree = "<group>"; };
 		BE60216E1EEFC30D007A0F0E /* DDCollectionViewStatusComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDCollectionViewStatusComponent.h; sourceTree = "<group>"; };
 		BE60216F1EEFC30D007A0F0E /* DDCollectionViewStatusComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDCollectionViewStatusComponent.m; sourceTree = "<group>"; };
 		BE6021701EEFC30D007A0F0E /* DDComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDComponent.h; sourceTree = "<group>"; };
@@ -136,6 +135,10 @@
 		BE6021BB1EEFFFE9007A0F0E /* TaobaoEntriesComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaobaoEntriesComponent.swift; sourceTree = "<group>"; };
 		BE6021BD1EEFFFFE007A0F0E /* TaobaoGoodsComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaobaoGoodsComponent.swift; sourceTree = "<group>"; };
 		BE6021BF1EF00029007A0F0E /* TaobaoBanner.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TaobaoBanner.xib; sourceTree = "<group>"; };
+		BE94B1811F0C7DD00032B713 /* DDCollectionComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDCollectionComponent.h; sourceTree = "<group>"; };
+		BE94B1831F0C7DDA0032B713 /* DDCollectionViewComponent+Cache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DDCollectionViewComponent+Cache.h"; sourceTree = "<group>"; };
+		BE94B1851F0C7DE30032B713 /* DDCollectionViewSectionComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DDCollectionViewSectionComponent.mm; sourceTree = "<group>"; };
+		BE94B1871F0C7DE90032B713 /* DDCollectionViewSectionGroupComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DDCollectionViewSectionGroupComponent.mm; sourceTree = "<group>"; };
 		BE9B13FA1EF0FDFA009356BF /* TaobaoGoods0.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TaobaoGoods0.xib; sourceTree = "<group>"; };
 		BE9B13FB1EF0FDFA009356BF /* TaobaoGoods1.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TaobaoGoods1.xib; sourceTree = "<group>"; };
 		BE9B13FC1EF0FDFA009356BF /* TaobaoGoods2.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TaobaoGoods2.xib; sourceTree = "<group>"; };
@@ -228,15 +231,17 @@
 		BE6021641EEFC30D007A0F0E /* Collection */ = {
 			isa = PBXGroup;
 			children = (
+				BE94B1811F0C7DD00032B713 /* DDCollectionComponent.h */,
+				BE94B1831F0C7DDA0032B713 /* DDCollectionViewComponent+Cache.h */,
 				BE6021651EEFC30D007A0F0E /* DDCollectionViewComponent+Private.h */,
 				BE6021661EEFC30D007A0F0E /* DDCollectionViewComponent.h */,
 				BE6021671EEFC30D007A0F0E /* DDCollectionViewComponent.m */,
 				BE6021681EEFC30D007A0F0E /* DDCollectionViewItemComponent.h */,
 				BE6021691EEFC30D007A0F0E /* DDCollectionViewItemComponent.m */,
 				BE60216A1EEFC30D007A0F0E /* DDCollectionViewSectionComponent.h */,
-				BE60216B1EEFC30D007A0F0E /* DDCollectionViewSectionComponent.m */,
+				BE94B1851F0C7DE30032B713 /* DDCollectionViewSectionComponent.mm */,
 				BE60216C1EEFC30D007A0F0E /* DDCollectionViewSectionGroupComponent.h */,
-				BE60216D1EEFC30D007A0F0E /* DDCollectionViewSectionGroupComponent.m */,
+				BE94B1871F0C7DE90032B713 /* DDCollectionViewSectionGroupComponent.mm */,
 				BE60216E1EEFC30D007A0F0E /* DDCollectionViewStatusComponent.h */,
 				BE60216F1EEFC30D007A0F0E /* DDCollectionViewStatusComponent.m */,
 			);
@@ -324,11 +329,12 @@
 				BE6021841EEFC30D007A0F0E /* DDCollectionViewStatusComponent.h in Headers */,
 				BE6021881EEFC30D007A0F0E /* DDTableViewComponent.h in Headers */,
 				BE60218E1EEFC30D007A0F0E /* DDTableViewSectionGroupComponent.h in Headers */,
+				BE94B1821F0C7DD00032B713 /* DDCollectionComponent.h in Headers */,
+				BE94B1841F0C7DDA0032B713 /* DDCollectionViewComponent+Cache.h in Headers */,
+				BE6021871EEFC30D007A0F0E /* DDTableViewComponent+Private.h in Headers */,
 				BE6021821EEFC30D007A0F0E /* DDCollectionViewSectionGroupComponent.h in Headers */,
 				BE6021801EEFC30D007A0F0E /* DDCollectionViewSectionComponent.h in Headers */,
 				BE6021861EEFC30D007A0F0E /* DDComponent.h in Headers */,
-				BE6021871EEFC30D007A0F0E /* DDTableViewComponent+Private.h in Headers */,
-				BE60217B1EEFC30D007A0F0E /* DDCollectionViewComponent+Private.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -442,14 +448,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BE6021811EEFC30D007A0F0E /* DDCollectionViewSectionComponent.m in Sources */,
 				BE60217D1EEFC30D007A0F0E /* DDCollectionViewComponent.m in Sources */,
+				BE94B1861F0C7DE30032B713 /* DDCollectionViewSectionComponent.mm in Sources */,
 				BE6021851EEFC30D007A0F0E /* DDCollectionViewStatusComponent.m in Sources */,
 				BE60218D1EEFC30D007A0F0E /* DDTableViewSectionComponent.m in Sources */,
-				BE6021831EEFC30D007A0F0E /* DDCollectionViewSectionGroupComponent.m in Sources */,
 				BE60217F1EEFC30D007A0F0E /* DDCollectionViewItemComponent.m in Sources */,
 				BE6021891EEFC30D007A0F0E /* DDTableViewComponent.m in Sources */,
 				BE60218B1EEFC30D007A0F0E /* DDTableViewItemComponent.m in Sources */,
+				BE94B1881F0C7DE90032B713 /* DDCollectionViewSectionGroupComponent.mm in Sources */,
 				BE60218F1EEFC30D007A0F0E /* DDTableViewSectionGroupComponent.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
