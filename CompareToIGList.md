@@ -1,4 +1,6 @@
 
+# 比较IGList和DDComponent
+
 在我们的项目中大量使用了列表以及模块化的思想，所以才有了[`DDComponent`](https://github.com/djs66256/DDComponent)，这个的原理在之前的[美学的表现层组件化之路](http://djs66256.github.io/2017/04/09/2017-04-09-%E7%BE%8E%E5%AD%A6%E7%9A%84%E8%A1%A8%E7%8E%B0%E5%B1%82%E7%BB%84%E4%BB%B6%E5%8C%96%E4%B9%8B%E8%B7%AF/)详细的说明了使用方式。最近翻了翻`IGListKit`的代码，发现他的思想和我的思想非常的类似，但也有部分区别，这里就来分析下`IGListKit`的场景。
 
 ## 首先，来看看IGListKit的使用
