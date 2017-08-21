@@ -44,10 +44,10 @@
                             insetForSectionAtIndex:indexPath.section];
     }
     if (autoWidth) {
-        size.width = collectionView.frame.size.width - inset.left - inset.right;
+        size.width = MAX(collectionView.frame.size.width - inset.left - inset.right, 0);
     }
     if (autoHeight) {
-        size.height = collectionView.frame.size.height - inset.top - inset.bottom;
+        size.height = MAX(collectionView.frame.size.height - inset.top - inset.bottom, 0);
     }
     return size;
 }
