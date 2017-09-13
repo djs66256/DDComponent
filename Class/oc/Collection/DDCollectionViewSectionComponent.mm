@@ -345,6 +345,11 @@
     return self.section;
 }
 
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
+    // hidden if no subComponents
+    return self.subComponents.count > 0 ? 1 : 0;
+}
+
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     NSInteger count = 0;
     if (self.dataSourceCacheEnable) {
