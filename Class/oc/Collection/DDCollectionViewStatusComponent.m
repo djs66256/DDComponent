@@ -25,6 +25,8 @@
 
 @implementation DDCollectionViewStatusComponent {
     NSMutableDictionary<NSString *, DDCollectionViewBaseComponent *> *_componentDict;
+@protected
+    NSUInteger _numberOfSections; // cache
 }
 
 - (instancetype)init
@@ -93,7 +95,8 @@
 #pragma mark - CollectionView
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-    return [self.currentComponent numberOfSectionsInCollectionView:collectionView];
+    _numberOfSections = [self.currentComponent numberOfSectionsInCollectionView:collectionView];
+    return _numberOfSections;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
@@ -313,17 +316,23 @@
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
-    DDCollectionViewBaseComponent *comp = _headerComponent ?: _headerFooterComponent;
-    if ([comp respondsToSelector:_cmd]) {
-        return [comp collectionView:collectionView layout:collectionViewLayout referenceSizeForHeaderInSection:section];
+    // header appear at first component
+    if (self.section == section) {
+        DDCollectionViewBaseComponent *comp = _headerComponent ?: _headerFooterComponent;
+        if ([comp respondsToSelector:_cmd]) {
+            return [comp collectionView:collectionView layout:collectionViewLayout referenceSizeForHeaderInSection:section];
+        }
     }
     return CGSizeZero;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section {
-    DDCollectionViewBaseComponent *comp = _footerComponent ?: _headerFooterComponent;
-    if ([comp respondsToSelector:_cmd]) {
-        return [comp collectionView:collectionView layout:collectionViewLayout referenceSizeForFooterInSection:section];
+    // footer appear at last component
+    if (self.section + _numberOfSections - 1 == section) {
+        DDCollectionViewBaseComponent *comp = _footerComponent ?: _headerFooterComponent;
+        if ([comp respondsToSelector:_cmd]) {
+            return [comp collectionView:collectionView layout:collectionViewLayout referenceSizeForFooterInSection:section];
+        }
     }
     return CGSizeZero;
 }
