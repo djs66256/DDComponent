@@ -113,6 +113,10 @@ po self.rootComponent
 1. View Component: displaying. for example, a list of cell or just an element。
 2. Container Component: combine the view components. For example, conbine some components as a list, or switch between different components(Loading, Error, Empty). And the root component is also a containter component.
 
+![](./Images/example.png)
+
+An example how it 
+
 ![](./Images/structure2.png)
 
 We need to do is only the red part.
