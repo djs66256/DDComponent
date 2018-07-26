@@ -51,6 +51,8 @@
 		BE6021BC1EEFFFE9007A0F0E /* TaobaoEntriesComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6021BB1EEFFFE9007A0F0E /* TaobaoEntriesComponent.swift */; };
 		BE6021BE1EEFFFFE007A0F0E /* TaobaoGoodsComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6021BD1EEFFFFE007A0F0E /* TaobaoGoodsComponent.swift */; };
 		BE6021C01EF00029007A0F0E /* TaobaoBanner.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE6021BF1EF00029007A0F0E /* TaobaoBanner.xib */; };
+		BE777A0F2109639700727B69 /* ObjcImagesComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = BE777A0E2109639700727B69 /* ObjcImagesComponent.m */; };
+		BE777A122109645F00727B69 /* ObjcImageCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BE777A112109645F00727B69 /* ObjcImageCollectionViewCell.m */; };
 		BE94B1821F0C7DD00032B713 /* DDCollectionComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = BE94B1811F0C7DD00032B713 /* DDCollectionComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BE94B1841F0C7DDA0032B713 /* DDCollectionViewComponent+Cache.h in Headers */ = {isa = PBXBuildFile; fileRef = BE94B1831F0C7DDA0032B713 /* DDCollectionViewComponent+Cache.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BE94B1861F0C7DE30032B713 /* DDCollectionViewSectionComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = BE94B1851F0C7DE30032B713 /* DDCollectionViewSectionComponent.mm */; };
@@ -135,6 +137,10 @@
 		BE6021BB1EEFFFE9007A0F0E /* TaobaoEntriesComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaobaoEntriesComponent.swift; sourceTree = "<group>"; };
 		BE6021BD1EEFFFFE007A0F0E /* TaobaoGoodsComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaobaoGoodsComponent.swift; sourceTree = "<group>"; };
 		BE6021BF1EF00029007A0F0E /* TaobaoBanner.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TaobaoBanner.xib; sourceTree = "<group>"; };
+		BE777A0D2109639700727B69 /* ObjcImagesComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjcImagesComponent.h; sourceTree = "<group>"; };
+		BE777A0E2109639700727B69 /* ObjcImagesComponent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ObjcImagesComponent.m; sourceTree = "<group>"; };
+		BE777A102109645F00727B69 /* ObjcImageCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjcImageCollectionViewCell.h; sourceTree = "<group>"; };
+		BE777A112109645F00727B69 /* ObjcImageCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ObjcImageCollectionViewCell.m; sourceTree = "<group>"; };
 		BE94B1811F0C7DD00032B713 /* DDCollectionComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDCollectionComponent.h; sourceTree = "<group>"; };
 		BE94B1831F0C7DDA0032B713 /* DDCollectionViewComponent+Cache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DDCollectionViewComponent+Cache.h"; sourceTree = "<group>"; };
 		BE94B1851F0C7DE30032B713 /* DDCollectionViewSectionComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DDCollectionViewSectionComponent.mm; sourceTree = "<group>"; };
@@ -177,6 +183,7 @@
 			isa = PBXGroup;
 			children = (
 				65C999391D68AF740019780A /* Class */,
+				BE777A132109655A00727B69 /* ObjcComponent */,
 				65C999261D68AF5D0019780A /* Component */,
 				657016DD1D97A8EA0096EC69 /* DDComponent */,
 				65C999251D68AF5D0019780A /* Products */,
@@ -313,6 +320,18 @@
 				BE9B13FD1EF0FDFA009356BF /* TaobaoGoods3.xib */,
 			);
 			name = TaoBao;
+			sourceTree = "<group>";
+		};
+		BE777A132109655A00727B69 /* ObjcComponent */ = {
+			isa = PBXGroup;
+			children = (
+				BE777A102109645F00727B69 /* ObjcImageCollectionViewCell.h */,
+				BE777A112109645F00727B69 /* ObjcImageCollectionViewCell.m */,
+				BE777A0D2109639700727B69 /* ObjcImagesComponent.h */,
+				BE777A0E2109639700727B69 /* ObjcImagesComponent.m */,
+			);
+			name = ObjcComponent;
+			path = Component;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -472,8 +491,10 @@
 				BE6021B81EEFFE1F007A0F0E /* TaobaoCollectionViewController.swift in Sources */,
 				BE6021B51EEFEB59007A0F0E /* FooterComponent.swift in Sources */,
 				BE6021981EEFC576007A0F0E /* HeaderFooterViewController.swift in Sources */,
+				BE777A122109645F00727B69 /* ObjcImageCollectionViewCell.m in Sources */,
 				65C999281D68AF5D0019780A /* AppDelegate.swift in Sources */,
 				BE6021B31EEFEB1E007A0F0E /* TextCollectionReusableView.swift in Sources */,
+				BE777A0F2109639700727B69 /* ObjcImagesComponent.m in Sources */,
 				BE6021921EEFC50D007A0F0E /* SimpleViewController.swift in Sources */,
 				BE6021AF1EEFDA30007A0F0E /* ImagesComponent.swift in Sources */,
 				BE6021961EEFC54A007A0F0E /* StatusViewController.swift in Sources */,
