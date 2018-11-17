@@ -40,7 +40,8 @@ class RootCollectionViewController: UICollectionViewController {
             TitleModel(title: "Header Footer", controllerClass: HeaderFooterViewController.self),
             TitleModel(title: "Status", controllerClass: StatusViewController.self),
             TitleModel(title: "Header Footer Status", controllerClass: HeaderStatusViewController.self),
-            TitleModel(title: "Tao Bao Example 淘宝首页例子", controllerClass: TaobaoCollectionViewController.self)
+            TitleModel(title: "Tao Bao Example 淘宝首页例子", controllerClass: TaobaoCollectionViewController.self),
+            TitleModel(title: "table component", controllerClass: DDTableComponentCustomViewController.self)
         ]
         
         rootComponent?.subComponents = [cellComponent]

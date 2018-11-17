@@ -14,7 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) UITableView *tableView;
 @property (nonatomic, weak) id<UIScrollViewDelegate> scrollViewDelegate;
+@property (nonatomic, assign, getter=isEstimatedHeightEnabled) BOOL estimatedHeightEnabled;
 
+- (instancetype)init;
 - (instancetype)initWithTableView:(UITableView *)tableView;
 
 - (void)setNeedReload;

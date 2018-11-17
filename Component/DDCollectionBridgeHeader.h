@@ -24,5 +24,6 @@
 #define DDCollectionBridgeHeader_h
 
 #import <DDComponent/DDComponent.h>
+#import "DDTableComponentCustomViewController.h"
 
 #endif /* DDCollectionBridgeHeader_h */

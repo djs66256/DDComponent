@@ -14,6 +14,7 @@
 #include <mutex>
 #include <cstdint>
 #include <tuple>
+#include <memory>
 #import <UIKit/UIKit.h>
 #import "DDTableViewResponds.h"
 #import "DDTableViewComponentProtocol.h"
@@ -33,9 +34,6 @@ namespace DD {
             }
             
             const TableViewResponds* respondsForObject(id<NSObject> obj) {
-                NSCAssert(![obj conformsToProtocol:@protocol(DDTableViewCompositeComponentProtocol)],
-                          @"Composite object can not get responds from cache!");
-                
                 if (obj == nil) return nullptr;
                 
                 std::uintptr_t ptr = reinterpret_cast<std::uintptr_t>(obj.class);
@@ -44,24 +42,39 @@ namespace DD {
                 
                 auto responds = cache_.find(ptr);
                 if (responds != cache_.end()) {
-                    lastCache_ = std::make_pair(ptr, &responds->second);
-                    return &responds->second;
+                    lastCache_ = std::make_pair(ptr, responds->second);
+                    return responds->second;
                 }
                 else {
-                    cache_[ptr] = TableViewResponds(obj);
-                    return &cache_[ptr];
+                    cache_[ptr] = new TableViewResponds(obj);
+                    return cache_[ptr];
                 }
             }
             
         private:
             Manager() {}
-            std::unordered_map<std::uintptr_t, TableViewResponds> cache_;
+            std::unordered_map<std::uintptr_t, TableViewResponds*> cache_;
             // At some time, we get a list of component that is the same type.
             std::pair<std::uintptr_t, TableViewResponds*> lastCache_ = std::make_pair(-1, nullptr);
         };
         
         class SectionCache {
         public:
+            class Iterator {
+            public:
+                Iterator(SectionCache* cache): cache_(cache) {}
+                Iterator(SectionCache* cache, size_t idx): cache_(cache), index_(idx) {}
+                
+                NSRange& range() { return cache_->indexPaths_[index_]; }
+                id<DDTableViewComponentProtocol> component() { return cache_->components_[index_]; }
+                const TableViewResponds* responds() { return cache_->responds_[index_]; }
+                
+                bool operator== (Iterator& other) { return index_ == other.index_; }
+            private:
+                SectionCache* cache_;
+                size_t index_ = NSNotFound;
+            };
+            
             void fill(NSArray<id<DDTableViewComponentProtocol>> *components, UITableView *tableView) {
                 indexPaths_.clear();
                 responds_.clear();
@@ -76,6 +89,7 @@ namespace DD {
                 for (id<DDTableViewComponentProtocol> comp in components) {
                     NSRange r = { location, static_cast<NSUInteger>([comp numberOfSectionsInTableView:tableView]) };
                     indexPaths_.push_back(r);
+                    location += r.length;
                     if ([comp conformsToProtocol:@protocol(DDTableViewCompositeComponentProtocol)]) {
                         id<DDTableViewCompositeComponentProtocol> compositeComp = (id<DDTableViewCompositeComponentProtocol>)comp;
                         rs = compositeComp.respondsInfo;
@@ -93,15 +107,17 @@ namespace DD {
                 myResponds_ = totalResponds;
             }
             
-            std::pair<const TableViewResponds*, id<DDTableViewComponentProtocol>> respondsInSection(NSInteger section) {
+            Iterator begin() { return Iterator(this, indexPaths_.size() > 0 ? 0 : NSNotFound); }
+            Iterator end() { return Iterator(this); }
+            Iterator getSection(NSInteger section) {
                 for (NSInteger i = 0; i < indexPaths_.size(); ++i) {
                     auto& r = indexPaths_[i];
                     if (r.location <= section && r.location + r.length > section) {
-                        return std::make_pair(responds_[i], components_[i]);
+                        return Iterator(this, i);
                     }
                 }
                 NSCAssert(false, @"Can not find info in section %zd!", section);
-                return std::make_pair(nullptr, nil);
+                return end();
             }
             
             const TableViewResponds* myResponds() { return &myResponds_; }
@@ -123,6 +139,30 @@ namespace DD {
         
         class RowCache {
         public:
+            class Iterator {
+            public:
+                Iterator(RowCache* cache): cache_(cache) {}
+                Iterator(RowCache* cache, size_t idx): cache_(cache), index_(idx) {}
+                
+                id<DDTableViewComponentProtocol> component() { return cache_->components_[index_]; }
+                const TableViewResponds* responds() { return cache_->responds_[index_]; }
+                
+                bool operator== (Iterator& other) { return index_ == other.index_; }
+            private:
+                RowCache *cache_;
+                size_t index_ = NSNotFound;
+            };
+            
+            Iterator begin() { return Iterator(this, responds_.size() > 0 ? 0 : NSNotFound); }
+            Iterator end() { return Iterator(this); }
+            Iterator getRow(NSInteger row) {
+                if (row < responds_.size()) {
+                    return Iterator(this, row);
+                }
+                NSCAssert(false, @"Can not find info at row %zd!", row);
+                return end();
+            }
+            
             void fill(NSArray<id<DDTableViewComponentProtocol>> *components, UITableView *tableView) {
                 responds_.clear();
                 responds_.reserve(components.count);

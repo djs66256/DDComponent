@@ -11,6 +11,12 @@
 		6501EB0E219F0B07001D4038 /* DDTableViewItemComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 6501EB03219F0B06001D4038 /* DDTableViewItemComponent.m */; };
 		6501EB10219F0B07001D4038 /* DDTableViewSectionComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6501EB08219F0B06001D4038 /* DDTableViewSectionComponent.mm */; };
 		6501EB11219F0B07001D4038 /* DDTableViewRootComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6501EB0B219F0B06001D4038 /* DDTableViewRootComponent.mm */; };
+		6501EB1621A00D81001D4038 /* DDTableComponentDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6501EB1521A00D81001D4038 /* DDTableComponentDemoViewController.m */; };
+		6501EB1921A00D9A001D4038 /* DDTableComponentCustomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6501EB1821A00D9A001D4038 /* DDTableComponentCustomViewController.m */; };
+		6501EB1F21A00DD7001D4038 /* DDTableViewItemDemoComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 6501EB1E21A00DD7001D4038 /* DDTableViewItemDemoComponent.m */; };
+		6501EB2221A00DF2001D4038 /* DDComponentDemoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6501EB2121A00DF2001D4038 /* DDComponentDemoTableViewCell.m */; };
+		6501EB2521A00E23001D4038 /* DDTableViewHeaderFooterSectionDemoComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 6501EB2421A00E23001D4038 /* DDTableViewHeaderFooterSectionDemoComponent.m */; };
+		6501EB2921A04AC5001D4038 /* DDHeaderFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6501EB2821A04AC5001D4038 /* DDHeaderFooterView.m */; };
 		657016E31D97A8EA0096EC69 /* DDComponent.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 657016DC1D97A8E90096EC69 /* DDComponent.framework */; };
 		657016E41D97A8EA0096EC69 /* DDComponent.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 657016DC1D97A8E90096EC69 /* DDComponent.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		65C999281D68AF5D0019780A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C999271D68AF5D0019780A /* AppDelegate.swift */; };
@@ -96,6 +102,19 @@
 		6501EB0B219F0B06001D4038 /* DDTableViewRootComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DDTableViewRootComponent.mm; sourceTree = "<group>"; };
 		6501EB0C219F0B06001D4038 /* DDTableViewComponentProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDTableViewComponentProtocol.h; sourceTree = "<group>"; };
 		6501EB12219F1876001D4038 /* DDTableViewComponentMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDTableViewComponentMacros.h; sourceTree = "<group>"; };
+		6501EB1421A00D81001D4038 /* DDTableComponentDemoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDTableComponentDemoViewController.h; sourceTree = "<group>"; };
+		6501EB1521A00D81001D4038 /* DDTableComponentDemoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DDTableComponentDemoViewController.m; sourceTree = "<group>"; };
+		6501EB1721A00D9A001D4038 /* DDTableComponentCustomViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDTableComponentCustomViewController.h; sourceTree = "<group>"; };
+		6501EB1821A00D9A001D4038 /* DDTableComponentCustomViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DDTableComponentCustomViewController.m; sourceTree = "<group>"; };
+		6501EB1D21A00DD7001D4038 /* DDTableViewItemDemoComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDTableViewItemDemoComponent.h; sourceTree = "<group>"; };
+		6501EB1E21A00DD7001D4038 /* DDTableViewItemDemoComponent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DDTableViewItemDemoComponent.m; sourceTree = "<group>"; };
+		6501EB2021A00DF2001D4038 /* DDComponentDemoTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDComponentDemoTableViewCell.h; sourceTree = "<group>"; };
+		6501EB2121A00DF2001D4038 /* DDComponentDemoTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DDComponentDemoTableViewCell.m; sourceTree = "<group>"; };
+		6501EB2321A00E23001D4038 /* DDTableViewHeaderFooterSectionDemoComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDTableViewHeaderFooterSectionDemoComponent.h; sourceTree = "<group>"; };
+		6501EB2421A00E23001D4038 /* DDTableViewHeaderFooterSectionDemoComponent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DDTableViewHeaderFooterSectionDemoComponent.m; sourceTree = "<group>"; };
+		6501EB2621A00F1F001D4038 /* DDTableViewComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDTableViewComponent.h; sourceTree = "<group>"; };
+		6501EB2721A04AC5001D4038 /* DDHeaderFooterView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDHeaderFooterView.h; sourceTree = "<group>"; };
+		6501EB2821A04AC5001D4038 /* DDHeaderFooterView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DDHeaderFooterView.m; sourceTree = "<group>"; };
 		657016DC1D97A8E90096EC69 /* DDComponent.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DDComponent.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		657016DE1D97A8EA0096EC69 /* DDComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDComponent.h; sourceTree = "<group>"; };
 		657016DF1D97A8EA0096EC69 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -172,7 +191,9 @@
 		6501EAFF219F0B06001D4038 /* ClassesTable */ = {
 			isa = PBXGroup;
 			children = (
+				6501EB2621A00F1F001D4038 /* DDTableViewComponent.h */,
 				6501EB05219F0B06001D4038 /* DDTableViewComponentCache.h */,
+				6501EB12219F1876001D4038 /* DDTableViewComponentMacros.h */,
 				6501EB0C219F0B06001D4038 /* DDTableViewComponentProtocol.h */,
 				6501EB06219F0B06001D4038 /* DDTableViewCompositeComponentProtocol.h */,
 				6501EB09219F0B06001D4038 /* DDTableViewItemComponent.h */,
@@ -184,9 +205,51 @@
 				6501EB08219F0B06001D4038 /* DDTableViewSectionComponent.mm */,
 				6501EB0A219F0B06001D4038 /* DDTableViewSectionGroupComponent.h */,
 				6501EB02219F0B06001D4038 /* DDTableViewSectionGroupComponent.mm */,
-				6501EB12219F1876001D4038 /* DDTableViewComponentMacros.h */,
 			);
 			path = ClassesTable;
+			sourceTree = "<group>";
+		};
+		6501EB1321A00D51001D4038 /* TableDemo */ = {
+			isa = PBXGroup;
+			children = (
+				6501EB1C21A00DB2001D4038 /* Component */,
+				6501EB1B21A00DA9001D4038 /* Cell */,
+				6501EB1A21A00D9E001D4038 /* Custom */,
+				6501EB1421A00D81001D4038 /* DDTableComponentDemoViewController.h */,
+				6501EB1521A00D81001D4038 /* DDTableComponentDemoViewController.m */,
+			);
+			path = TableDemo;
+			sourceTree = "<group>";
+		};
+		6501EB1A21A00D9E001D4038 /* Custom */ = {
+			isa = PBXGroup;
+			children = (
+				6501EB1721A00D9A001D4038 /* DDTableComponentCustomViewController.h */,
+				6501EB1821A00D9A001D4038 /* DDTableComponentCustomViewController.m */,
+			);
+			path = Custom;
+			sourceTree = "<group>";
+		};
+		6501EB1B21A00DA9001D4038 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				6501EB2021A00DF2001D4038 /* DDComponentDemoTableViewCell.h */,
+				6501EB2121A00DF2001D4038 /* DDComponentDemoTableViewCell.m */,
+				6501EB2721A04AC5001D4038 /* DDHeaderFooterView.h */,
+				6501EB2821A04AC5001D4038 /* DDHeaderFooterView.m */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		6501EB1C21A00DB2001D4038 /* Component */ = {
+			isa = PBXGroup;
+			children = (
+				6501EB1D21A00DD7001D4038 /* DDTableViewItemDemoComponent.h */,
+				6501EB1E21A00DD7001D4038 /* DDTableViewItemDemoComponent.m */,
+				6501EB2321A00E23001D4038 /* DDTableViewHeaderFooterSectionDemoComponent.h */,
+				6501EB2421A00E23001D4038 /* DDTableViewHeaderFooterSectionDemoComponent.m */,
+			);
+			path = Component;
 			sourceTree = "<group>";
 		};
 		657016DD1D97A8EA0096EC69 /* DDComponent */ = {
@@ -201,6 +264,7 @@
 		65C9991B1D68AF5D0019780A = {
 			isa = PBXGroup;
 			children = (
+				6501EB1321A00D51001D4038 /* TableDemo */,
 				6501EAFF219F0B06001D4038 /* ClassesTable */,
 				65C999391D68AF740019780A /* Class */,
 				BE777A132109655A00727B69 /* ObjcComponent */,
@@ -482,14 +546,20 @@
 				BE6021A91EEFCA97007A0F0E /* TitleCollectionViewCell.swift in Sources */,
 				BE6021A41EEFC660007A0F0E /* StatusComponent.swift in Sources */,
 				BE6021BA1EEFFFDA007A0F0E /* TaobaoBannerComponent.swift in Sources */,
+				6501EB2521A00E23001D4038 /* DDTableViewHeaderFooterSectionDemoComponent.m in Sources */,
 				BE6021AD1EEFD99D007A0F0E /* TitlesComponent.swift in Sources */,
 				BE6021B81EEFFE1F007A0F0E /* TaobaoCollectionViewController.swift in Sources */,
 				BE6021B51EEFEB59007A0F0E /* FooterComponent.swift in Sources */,
 				BE6021981EEFC576007A0F0E /* HeaderFooterViewController.swift in Sources */,
+				6501EB2921A04AC5001D4038 /* DDHeaderFooterView.m in Sources */,
+				6501EB1621A00D81001D4038 /* DDTableComponentDemoViewController.m in Sources */,
 				BE777A122109645F00727B69 /* ObjcImageCollectionViewCell.m in Sources */,
+				6501EB1F21A00DD7001D4038 /* DDTableViewItemDemoComponent.m in Sources */,
+				6501EB2221A00DF2001D4038 /* DDComponentDemoTableViewCell.m in Sources */,
 				6501EB10219F0B07001D4038 /* DDTableViewSectionComponent.mm in Sources */,
 				65C999281D68AF5D0019780A /* AppDelegate.swift in Sources */,
 				BE6021B31EEFEB1E007A0F0E /* TextCollectionReusableView.swift in Sources */,
+				6501EB1921A00D9A001D4038 /* DDTableComponentCustomViewController.m in Sources */,
 				BE777A0F2109639700727B69 /* ObjcImagesComponent.m in Sources */,
 				BE6021921EEFC50D007A0F0E /* SimpleViewController.swift in Sources */,
 				BE6021AF1EEFDA30007A0F0E /* ImagesComponent.swift in Sources */,
@@ -677,6 +747,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				INFOPLIST_FILE = Component/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.djs66256.Component;
@@ -690,6 +761,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				INFOPLIST_FILE = Component/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.djs66256.Component;

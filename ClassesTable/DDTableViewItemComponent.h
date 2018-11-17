@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak) id<DDTableViewComponentProtocol> superComponent;
 
-- (void)prepareCells:(UITableView *)tableView NS_REQUIRES_SUPER;
+- (void)prepareCells:(UITableView *)tableView;
 
 @end
 

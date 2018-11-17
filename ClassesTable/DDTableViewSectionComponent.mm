@@ -199,20 +199,29 @@ using namespace DD::TableViewComponent;
     TableViewResponds _myResponds;
 }
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _myResponds.cls = self.class;
+    }
+    return self;
+}
+
 #pragma mark - component
 - (void)setSubComponents:(NSArray<DDTableViewItemComponent *> *)subComponents {
     if (_subComponents != subComponents) {
         for (DDTableViewItemComponent *comp in _subComponents) {
             if (comp.superComponent == self) comp.superComponent = nil;
+        }
+        
+        _subComponents = subComponents.copy;
+        
+        UITableView *tableView = self.tableView;
+        for (DDTableViewItemComponent *comp in _subComponents) {
+            comp.superComponent = self;
             
-            _subComponents = subComponents.copy;
-            
-            UITableView *tableView = self.tableView;
-            for (DDTableViewItemComponent *comp in _subComponents) {
-                comp.superComponent = self;
-                
-                if (tableView) [comp prepareCells:tableView];
-            }
+            if (tableView) [comp prepareCells:tableView];
         }
     }
 }
@@ -250,216 +259,216 @@ using namespace DD::TableViewComponent;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.respondsAtRow(indexPath.row);
-    return [std::get<1>(rs) tableView:tableView cellForRowAtIndexPath:indexPath];
+    auto rs = _cache.getRow(indexPath.row);
+    return [rs.component() tableView:tableView cellForRowAtIndexPath:indexPath];
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.respondsAtRow(indexPath.row);
-    if (std::get<0>(rs)->canEditRowAtIndexPath) {
-        return [std::get<1>(rs) tableView:tableView canEditRowAtIndexPath:indexPath];
+    auto rs = _cache.getRow(indexPath.row);
+    if (rs.responds()->canEditRowAtIndexPath) {
+        return [rs.component() tableView:tableView canEditRowAtIndexPath:indexPath];
     }
     return NO;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.respondsAtRow(indexPath.row);
-    if (std::get<0>(rs)->commitEditingStyle) {
-        [std::get<1>(rs) tableView:tableView commitEditingStyle:editingStyle forRowAtIndexPath:indexPath];
+    auto rs = _cache.getRow(indexPath.row);
+    if (rs.responds()->commitEditingStyle) {
+        [rs.component() tableView:tableView commitEditingStyle:editingStyle forRowAtIndexPath:indexPath];
     }
 }
 
 #pragma mark - delegate
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.respondsAtRow(indexPath.row);
-    if (std::get<0>(rs)->willDisplayCell) {
-        [std::get<1>(rs) tableView:tableView willDisplayCell:cell forRowAtIndexPath:indexPath];
+    auto rs = _cache.getRow(indexPath.row);
+    if (rs.responds()->willDisplayCell) {
+        [rs.component() tableView:tableView willDisplayCell:cell forRowAtIndexPath:indexPath];
     }
 }
 
 - (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath*)indexPath NS_AVAILABLE_IOS(6_0) {
-    auto rs = _cache.respondsAtRow(indexPath.row);
-    if (std::get<0>(rs)->didEndDisplayingCell) {
-        [std::get<1>(rs) tableView:tableView didEndDisplayingCell:cell forRowAtIndexPath:indexPath];
+    auto rs = _cache.getRow(indexPath.row);
+    if (rs.responds()->didEndDisplayingCell) {
+        [rs.component() tableView:tableView didEndDisplayingCell:cell forRowAtIndexPath:indexPath];
     }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.respondsAtRow(indexPath.row);
-    if (std::get<0>(rs)->heightForRowAtIndexPath) {
-        return [std::get<1>(rs) tableView:tableView heightForRowAtIndexPath:indexPath];
+    auto rs = _cache.getRow(indexPath.row);
+    if (rs.responds()->heightForRowAtIndexPath) {
+        return [rs.component() tableView:tableView heightForRowAtIndexPath:indexPath];
     }
     return 0;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(7_0) {
-    auto rs = _cache.respondsAtRow(indexPath.row);
-    if (std::get<0>(rs)->estimatedHeightForRowAtIndexPath) {
-        return [std::get<1>(rs) tableView:tableView estimatedHeightForRowAtIndexPath:indexPath];
+    auto rs = _cache.getRow(indexPath.row);
+    if (rs.responds()->estimatedHeightForRowAtIndexPath) {
+        return [rs.component() tableView:tableView estimatedHeightForRowAtIndexPath:indexPath];
     }
     return 0;
 }
 
 - (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(6_0) {
-    auto rs = _cache.respondsAtRow(indexPath.row);
-    if (std::get<0>(rs)->shouldHighlightRowAtIndexPath) {
-        return [std::get<1>(rs) tableView:tableView shouldHighlightRowAtIndexPath:indexPath];
+    auto rs = _cache.getRow(indexPath.row);
+    if (rs.responds()->shouldHighlightRowAtIndexPath) {
+        return [rs.component() tableView:tableView shouldHighlightRowAtIndexPath:indexPath];
     }
     return YES;
 }
 
 - (void)tableView:(UITableView *)tableView didHighlightRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(6_0) {
-    auto rs = _cache.respondsAtRow(indexPath.row);
-    if (std::get<0>(rs)->didHighlightRowAtIndexPath) {
-        [std::get<1>(rs) tableView:tableView didHighlightRowAtIndexPath:indexPath];
+    auto rs = _cache.getRow(indexPath.row);
+    if (rs.responds()->didHighlightRowAtIndexPath) {
+        [rs.component() tableView:tableView didHighlightRowAtIndexPath:indexPath];
     }
 }
 
 - (void)tableView:(UITableView *)tableView didUnhighlightRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(6_0) {
-    auto rs = _cache.respondsAtRow(indexPath.row);
-    if (std::get<0>(rs)->didUnhighlightRowAtIndexPath) {
-        [std::get<1>(rs) tableView:tableView didUnhighlightRowAtIndexPath:indexPath];
+    auto rs = _cache.getRow(indexPath.row);
+    if (rs.responds()->didUnhighlightRowAtIndexPath) {
+        [rs.component() tableView:tableView didUnhighlightRowAtIndexPath:indexPath];
     }
 }
 
 - (nullable NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.respondsAtRow(indexPath.row);
-    if (std::get<0>(rs)->willSelectRowAtIndexPath) {
-        return [std::get<1>(rs) tableView:tableView willSelectRowAtIndexPath:indexPath];
+    auto rs = _cache.getRow(indexPath.row);
+    if (rs.responds()->willSelectRowAtIndexPath) {
+        return [rs.component() tableView:tableView willSelectRowAtIndexPath:indexPath];
     }
     return indexPath;
 }
 
 - (nullable NSIndexPath *)tableView:(UITableView *)tableView willDeselectRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(3_0) {
-    auto rs = _cache.respondsAtRow(indexPath.row);
-    if (std::get<0>(rs)->canEditRowAtIndexPath) {
-        return [std::get<1>(rs) tableView:tableView willDeselectRowAtIndexPath:indexPath];
+    auto rs = _cache.getRow(indexPath.row);
+    if (rs.responds()->canEditRowAtIndexPath) {
+        return [rs.component() tableView:tableView willDeselectRowAtIndexPath:indexPath];
     }
     return indexPath;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.respondsAtRow(indexPath.row);
-    if (std::get<0>(rs)->didSelectRowAtIndexPath) {
-        [std::get<1>(rs) tableView:tableView didSelectRowAtIndexPath:indexPath];
+    auto rs = _cache.getRow(indexPath.row);
+    if (rs.responds()->didSelectRowAtIndexPath) {
+        [rs.component() tableView:tableView didSelectRowAtIndexPath:indexPath];
     }
 }
 
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(3_0) {
-    auto rs = _cache.respondsAtRow(indexPath.row);
-    if (std::get<0>(rs)->didDeselectRowAtIndexPath) {
-        [std::get<1>(rs) tableView:tableView didDeselectRowAtIndexPath:indexPath];
+    auto rs = _cache.getRow(indexPath.row);
+    if (rs.responds()->didDeselectRowAtIndexPath) {
+        [rs.component() tableView:tableView didDeselectRowAtIndexPath:indexPath];
     }
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.respondsAtRow(indexPath.row);
-    if (std::get<0>(rs)->editingStyleForRowAtIndexPath) {
-        return [std::get<1>(rs) tableView:tableView editingStyleForRowAtIndexPath:indexPath];
+    auto rs = _cache.getRow(indexPath.row);
+    if (rs.responds()->editingStyleForRowAtIndexPath) {
+        return [rs.component() tableView:tableView editingStyleForRowAtIndexPath:indexPath];
     }
     return UITableViewCellEditingStyleNone;
 }
 
 - (nullable NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(3_0) __TVOS_PROHIBITED {
-    auto rs = _cache.respondsAtRow(indexPath.row);
-    if (std::get<0>(rs)->titleForDeleteConfirmationButtonForRowAtIndexPath) {
-        return [std::get<1>(rs) tableView:tableView titleForDeleteConfirmationButtonForRowAtIndexPath:indexPath];
+    auto rs = _cache.getRow(indexPath.row);
+    if (rs.responds()->titleForDeleteConfirmationButtonForRowAtIndexPath) {
+        return [rs.component() tableView:tableView titleForDeleteConfirmationButtonForRowAtIndexPath:indexPath];
     }
     return nil;
 }
 
 - (nullable NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(8_0) __TVOS_PROHIBITED {
-    auto rs = _cache.respondsAtRow(indexPath.row);
-    if (std::get<0>(rs)->editActionsForRowAtIndexPath) {
-        return [std::get<1>(rs) tableView:tableView editActionsForRowAtIndexPath:indexPath];
+    auto rs = _cache.getRow(indexPath.row);
+    if (rs.responds()->editActionsForRowAtIndexPath) {
+        return [rs.component() tableView:tableView editActionsForRowAtIndexPath:indexPath];
     }
     return nil;
 }
 
 - (nullable UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath API_AVAILABLE(ios(11.0)) API_UNAVAILABLE(tvos) {
-    auto rs = _cache.respondsAtRow(indexPath.row);
-    if (std::get<0>(rs)->leadingSwipeActionsConfigurationForRowAtIndexPath) {
-        return [std::get<1>(rs) tableView:tableView leadingSwipeActionsConfigurationForRowAtIndexPath:indexPath];
+    auto rs = _cache.getRow(indexPath.row);
+    if (rs.responds()->leadingSwipeActionsConfigurationForRowAtIndexPath) {
+        return [rs.component() tableView:tableView leadingSwipeActionsConfigurationForRowAtIndexPath:indexPath];
     }
     return nil;
 }
 
 - (nullable UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath API_AVAILABLE(ios(11.0)) API_UNAVAILABLE(tvos) {
-    auto rs = _cache.respondsAtRow(indexPath.row);
-    if (std::get<0>(rs)->trailingSwipeActionsConfigurationForRowAtIndexPath) {
-        return [std::get<1>(rs) tableView:tableView trailingSwipeActionsConfigurationForRowAtIndexPath:indexPath];
+    auto rs = _cache.getRow(indexPath.row);
+    if (rs.responds()->trailingSwipeActionsConfigurationForRowAtIndexPath) {
+        return [rs.component() tableView:tableView trailingSwipeActionsConfigurationForRowAtIndexPath:indexPath];
     }
     return nil;
 }
 
 - (BOOL)tableView:(UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.respondsAtRow(indexPath.row);
-    if (std::get<0>(rs)->shouldIndentWhileEditingRowAtIndexPath) {
-        return [std::get<1>(rs) tableView:tableView shouldIndentWhileEditingRowAtIndexPath:indexPath];
+    auto rs = _cache.getRow(indexPath.row);
+    if (rs.responds()->shouldIndentWhileEditingRowAtIndexPath) {
+        return [rs.component() tableView:tableView shouldIndentWhileEditingRowAtIndexPath:indexPath];
     }
     return NO;
 }
 
 - (void)tableView:(UITableView *)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath __TVOS_PROHIBITED {
-    auto rs = _cache.respondsAtRow(indexPath.row);
-    if (std::get<0>(rs)->willBeginEditingRowAtIndexPath) {
-        [std::get<1>(rs) tableView:tableView willBeginEditingRowAtIndexPath:indexPath];
+    auto rs = _cache.getRow(indexPath.row);
+    if (rs.responds()->willBeginEditingRowAtIndexPath) {
+        [rs.component() tableView:tableView willBeginEditingRowAtIndexPath:indexPath];
     }
 }
 
 - (void)tableView:(UITableView *)tableView didEndEditingRowAtIndexPath:(nullable NSIndexPath *)indexPath __TVOS_PROHIBITED {
-    auto rs = _cache.respondsAtRow(indexPath.row);
-    if (std::get<0>(rs)->didEndEditingRowAtIndexPath) {
-        return [std::get<1>(rs) tableView:tableView didEndEditingRowAtIndexPath:indexPath];
+    auto rs = _cache.getRow(indexPath.row);
+    if (rs.responds()->didEndEditingRowAtIndexPath) {
+        return [rs.component() tableView:tableView didEndEditingRowAtIndexPath:indexPath];
     }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView indentationLevelForRowAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.respondsAtRow(indexPath.row);
-    if (std::get<0>(rs)->indentationLevelForRowAtIndexPath) {
-        return [std::get<1>(rs) tableView:tableView indentationLevelForRowAtIndexPath:indexPath];
+    auto rs = _cache.getRow(indexPath.row);
+    if (rs.responds()->indentationLevelForRowAtIndexPath) {
+        return [rs.component() tableView:tableView indentationLevelForRowAtIndexPath:indexPath];
     }
     return 0;
 }
 
 - (BOOL)tableView:(UITableView *)tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(5_0) {
-    auto rs = _cache.respondsAtRow(indexPath.row);
-    if (std::get<0>(rs)->shouldShowMenuForRowAtIndexPath) {
-        return [std::get<1>(rs) tableView:tableView shouldShowMenuForRowAtIndexPath:indexPath];
+    auto rs = _cache.getRow(indexPath.row);
+    if (rs.responds()->shouldShowMenuForRowAtIndexPath) {
+        return [rs.component() tableView:tableView shouldShowMenuForRowAtIndexPath:indexPath];
     }
     return NO;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canPerformAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(nullable id)sender NS_AVAILABLE_IOS(5_0) {
-    auto rs = _cache.respondsAtRow(indexPath.row);
-    if (std::get<0>(rs)->canPerformAction) {
-        return [std::get<1>(rs) tableView:tableView canPerformAction:action forRowAtIndexPath:indexPath withSender:sender];
+    auto rs = _cache.getRow(indexPath.row);
+    if (rs.responds()->canPerformAction) {
+        return [rs.component() tableView:tableView canPerformAction:action forRowAtIndexPath:indexPath withSender:sender];
     }
     return NO;
 }
 
 - (void)tableView:(UITableView *)tableView performAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(nullable id)sender NS_AVAILABLE_IOS(5_0) {
-    auto rs = _cache.respondsAtRow(indexPath.row);
-    if (std::get<0>(rs)->performAction) {
-        [std::get<1>(rs) tableView:tableView performAction:action forRowAtIndexPath:indexPath withSender:sender];
+    auto rs = _cache.getRow(indexPath.row);
+    if (rs.responds()->performAction) {
+        [rs.component() tableView:tableView performAction:action forRowAtIndexPath:indexPath withSender:sender];
     }
 }
 
 // Focus
 
 - (BOOL)tableView:(UITableView *)tableView canFocusRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(9_0) {
-    auto rs = _cache.respondsAtRow(indexPath.row);
-    if (std::get<0>(rs)->canFocusRowAtIndexPath) {
-        return [std::get<1>(rs) tableView:tableView canFocusRowAtIndexPath:indexPath];
+    auto rs = _cache.getRow(indexPath.row);
+    if (rs.responds()->canFocusRowAtIndexPath) {
+        return [rs.component() tableView:tableView canFocusRowAtIndexPath:indexPath];
     }
     return NO;
 }
 
 - (BOOL)tableView:(UITableView *)tableView shouldSpringLoadRowAtIndexPath:(NSIndexPath *)indexPath withContext:(id<UISpringLoadedInteractionContext>)context API_AVAILABLE(ios(11.0)) API_UNAVAILABLE(tvos, watchos) {
-    auto rs = _cache.respondsAtRow(indexPath.row);
-    if (std::get<0>(rs)->shouldSpringLoadRowAtIndexPath) {
-        return [std::get<1>(rs) tableView:tableView shouldSpringLoadRowAtIndexPath:indexPath withContext:context];
+    auto rs = _cache.getRow(indexPath.row);
+    if (rs.responds()->shouldSpringLoadRowAtIndexPath) {
+        return [rs.component() tableView:tableView shouldSpringLoadRowAtIndexPath:indexPath withContext:context];
     }
     return NO;
 }

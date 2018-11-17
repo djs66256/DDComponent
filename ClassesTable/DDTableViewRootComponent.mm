@@ -21,6 +21,18 @@ using namespace DD::TableViewComponent;
 }
 @synthesize tableView = _tableView;
 
+- (void)dealloc {
+    _tableView.delegate = nil;
+    _tableView.dataSource = nil;
+}
+
+- (instancetype)init
+{
+    UITableView *tableView = [[UITableView alloc] initWithFrame:UIScreen.mainScreen.bounds];
+    self = [self initWithTableView:tableView];
+    return self;
+}
+
 - (instancetype)initWithTableView:(UITableView *)tableView
 {
     self = [super init];
@@ -60,6 +72,16 @@ using namespace DD::TableViewComponent;
 }
 
 - (void)performBatchUpdate:(void (^)())block {
+}
+
+-(BOOL)respondsToSelector:(SEL)aSelector {
+    if (!_estimatedHeightEnabled && (
+        aSelector == @selector(tableView:estimatedHeightForRowAtIndexPath:)
+        || aSelector == @selector(tableView:estimatedHeightForHeaderInSection:)
+        || aSelector == @selector(tableView:estimatedHeightForFooterInSection:))) {
+        return NO;
+    }
+    return [super respondsToSelector:aSelector];
 }
 
 #pragma mark - scroll delegate
