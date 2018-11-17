@@ -12,12 +12,9 @@
 #import "DDTableViewComponentCache.h"
 #import "DDTableViewCompositeComponentProtocol.h"
 #import "DDTableViewRootComponent.h"
+#import "DDTableViewComponentInternal.h"
 
 using namespace DD::TableViewComponent;
-
-@interface DDTableViewSectionGroupComponent () <DDTableViewCompositeComponentProtocol>
-
-@end
 
 @implementation DDTableViewSectionGroupComponent {
     SectionCache _cache;

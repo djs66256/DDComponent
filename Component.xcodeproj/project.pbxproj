@@ -19,6 +19,7 @@
 		6501EB2921A04AC5001D4038 /* DDHeaderFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6501EB2821A04AC5001D4038 /* DDHeaderFooterView.m */; };
 		657016E31D97A8EA0096EC69 /* DDComponent.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 657016DC1D97A8E90096EC69 /* DDComponent.framework */; };
 		657016E41D97A8EA0096EC69 /* DDComponent.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 657016DC1D97A8E90096EC69 /* DDComponent.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6595F9B221A05CFB005FD773 /* DDTableViewStatusComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6595F9B121A05CFB005FD773 /* DDTableViewStatusComponent.mm */; };
 		65C999281D68AF5D0019780A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C999271D68AF5D0019780A /* AppDelegate.swift */; };
 		65C9992D1D68AF5D0019780A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65C9992B1D68AF5D0019780A /* Main.storyboard */; };
 		65C9992F1D68AF5D0019780A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 65C9992E1D68AF5D0019780A /* Assets.xcassets */; };
@@ -118,6 +119,9 @@
 		657016DC1D97A8E90096EC69 /* DDComponent.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DDComponent.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		657016DE1D97A8EA0096EC69 /* DDComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDComponent.h; sourceTree = "<group>"; };
 		657016DF1D97A8EA0096EC69 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6595F9B021A05CFB005FD773 /* DDTableViewStatusComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDTableViewStatusComponent.h; sourceTree = "<group>"; };
+		6595F9B121A05CFB005FD773 /* DDTableViewStatusComponent.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = DDTableViewStatusComponent.mm; sourceTree = "<group>"; };
+		6595F9B321A062D3005FD773 /* DDTableViewComponentInternal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDTableViewComponentInternal.h; sourceTree = "<group>"; };
 		65C999241D68AF5D0019780A /* Component.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Component.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		65C999271D68AF5D0019780A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		65C9992C1D68AF5D0019780A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -192,6 +196,7 @@
 			isa = PBXGroup;
 			children = (
 				6501EB2621A00F1F001D4038 /* DDTableViewComponent.h */,
+				6595F9B321A062D3005FD773 /* DDTableViewComponentInternal.h */,
 				6501EB05219F0B06001D4038 /* DDTableViewComponentCache.h */,
 				6501EB12219F1876001D4038 /* DDTableViewComponentMacros.h */,
 				6501EB0C219F0B06001D4038 /* DDTableViewComponentProtocol.h */,
@@ -205,6 +210,8 @@
 				6501EB08219F0B06001D4038 /* DDTableViewSectionComponent.mm */,
 				6501EB0A219F0B06001D4038 /* DDTableViewSectionGroupComponent.h */,
 				6501EB02219F0B06001D4038 /* DDTableViewSectionGroupComponent.mm */,
+				6595F9B021A05CFB005FD773 /* DDTableViewStatusComponent.h */,
+				6595F9B121A05CFB005FD773 /* DDTableViewStatusComponent.mm */,
 			);
 			path = ClassesTable;
 			sourceTree = "<group>";
@@ -564,6 +571,7 @@
 				BE6021921EEFC50D007A0F0E /* SimpleViewController.swift in Sources */,
 				BE6021AF1EEFDA30007A0F0E /* ImagesComponent.swift in Sources */,
 				BE6021961EEFC54A007A0F0E /* StatusViewController.swift in Sources */,
+				6595F9B221A05CFB005FD773 /* DDTableViewStatusComponent.mm in Sources */,
 				BE6021AB1EEFD950007A0F0E /* ImageCollectionViewCell.swift in Sources */,
 				BE6021BE1EEFFFFE007A0F0E /* TaobaoGoodsComponent.swift in Sources */,
 				BE6021A01EEFC637007A0F0E /* HeaderComponent.swift in Sources */,

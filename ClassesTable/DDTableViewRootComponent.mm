@@ -9,11 +9,9 @@
 #import "DDTableViewRootComponent.h"
 #import "DDTableViewCompositeComponentProtocol.h"
 #import "DDTableViewResponds.h"
+#import "DDTableViewComponentInternal.h"
 
 using namespace DD::TableViewComponent;
-@interface DDTableViewSectionGroupComponent (internal) <DDTableViewCompositeComponentProtocol>
-
-@end
 
 @implementation DDTableViewRootComponent {
     BOOL _needReload;

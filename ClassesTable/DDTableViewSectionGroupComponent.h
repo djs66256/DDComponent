@@ -12,7 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DDTableViewSectionGroupComponent : NSObject <DDTableViewComponentProtocol>
+@interface DDTableViewSectionGroupComponent : DDTableViewSectionComponent
 
 @property (nonatomic, weak) DDTableViewSectionGroupComponent *superComponent;
 

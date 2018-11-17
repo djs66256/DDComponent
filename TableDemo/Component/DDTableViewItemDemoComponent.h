@@ -16,4 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface DDTableViewItemDemo1Component : DDTableViewItemComponent
+@end
+
 NS_ASSUME_NONNULL_END

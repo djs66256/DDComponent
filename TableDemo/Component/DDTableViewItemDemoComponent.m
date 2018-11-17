@@ -215,3 +215,24 @@
 }
 
 @end
+
+@implementation DDTableViewItemDemo1Component
+
+- (void)prepareCells:(UITableView *)tableView {
+    printf("%s\n", sel_getName(_cmd));
+    [tableView registerClass:[DDComponentDemoTableViewCell class]
+      forCellReuseIdentifier:@"DDComponentDemoTableViewCell"];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    printf("%s\n", sel_getName(_cmd));
+    DDComponentDemoTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DDComponentDemoTableViewCell"];
+    cell.contentView.backgroundColor = UIColor.grayColor;
+    return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    printf("%s\n", sel_getName(_cmd));
+    return 20;
+}
+@end

@@ -13,5 +13,6 @@
 #import "DDTableViewSectionComponent.h"
 #import "DDTableViewSectionGroupComponent.h"
 #import "DDTableViewRootComponent.h"
+#import "DDTableViewStatusComponent.h"
 
 #endif /* DDTableViewComponent_h */

@@ -22,13 +22,13 @@
 
 namespace DD {
     namespace TableViewComponent {
-        class Manager {
+        class RespondsManager {
         public:
-            static Manager& getInstance() {
-                static Manager *g_manager = nil;
+            static RespondsManager& getInstance() {
+                static RespondsManager *g_manager = nil;
                 std::once_flag flag;
                 std::call_once(flag, [](){
-                    g_manager = new Manager;
+                    g_manager = new RespondsManager;
                 });
                 return *g_manager;
             }
@@ -52,7 +52,7 @@ namespace DD {
             }
             
         private:
-            Manager() {}
+            RespondsManager() {}
             std::unordered_map<std::uintptr_t, TableViewResponds*> cache_;
             // At some time, we get a list of component that is the same type.
             std::pair<std::uintptr_t, TableViewResponds*> lastCache_ = std::make_pair(-1, nullptr);
@@ -85,7 +85,7 @@ namespace DD {
                 NSUInteger location = 0;
                 TableViewResponds totalResponds;
                 const TableViewResponds *rs, *prev = nullptr;
-                auto manager = Manager::getInstance();
+                auto manager = RespondsManager::getInstance();
                 for (id<DDTableViewComponentProtocol> comp in components) {
                     NSRange r = { location, static_cast<NSUInteger>([comp numberOfSectionsInTableView:tableView]) };
                     indexPaths_.push_back(r);
@@ -168,7 +168,7 @@ namespace DD {
                 responds_.reserve(components.count);
                 components_ = components;
                 
-                auto manager = Manager::getInstance();
+                auto manager = RespondsManager::getInstance();
                 TableViewResponds totalResponds;
                 const TableViewResponds *rs, *prev = nullptr;
                 for (id<DDTableViewComponentProtocol> comp in components) {
@@ -205,7 +205,7 @@ namespace DD {
             void fill(id<DDTableViewComponentProtocol> self, id<DDTableViewComponentProtocol> header, id<DDTableViewComponentProtocol> footer) {
                 myResponds_.clear();
                 
-                auto manager = Manager::getInstance();
+                auto manager = RespondsManager::getInstance();
                 headerResponds_ = manager.respondsForObject(header);
                 footerResponds_ = manager.respondsForObject(footer);
                 selfResponds_ = manager.respondsForObject(self);

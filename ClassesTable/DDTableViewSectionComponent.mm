@@ -10,6 +10,7 @@
 #import "DDTableViewRootComponent.h"
 #import "DDTableViewCompositeComponentProtocol.h"
 #import "DDTableViewComponentCache.h"
+#import "DDTableViewComponentInternal.h"
 
 using namespace DD::TableViewComponent;
 
@@ -39,10 +40,6 @@ using namespace DD::TableViewComponent;
     DDNeedOverride();
     return nil;
 }
-
-@end
-
-@interface DDTableViewHeaderFooterSectionComponent () <DDTableViewCompositeComponentProtocol>
 
 @end
 
@@ -187,10 +184,6 @@ using namespace DD::TableViewComponent;
     }
     return nil;
 }
-
-@end
-
-@interface DDTableViewItemGroupSectionComponent () <DDTableViewCompositeComponentProtocol>
 
 @end
 
