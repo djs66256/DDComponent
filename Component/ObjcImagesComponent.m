@@ -2,7 +2,7 @@
 //  ObjcImagesComponent.m
 //  Component
 //
-//  Created by hzduanjiashun on 2018/7/26.
+//  Created by daniel on 2018/7/26.
 //  Copyright © 2018年 Daniel. All rights reserved.
 //
 

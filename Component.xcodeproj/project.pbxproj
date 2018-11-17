@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6501EB0D219F0B07001D4038 /* DDTableViewSectionGroupComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6501EB02219F0B06001D4038 /* DDTableViewSectionGroupComponent.mm */; };
+		6501EB0E219F0B07001D4038 /* DDTableViewItemComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 6501EB03219F0B06001D4038 /* DDTableViewItemComponent.m */; };
+		6501EB10219F0B07001D4038 /* DDTableViewSectionComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6501EB08219F0B06001D4038 /* DDTableViewSectionComponent.mm */; };
+		6501EB11219F0B07001D4038 /* DDTableViewRootComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6501EB0B219F0B06001D4038 /* DDTableViewRootComponent.mm */; };
 		657016E31D97A8EA0096EC69 /* DDComponent.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 657016DC1D97A8E90096EC69 /* DDComponent.framework */; };
 		657016E41D97A8EA0096EC69 /* DDComponent.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 657016DC1D97A8E90096EC69 /* DDComponent.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		65C999281D68AF5D0019780A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C999271D68AF5D0019780A /* AppDelegate.swift */; };
@@ -22,15 +26,6 @@
 		BE6021841EEFC30D007A0F0E /* DDCollectionViewStatusComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = BE60216E1EEFC30D007A0F0E /* DDCollectionViewStatusComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BE6021851EEFC30D007A0F0E /* DDCollectionViewStatusComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = BE60216F1EEFC30D007A0F0E /* DDCollectionViewStatusComponent.m */; };
 		BE6021861EEFC30D007A0F0E /* DDComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = BE6021701EEFC30D007A0F0E /* DDComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		BE6021871EEFC30D007A0F0E /* DDTableViewComponent+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = BE6021721EEFC30D007A0F0E /* DDTableViewComponent+Private.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		BE6021881EEFC30D007A0F0E /* DDTableViewComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = BE6021731EEFC30D007A0F0E /* DDTableViewComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		BE6021891EEFC30D007A0F0E /* DDTableViewComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = BE6021741EEFC30D007A0F0E /* DDTableViewComponent.m */; };
-		BE60218A1EEFC30D007A0F0E /* DDTableViewItemComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = BE6021751EEFC30D007A0F0E /* DDTableViewItemComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		BE60218B1EEFC30D007A0F0E /* DDTableViewItemComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = BE6021761EEFC30D007A0F0E /* DDTableViewItemComponent.m */; };
-		BE60218C1EEFC30D007A0F0E /* DDTableViewSectionComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = BE6021771EEFC30D007A0F0E /* DDTableViewSectionComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		BE60218D1EEFC30D007A0F0E /* DDTableViewSectionComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = BE6021781EEFC30D007A0F0E /* DDTableViewSectionComponent.m */; };
-		BE60218E1EEFC30D007A0F0E /* DDTableViewSectionGroupComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = BE6021791EEFC30D007A0F0E /* DDTableViewSectionGroupComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		BE60218F1EEFC30D007A0F0E /* DDTableViewSectionGroupComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = BE60217A1EEFC30D007A0F0E /* DDTableViewSectionGroupComponent.m */; };
 		BE6021921EEFC50D007A0F0E /* SimpleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6021911EEFC50D007A0F0E /* SimpleViewController.swift */; };
 		BE6021961EEFC54A007A0F0E /* StatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6021951EEFC54A007A0F0E /* StatusViewController.swift */; };
 		BE6021981EEFC576007A0F0E /* HeaderFooterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6021971EEFC576007A0F0E /* HeaderFooterViewController.swift */; };
@@ -88,6 +83,19 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		6501EB00219F0B06001D4038 /* DDTableViewResponds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDTableViewResponds.h; sourceTree = "<group>"; };
+		6501EB01219F0B06001D4038 /* DDTableViewSectionComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDTableViewSectionComponent.h; sourceTree = "<group>"; };
+		6501EB02219F0B06001D4038 /* DDTableViewSectionGroupComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DDTableViewSectionGroupComponent.mm; sourceTree = "<group>"; };
+		6501EB03219F0B06001D4038 /* DDTableViewItemComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDTableViewItemComponent.m; sourceTree = "<group>"; };
+		6501EB04219F0B06001D4038 /* DDTableViewRootComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDTableViewRootComponent.h; sourceTree = "<group>"; };
+		6501EB05219F0B06001D4038 /* DDTableViewComponentCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDTableViewComponentCache.h; sourceTree = "<group>"; };
+		6501EB06219F0B06001D4038 /* DDTableViewCompositeComponentProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDTableViewCompositeComponentProtocol.h; sourceTree = "<group>"; };
+		6501EB08219F0B06001D4038 /* DDTableViewSectionComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DDTableViewSectionComponent.mm; sourceTree = "<group>"; };
+		6501EB09219F0B06001D4038 /* DDTableViewItemComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDTableViewItemComponent.h; sourceTree = "<group>"; };
+		6501EB0A219F0B06001D4038 /* DDTableViewSectionGroupComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDTableViewSectionGroupComponent.h; sourceTree = "<group>"; };
+		6501EB0B219F0B06001D4038 /* DDTableViewRootComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DDTableViewRootComponent.mm; sourceTree = "<group>"; };
+		6501EB0C219F0B06001D4038 /* DDTableViewComponentProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDTableViewComponentProtocol.h; sourceTree = "<group>"; };
+		6501EB12219F1876001D4038 /* DDTableViewComponentMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDTableViewComponentMacros.h; sourceTree = "<group>"; };
 		657016DC1D97A8E90096EC69 /* DDComponent.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DDComponent.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		657016DE1D97A8EA0096EC69 /* DDComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDComponent.h; sourceTree = "<group>"; };
 		657016DF1D97A8EA0096EC69 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -107,15 +115,6 @@
 		BE60216E1EEFC30D007A0F0E /* DDCollectionViewStatusComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDCollectionViewStatusComponent.h; sourceTree = "<group>"; };
 		BE60216F1EEFC30D007A0F0E /* DDCollectionViewStatusComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDCollectionViewStatusComponent.m; sourceTree = "<group>"; };
 		BE6021701EEFC30D007A0F0E /* DDComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDComponent.h; sourceTree = "<group>"; };
-		BE6021721EEFC30D007A0F0E /* DDTableViewComponent+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DDTableViewComponent+Private.h"; sourceTree = "<group>"; };
-		BE6021731EEFC30D007A0F0E /* DDTableViewComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDTableViewComponent.h; sourceTree = "<group>"; };
-		BE6021741EEFC30D007A0F0E /* DDTableViewComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDTableViewComponent.m; sourceTree = "<group>"; };
-		BE6021751EEFC30D007A0F0E /* DDTableViewItemComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDTableViewItemComponent.h; sourceTree = "<group>"; };
-		BE6021761EEFC30D007A0F0E /* DDTableViewItemComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDTableViewItemComponent.m; sourceTree = "<group>"; };
-		BE6021771EEFC30D007A0F0E /* DDTableViewSectionComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDTableViewSectionComponent.h; sourceTree = "<group>"; };
-		BE6021781EEFC30D007A0F0E /* DDTableViewSectionComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDTableViewSectionComponent.m; sourceTree = "<group>"; };
-		BE6021791EEFC30D007A0F0E /* DDTableViewSectionGroupComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDTableViewSectionGroupComponent.h; sourceTree = "<group>"; };
-		BE60217A1EEFC30D007A0F0E /* DDTableViewSectionGroupComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDTableViewSectionGroupComponent.m; sourceTree = "<group>"; };
 		BE6021901EEFC39B007A0F0E /* DDCollectionBridgeHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDCollectionBridgeHeader.h; sourceTree = "<group>"; };
 		BE6021911EEFC50D007A0F0E /* SimpleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleViewController.swift; sourceTree = "<group>"; };
 		BE6021951EEFC54A007A0F0E /* StatusViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusViewController.swift; sourceTree = "<group>"; };
@@ -170,6 +169,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6501EAFF219F0B06001D4038 /* ClassesTable */ = {
+			isa = PBXGroup;
+			children = (
+				6501EB05219F0B06001D4038 /* DDTableViewComponentCache.h */,
+				6501EB0C219F0B06001D4038 /* DDTableViewComponentProtocol.h */,
+				6501EB06219F0B06001D4038 /* DDTableViewCompositeComponentProtocol.h */,
+				6501EB09219F0B06001D4038 /* DDTableViewItemComponent.h */,
+				6501EB03219F0B06001D4038 /* DDTableViewItemComponent.m */,
+				6501EB00219F0B06001D4038 /* DDTableViewResponds.h */,
+				6501EB04219F0B06001D4038 /* DDTableViewRootComponent.h */,
+				6501EB0B219F0B06001D4038 /* DDTableViewRootComponent.mm */,
+				6501EB01219F0B06001D4038 /* DDTableViewSectionComponent.h */,
+				6501EB08219F0B06001D4038 /* DDTableViewSectionComponent.mm */,
+				6501EB0A219F0B06001D4038 /* DDTableViewSectionGroupComponent.h */,
+				6501EB02219F0B06001D4038 /* DDTableViewSectionGroupComponent.mm */,
+				6501EB12219F1876001D4038 /* DDTableViewComponentMacros.h */,
+			);
+			path = ClassesTable;
+			sourceTree = "<group>";
+		};
 		657016DD1D97A8EA0096EC69 /* DDComponent */ = {
 			isa = PBXGroup;
 			children = (
@@ -182,6 +201,7 @@
 		65C9991B1D68AF5D0019780A = {
 			isa = PBXGroup;
 			children = (
+				6501EAFF219F0B06001D4038 /* ClassesTable */,
 				65C999391D68AF740019780A /* Class */,
 				BE777A132109655A00727B69 /* ObjcComponent */,
 				65C999261D68AF5D0019780A /* Component */,
@@ -230,7 +250,6 @@
 			children = (
 				BE6021641EEFC30D007A0F0E /* Collection */,
 				BE6021701EEFC30D007A0F0E /* DDComponent.h */,
-				BE6021711EEFC30D007A0F0E /* Table */,
 			);
 			path = oc;
 			sourceTree = "<group>";
@@ -253,22 +272,6 @@
 				BE60216F1EEFC30D007A0F0E /* DDCollectionViewStatusComponent.m */,
 			);
 			path = Collection;
-			sourceTree = "<group>";
-		};
-		BE6021711EEFC30D007A0F0E /* Table */ = {
-			isa = PBXGroup;
-			children = (
-				BE6021721EEFC30D007A0F0E /* DDTableViewComponent+Private.h */,
-				BE6021731EEFC30D007A0F0E /* DDTableViewComponent.h */,
-				BE6021741EEFC30D007A0F0E /* DDTableViewComponent.m */,
-				BE6021751EEFC30D007A0F0E /* DDTableViewItemComponent.h */,
-				BE6021761EEFC30D007A0F0E /* DDTableViewItemComponent.m */,
-				BE6021771EEFC30D007A0F0E /* DDTableViewSectionComponent.h */,
-				BE6021781EEFC30D007A0F0E /* DDTableViewSectionComponent.m */,
-				BE6021791EEFC30D007A0F0E /* DDTableViewSectionGroupComponent.h */,
-				BE60217A1EEFC30D007A0F0E /* DDTableViewSectionGroupComponent.m */,
-			);
-			path = Table;
 			sourceTree = "<group>";
 		};
 		BE60219D1EEFC5FE007A0F0E /* Controllers */ = {
@@ -341,16 +344,11 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BE60218A1EEFC30D007A0F0E /* DDTableViewItemComponent.h in Headers */,
 				BE60217C1EEFC30D007A0F0E /* DDCollectionViewComponent.h in Headers */,
-				BE60218C1EEFC30D007A0F0E /* DDTableViewSectionComponent.h in Headers */,
 				BE60217E1EEFC30D007A0F0E /* DDCollectionViewItemComponent.h in Headers */,
 				BE6021841EEFC30D007A0F0E /* DDCollectionViewStatusComponent.h in Headers */,
-				BE6021881EEFC30D007A0F0E /* DDTableViewComponent.h in Headers */,
-				BE60218E1EEFC30D007A0F0E /* DDTableViewSectionGroupComponent.h in Headers */,
 				BE94B1821F0C7DD00032B713 /* DDCollectionComponent.h in Headers */,
 				BE94B1841F0C7DDA0032B713 /* DDCollectionViewComponent+Cache.h in Headers */,
-				BE6021871EEFC30D007A0F0E /* DDTableViewComponent+Private.h in Headers */,
 				BE6021821EEFC30D007A0F0E /* DDCollectionViewSectionGroupComponent.h in Headers */,
 				BE6021801EEFC30D007A0F0E /* DDCollectionViewSectionComponent.h in Headers */,
 				BE6021861EEFC30D007A0F0E /* DDComponent.h in Headers */,
@@ -470,12 +468,8 @@
 				BE60217D1EEFC30D007A0F0E /* DDCollectionViewComponent.m in Sources */,
 				BE94B1861F0C7DE30032B713 /* DDCollectionViewSectionComponent.mm in Sources */,
 				BE6021851EEFC30D007A0F0E /* DDCollectionViewStatusComponent.m in Sources */,
-				BE60218D1EEFC30D007A0F0E /* DDTableViewSectionComponent.m in Sources */,
 				BE60217F1EEFC30D007A0F0E /* DDCollectionViewItemComponent.m in Sources */,
-				BE6021891EEFC30D007A0F0E /* DDTableViewComponent.m in Sources */,
-				BE60218B1EEFC30D007A0F0E /* DDTableViewItemComponent.m in Sources */,
 				BE94B1881F0C7DE90032B713 /* DDCollectionViewSectionGroupComponent.mm in Sources */,
-				BE60218F1EEFC30D007A0F0E /* DDTableViewSectionGroupComponent.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -483,6 +477,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6501EB0D219F0B07001D4038 /* DDTableViewSectionGroupComponent.mm in Sources */,
 				BE6021A61EEFC8D7007A0F0E /* RootCollectionViewController.swift in Sources */,
 				BE6021A91EEFCA97007A0F0E /* TitleCollectionViewCell.swift in Sources */,
 				BE6021A41EEFC660007A0F0E /* StatusComponent.swift in Sources */,
@@ -492,6 +487,7 @@
 				BE6021B51EEFEB59007A0F0E /* FooterComponent.swift in Sources */,
 				BE6021981EEFC576007A0F0E /* HeaderFooterViewController.swift in Sources */,
 				BE777A122109645F00727B69 /* ObjcImageCollectionViewCell.m in Sources */,
+				6501EB10219F0B07001D4038 /* DDTableViewSectionComponent.mm in Sources */,
 				65C999281D68AF5D0019780A /* AppDelegate.swift in Sources */,
 				BE6021B31EEFEB1E007A0F0E /* TextCollectionReusableView.swift in Sources */,
 				BE777A0F2109639700727B69 /* ObjcImagesComponent.m in Sources */,
@@ -501,8 +497,10 @@
 				BE6021AB1EEFD950007A0F0E /* ImageCollectionViewCell.swift in Sources */,
 				BE6021BE1EEFFFFE007A0F0E /* TaobaoGoodsComponent.swift in Sources */,
 				BE6021A01EEFC637007A0F0E /* HeaderComponent.swift in Sources */,
+				6501EB11219F0B07001D4038 /* DDTableViewRootComponent.mm in Sources */,
 				BE6021B11EEFDC67007A0F0E /* TextsComponent.swift in Sources */,
 				BE60219C1EEFC5DB007A0F0E /* HeaderStatusViewController.swift in Sources */,
+				6501EB0E219F0B07001D4038 /* DDTableViewItemComponent.m in Sources */,
 				BE60219A1EEFC5B1007A0F0E /* SectionsViewController.swift in Sources */,
 				BE6021BC1EEFFFE9007A0F0E /* TaobaoEntriesComponent.swift in Sources */,
 			);

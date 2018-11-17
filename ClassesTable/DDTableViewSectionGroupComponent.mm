@@ -1,41 +1,73 @@
 //
-//  NMTableViewSectionGroupComponent.m
-//  NMTableViewComponent
+//  DDTableViewSectionGroupComponent.m
+//  DDTableViewComponent
 //
-//  Created by hzduanjiashun on 2018/11/16.
+//  Created by daniel on 2018/11/16.
 //  Copyright © 2018 daniel. All rights reserved.
 //
 
 #include <vector>
 #include <tuple>
-#import "NMTableViewSectionGroupComponent.h"
-#import "NMTableViewComponentCache.h"
+#import "DDTableViewSectionGroupComponent.h"
+#import "DDTableViewComponentCache.h"
+#import "DDTableViewCompositeComponentProtocol.h"
+#import "DDTableViewRootComponent.h"
 
-using namespace NM::TableViewComponent;
+using namespace DD::TableViewComponent;
 
-@implementation NMTableViewSectionGroupComponent {
+@interface DDTableViewSectionGroupComponent () <DDTableViewCompositeComponentProtocol>
+
+@end
+
+@implementation DDTableViewSectionGroupComponent {
     SectionCache _cache;
 }
 
 #pragma mark - interface
-- (NMTableViewRootComponent *)rootComponent {
+- (DDTableViewRootComponent *)rootComponent {
     return self.superComponent.rootComponent;
 }
 
 - (UITableView *)tableView {
-    return self.superComponent.tableView;
+    return self.rootComponent.tableView;
 }
 
-- (void)prepareCells {}
+- (void)setSubComponents:(NSArray<DDTableViewSectionComponent *> *)subComponents {
+    if (_subComponents != subComponents) {
+        for (DDTableViewSectionComponent *comp in _subComponents) {
+            if (comp.superComponent == self) {
+                comp.superComponent = nil;
+            }
+        }
+        
+        _subComponents = subComponents.copy;
+        
+        UITableView *tableView = self.tableView;
+        for (DDTableViewSectionComponent * comp in subComponents) {
+            comp.superComponent = self;
+            if (tableView) [self prepareCells:tableView];
+        }
+    }
+}
 
-#pragma mark - reload
-- (void)rebuildCachedIndexPaths {
+- (void)prepareCells:(UITableView *)tableView {
+    for (DDTableViewSectionComponent *comp in self.subComponents) {
+        [comp prepareCells:tableView];
+    }
+}
+
+#pragma mark - composite component
+- (void)rebuildCache {
+    for (DDTableViewSectionComponent *comp in self.subComponents) {
+        if ([comp conformsToProtocol:@protocol(DDTableViewCompositeComponentProtocol)]) {
+            [(id<DDTableViewCompositeComponentProtocol>)comp rebuildCache];
+        }
+    }
     _cache.fill(self.subComponents, self.tableView);
 }
 
-
-- (void)reloadData {
-    [self rebuildCachedIndexPaths];
+- (const DD::TableViewComponent::TableViewResponds *)respondsInfo {
+    return _cache.myResponds();
 }
 
 #pragma mark - table view datasource
