@@ -30,16 +30,19 @@
     self.rootComponent = [[DDTableViewRootComponent alloc] initWithTableView:self.tableView];
     
     DDTableViewItemGroupSectionComponent *items = [DDTableViewItemGroupSectionComponent new];
-    items.subComponents = @[[DDTableViewItemDemoComponent new]];
+    items.subComponents = @[[DDTableViewItemDemoComponent new], [DDTableViewItemDemoComponent new]];
     
     DDTableViewHeaderFooterSectionDemoComponent *section = [DDTableViewHeaderFooterSectionDemoComponent new];
     
     DDTableViewSectionGroupComponent *sectionGroup = [DDTableViewSectionGroupComponent new];
-    sectionGroup.subComponents = @[[DDTableViewItemGroupSectionComponent new], [DDTableViewHeaderFooterSectionDemoComponent new]];
+    
+    DDTableViewItemGroupSectionComponent *items2 = [DDTableViewItemGroupSectionComponent new];
+    items2.subComponents = @[[DDTableViewItemDemoComponent new], [DDTableViewItemDemoComponent new]];
+    sectionGroup.subComponents = @[items2, [DDTableViewHeaderFooterSectionDemoComponent new]];
     
     DDTableViewStatusComponent *status = [DDTableViewStatusComponent new];
     DDTableViewSectionGroupComponent *g = [DDTableViewSectionGroupComponent new];
-    g.subComponents = @[items, section, items, sectionGroup];
+    g.subComponents = @[items, section, sectionGroup];
     status[@"normal"] = g;
     status.state = @"normal";
     

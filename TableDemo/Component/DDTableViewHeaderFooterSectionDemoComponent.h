@@ -6,7 +6,7 @@
 //  Copyright © 2018 Daniel. All rights reserved.
 //
 
-#import "DDTableViewSectionComponent.h"
+#import "DDTableViewComponent.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -52,8 +52,8 @@ extern const CGFloat DDComponentAutomaticDimension;
 
  @param component Nil if remove from super component.
  */
-//- (void)willMoveToComponent:(DDCollectionViewBaseComponent * _Nullable)component NS_REQUIRES_SUPER;
-//- (void)didMoveToComponent NS_REQUIRES_SUPER;
+//- (void)willMovetoSubComponent:(DDCollectionViewBaseComponent * _Nullable)component NS_REQUIRES_SUPER;
+//- (void)didMovetoSubComponent NS_REQUIRES_SUPER;
 //- (void)willMoveToRootComponent:(DDCollectionViewRootComponent * _Nullable)component NS_REQUIRES_SUPER;
 //- (void)didMoveToRootComponent NS_REQUIRES_SUPER;
 

@@ -22,6 +22,9 @@
     printf("%s\n", sel_getName(_cmd));
     DDComponentDemoTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DDComponentDemoTableViewCell"];
     cell.contentView.backgroundColor = UIColor.grayColor;
+    NSIndexPath *idx = [self convertToGlobalIndexPath:indexPath];
+    NSIndexPath *lidx = [self convertFromGlobalIndexPath:idx];
+    cell.textLabel.text = [NSString stringWithFormat:@"(%zd, %zd),(%zd, %zd)", idx.section, idx.row, lidx.section, lidx.row];
     return cell;
 }
 
@@ -139,6 +142,11 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     printf("%s\n", sel_getName(_cmd));
+    
+    NSIndexPath *global = [self convertToGlobalIndexPath:indexPath];
+    NSIndexPath *fix = [self convertFromGlobalIndexPath:global];
+    NSString *str = [NSString stringWithFormat:@"%@\n%@\n%@\n", indexPath, global, fix];
+    printf("%s\n", [str cStringUsingEncoding:NSUTF8StringEncoding]);
 }
 
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(3_0) {

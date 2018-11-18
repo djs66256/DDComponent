@@ -63,6 +63,26 @@ using namespace DD::TableViewComponent;
     }];
 }
 
+#pragma mark - convert
+//- (NSIndexPath *)convertIndexPath:(NSIndexPath *)indexPath fromComponent:(nonnull DDTableViewBaseComponent *)from toSuperComponent:(nonnull DDTableViewBaseComponent *)comp {
+//    return [self convertIndexPath:indexPath toSuperComponent:comp];
+//}
+
+- (NSIndexPath *)convertIndexPath:(NSIndexPath *)indexPath toSubComponent:(DDTableViewBaseComponent *)comp {
+    if (self == comp) return indexPath;
+    return [_currentComponent convertIndexPath:indexPath toSubComponent:comp];
+}
+
+- (NSInteger)convertSection:(NSInteger)section toSuperComponent:(DDTableViewBaseComponent *)comp {
+    if (self == comp) return section;
+    return [self.superComponent convertSection:section toSuperComponent:comp];
+}
+
+- (NSInteger)convertSection:(NSInteger)section toSubComponent:(DDTableViewBaseComponent *)comp {
+    if (self == comp) return section;
+    return [_currentComponent convertSection:section toSubComponent:comp];
+}
+
 #pragma mark - composite
 - (const TableViewResponds *)respondsInfo {
     return _responds;

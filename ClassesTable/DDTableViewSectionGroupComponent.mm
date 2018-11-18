@@ -20,6 +20,56 @@ using namespace DD::TableViewComponent;
     SectionCache _cache;
 }
 
+#pragma mark - convert
+- (NSIndexPath *)convertIndexPath:(NSIndexPath *)indexPath fromComponent:(nonnull DDTableViewBaseComponent *)from toSuperComponent:(nonnull DDTableViewBaseComponent *)comp {
+    auto rs = _cache.getComponent(from);
+    if (rs == _cache.end()) {
+        return nil;
+    }
+    else {
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section + rs.range().location];
+        return [self convertIndexPath:idx toSuperComponent:comp];
+    }
+}
+
+- (NSIndexPath *)convertIndexPath:(NSIndexPath *)indexPath toSubComponent:(DDTableViewBaseComponent *)comp {
+    if (self == comp) return indexPath;
+    
+    auto rs = _cache.getSection(indexPath.section);
+    if (rs == _cache.end()) {
+        return nil;
+    }
+    else {
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - rs.range().location];
+        return [rs.component() convertIndexPath:idx toSubComponent:comp];
+    }
+}
+
+- (NSInteger)convertSection:(NSInteger)section toSuperComponent:(DDTableViewBaseComponent *)comp {
+    if (self == comp) return section;
+    
+    auto rs = _cache.getSection(section);
+    if (rs == _cache.end()) {
+        return NSNotFound;
+    }
+    else {
+        return [self.superComponent convertSection:section + rs.range().location toSuperComponent:comp];
+    }
+}
+
+- (NSInteger)convertSection:(NSInteger)section toSubComponent:(DDTableViewBaseComponent *)comp {
+    if (self == comp) return section;
+    
+    auto rs = _cache.getSection(section);
+    if (rs == _cache.end()) {
+        return NSNotFound;
+    }
+    else {
+        return [rs.component() convertSection:section - rs.range().location
+                               toSubComponent:comp];
+    }
+}
+
 #pragma mark - interface
 
 - (void)setSubComponents:(NSArray<DDTableViewSectionComponent *> *)subComponents {

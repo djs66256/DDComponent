@@ -68,8 +68,8 @@ const CGFloat DDComponentAutomaticDimension = CGFLOAT_MAX;
 - (void)clearDataSourceCache {}
 - (void)clearSizeCache {}
 
-//- (void)willMoveToComponent:(DDCollectionViewBaseComponent *)component {}
-//- (void)didMoveToComponent {}
+//- (void)willMovetoSubComponent:(DDCollectionViewBaseComponent *)component {}
+//- (void)didMovetoSubComponent {}
 //- (void)willMoveToRootComponent:(DDCollectionViewBaseComponent *)component {}
 //- (void)didMoveToRootComponent {}
 

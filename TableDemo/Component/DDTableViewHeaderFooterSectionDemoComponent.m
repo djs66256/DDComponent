@@ -30,6 +30,9 @@
     printf("%s\n", sel_getName(_cmd));
     DDComponentDemoTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DDComponentDemoTableViewCell"];
     cell.contentView.backgroundColor = arc4random()%100 > 50 ? UIColor.redColor : UIColor.greenColor;
+    NSIndexPath *idx = [self convertToGlobalIndexPath:indexPath];
+    NSIndexPath *lidx = [self convertFromGlobalIndexPath:idx];
+    cell.textLabel.text = [NSString stringWithFormat:@"(%zd, %zd),(%zd, %zd)", idx.section, idx.row, lidx.section, lidx.row];
     return cell;
 }
 
@@ -40,6 +43,17 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return 20;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSIndexPath *global = [self convertToGlobalIndexPath:indexPath];
+    NSIndexPath *fix = [self convertFromGlobalIndexPath:global];
+    NSString *str = [NSString stringWithFormat:@"%@\n%@\n%@\n", indexPath, global, fix];
+    printf("%s\n", [str cStringUsingEncoding:NSUTF8StringEncoding]);
+    
+    NSInteger globalS = [self convertToGlobalSection:indexPath.section];
+    NSInteger fixS = [self convertFromGlobalSection:globalS];
+    printf("%zd, %zd, %zd\n", indexPath.section, globalS, fixS);
 }
 
 @end

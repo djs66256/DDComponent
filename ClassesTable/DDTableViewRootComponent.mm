@@ -51,6 +51,23 @@ using namespace DD::TableViewComponent;
     return self;
 }
 
+#pragma mark - convert
+- (NSIndexPath *)convertToGlobalIndexPath:(NSIndexPath *)indexPath {
+    return indexPath;
+}
+
+- (NSIndexPath *)convertFromGlobalIndexPath:(NSIndexPath *)indexPath {
+    return indexPath;
+}
+
+- (NSInteger)convertToGlobalSection:(NSInteger)section {
+    return section;
+}
+
+- (NSInteger)convertFromGlobalSection:(NSInteger)section {
+    return section;
+}
+
 - (void)setScrollViewDelegate:(id<UIScrollViewDelegate>)scrollViewDelegate {
     _scrollViewDelegate = scrollViewDelegate;
     _scrollResponds.fill(scrollViewDelegate);
