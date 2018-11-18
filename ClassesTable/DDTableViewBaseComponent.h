@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface DDTableViewBaseComponent : NSObject <DDTableViewComponentProtocol>
 
-@property (nonatomic, weak) DDTableViewBaseComponent *superComponent;
+@property (nonatomic, weak) __kindof DDTableViewBaseComponent *superComponent;
 
 - (NSIndexPath *)convertIndexPath:(NSIndexPath *)indexPath toSuperComponent:(DDTableViewBaseComponent *)comp;
 - (NSIndexPath *)convertIndexPath:(NSIndexPath *)indexPath toSubComponent:(DDTableViewBaseComponent *)comp;

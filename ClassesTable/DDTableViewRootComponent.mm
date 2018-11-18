@@ -78,18 +78,7 @@ using namespace DD::TableViewComponent;
     [self.tableView reloadData];
 }
 
-- (void)beginUpdate {
-    [self.tableView beginUpdates];
-}
-
-- (void)commitUpdate {
-    [self.tableView endUpdates];
-}
-
-- (void)performBatchUpdate:(void (^)())block {
-}
-
--(BOOL)respondsToSelector:(SEL)aSelector {
+- (BOOL)respondsToSelector:(SEL)aSelector {
     if (!_estimatedHeightEnabled && (
         aSelector == @selector(tableView:estimatedHeightForRowAtIndexPath:)
         || aSelector == @selector(tableView:estimatedHeightForHeaderInSection:)

@@ -19,15 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)init;
 - (instancetype)initWithTableView:(UITableView *)tableView;
 
-- (void)setNeedReload;
 - (void)reloadData;
-
-- (void)removeComponent:(id<DDTableViewComponentProtocol>)component;
-- (void)reloadComponent:(id<DDTableViewComponentProtocol>)component;
-
-- (void)beginUpdate;
-- (void)commitUpdate;
-- (void)performBatchUpdate:(void(^)())block;
 
 @end
 

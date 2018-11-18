@@ -48,7 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
  Attach to a collection view. It will override its delegate and dataSource.
  But it will not override scroll delegate.
 
- @param collectionView
+ @param collectionView Bind to collectionView.
  @param bind Yes will override delegate and dataSource.
  */
 - (instancetype)initWithCollectionView:(UICollectionView *)collectionView bind:(BOOL)bind;

@@ -10,10 +10,8 @@
 #import "DDTableViewBaseComponent.h"
 
 NS_ASSUME_NONNULL_BEGIN
-@class DDTableViewSectionComponent;
-@interface DDTableViewItemComponent : DDTableViewBaseComponent
 
-@property (nonatomic, weak) DDTableViewSectionComponent *superComponent;
+@interface DDTableViewItemComponent : DDTableViewBaseComponent
 
 @end
 

@@ -11,9 +11,13 @@
 
 #import "DDTableViewSectionComponent.h"
 #import "DDTableViewSectionGroupComponent.h"
+#import "DDTableViewBaseComponent.h"
+#import "DDTableViewCompositeComponentProtocol.h"
 
 @interface DDTableViewBaseComponent ()
-- (NSIndexPath *)convertIndexPath:(NSIndexPath *)indexPath fromComponent:(DDTableViewBaseComponent *)from toSuperComponent:(DDTableViewBaseComponent *)comp;
+- (NSIndexPath *)convertIndexPath:(NSIndexPath *)indexPath
+                    fromComponent:(DDTableViewBaseComponent *)from
+                 toSuperComponent:(DDTableViewBaseComponent *)comp;
 @end
 
 @interface DDTableViewHeaderFooterSectionComponent () <DDTableViewCompositeComponentProtocol>
