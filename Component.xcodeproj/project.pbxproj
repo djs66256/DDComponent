@@ -24,6 +24,7 @@
 		65C9992D1D68AF5D0019780A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65C9992B1D68AF5D0019780A /* Main.storyboard */; };
 		65C9992F1D68AF5D0019780A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 65C9992E1D68AF5D0019780A /* Assets.xcassets */; };
 		65C999321D68AF5E0019780A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65C999301D68AF5E0019780A /* LaunchScreen.storyboard */; };
+		BE52E71421A137F500A5E969 /* DDTableViewBaseComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = BE52E71321A137F500A5E969 /* DDTableViewBaseComponent.m */; };
 		BE60217C1EEFC30D007A0F0E /* DDCollectionViewComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = BE6021661EEFC30D007A0F0E /* DDCollectionViewComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BE60217D1EEFC30D007A0F0E /* DDCollectionViewComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = BE6021671EEFC30D007A0F0E /* DDCollectionViewComponent.m */; };
 		BE60217E1EEFC30D007A0F0E /* DDCollectionViewItemComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = BE6021681EEFC30D007A0F0E /* DDCollectionViewItemComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -128,6 +129,8 @@
 		65C9992E1D68AF5D0019780A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		65C999311D68AF5E0019780A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		65C999331D68AF5E0019780A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BE52E71221A137F500A5E969 /* DDTableViewBaseComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDTableViewBaseComponent.h; sourceTree = "<group>"; };
+		BE52E71321A137F500A5E969 /* DDTableViewBaseComponent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DDTableViewBaseComponent.m; sourceTree = "<group>"; };
 		BE6021651EEFC30D007A0F0E /* DDCollectionViewComponent+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DDCollectionViewComponent+Private.h"; sourceTree = "<group>"; };
 		BE6021661EEFC30D007A0F0E /* DDCollectionViewComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDCollectionViewComponent.h; sourceTree = "<group>"; };
 		BE6021671EEFC30D007A0F0E /* DDCollectionViewComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDCollectionViewComponent.m; sourceTree = "<group>"; };
@@ -200,6 +203,8 @@
 				6501EB05219F0B06001D4038 /* DDTableViewComponentCache.h */,
 				6501EB12219F1876001D4038 /* DDTableViewComponentMacros.h */,
 				6501EB0C219F0B06001D4038 /* DDTableViewComponentProtocol.h */,
+				BE52E71221A137F500A5E969 /* DDTableViewBaseComponent.h */,
+				BE52E71321A137F500A5E969 /* DDTableViewBaseComponent.m */,
 				6501EB06219F0B06001D4038 /* DDTableViewCompositeComponentProtocol.h */,
 				6501EB09219F0B06001D4038 /* DDTableViewItemComponent.h */,
 				6501EB03219F0B06001D4038 /* DDTableViewItemComponent.m */,
@@ -552,6 +557,7 @@
 				BE6021A61EEFC8D7007A0F0E /* RootCollectionViewController.swift in Sources */,
 				BE6021A91EEFCA97007A0F0E /* TitleCollectionViewCell.swift in Sources */,
 				BE6021A41EEFC660007A0F0E /* StatusComponent.swift in Sources */,
+				BE52E71421A137F500A5E969 /* DDTableViewBaseComponent.m in Sources */,
 				BE6021BA1EEFFFDA007A0F0E /* TaobaoBannerComponent.swift in Sources */,
 				6501EB2521A00E23001D4038 /* DDTableViewHeaderFooterSectionDemoComponent.m in Sources */,
 				BE6021AD1EEFD99D007A0F0E /* TitlesComponent.swift in Sources */,

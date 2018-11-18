@@ -14,8 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface DDTableViewSectionGroupComponent : DDTableViewSectionComponent
 
-@property (nonatomic, weak) DDTableViewSectionGroupComponent *superComponent;
-
 @property (nonatomic, strong) NSArray<DDTableViewSectionComponent *> *subComponents;
 
 @end

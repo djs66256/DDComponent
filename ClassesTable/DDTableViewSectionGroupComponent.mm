@@ -21,13 +21,6 @@ using namespace DD::TableViewComponent;
 }
 
 #pragma mark - interface
-- (DDTableViewRootComponent *)rootComponent {
-    return self.superComponent.rootComponent;
-}
-
-- (UITableView *)tableView {
-    return self.rootComponent.tableView;
-}
 
 - (void)setSubComponents:(NSArray<DDTableViewSectionComponent *> *)subComponents {
     if (_subComponents != subComponents) {

@@ -186,14 +186,6 @@ namespace DD {
             
             NSInteger numberOfRows() { return responds_.size(); }
             
-            std::pair<const TableViewResponds*, id<DDTableViewComponentProtocol>> respondsAtRow(NSInteger row) {
-                if (row < responds_.size()) {
-                    return std::make_pair(responds_[row], components_[row]);
-                }
-                NSCAssert(false, @"Can not find info at row %zd!", row);
-                return std::make_pair(nullptr, nil);
-            }
-            
         private:
             TableViewResponds myResponds_;
             std::vector<const TableViewResponds*> responds_;

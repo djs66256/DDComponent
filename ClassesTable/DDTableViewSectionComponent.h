@@ -7,17 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "DDTableViewComponentProtocol.h"
+#import "DDTableViewBaseComponent.h"
 #import "DDTableViewItemComponent.h"
 #import "DDTableViewComponentMacros.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DDTableViewSectionComponent : NSObject <DDTableViewComponentProtocol>
-
-@property (nonatomic, weak) id<DDTableViewComponentProtocol> superComponent;
-
-- (void)prepareCells:(UITableView *)tableView NS_REQUIRES_SUPER;
+@interface DDTableViewSectionComponent : DDTableViewBaseComponent
 
 @end
 
@@ -26,12 +22,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) DDTableViewItemComponent *header;
 @property (nonatomic, strong) DDTableViewItemComponent *footer;
 
+- (void)prepareCells:(UITableView *)tableView NS_REQUIRES_SUPER;
+
 @end
 
 FINAL_CLASS
 @interface DDTableViewItemGroupSectionComponent : DDTableViewHeaderFooterSectionComponent
 
 @property (nonatomic, strong) NSArray<DDTableViewItemComponent *> *subComponents;
+
+- (void)prepareCells:(UITableView *)tableView NS_REQUIRES_SUPER;
 
 @end
 

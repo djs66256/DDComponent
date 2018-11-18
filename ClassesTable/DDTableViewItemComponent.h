@@ -7,15 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "DDTableViewComponentProtocol.h"
+#import "DDTableViewBaseComponent.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DDTableViewItemComponent : NSObject <DDTableViewComponentProtocol>
-
-@property (nonatomic, weak) id<DDTableViewComponentProtocol> superComponent;
-
-- (void)prepareCells:(UITableView *)tableView;
+@interface DDTableViewItemComponent : DDTableViewBaseComponent
 
 @end
 
