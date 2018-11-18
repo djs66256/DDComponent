@@ -45,15 +45,15 @@ using namespace DD::TableViewComponent;
     }
 }
 
-- (NSInteger)convertSection:(NSInteger)section toSuperComponent:(DDTableViewBaseComponent *)comp {
+- (NSInteger)convertSection:(NSInteger)section fromComponent:(DDTableViewBaseComponent *)from toSuperComponent:(DDTableViewBaseComponent *)comp {
     if (self == comp) return section;
     
-    auto rs = _cache.getSection(section);
+    auto rs = _cache.getComponent(from);
     if (rs == _cache.end()) {
         return NSNotFound;
     }
     else {
-        return [self.superComponent convertSection:section + rs.range().location toSuperComponent:comp];
+        return [self convertSection:section + rs.range().location toSuperComponent:comp];
     }
 }
 

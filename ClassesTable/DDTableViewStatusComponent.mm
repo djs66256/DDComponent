@@ -70,11 +70,6 @@ using namespace DD::TableViewComponent;
     return [_currentComponent convertIndexPath:indexPath toSubComponent:comp];
 }
 
-- (NSInteger)convertSection:(NSInteger)section toSuperComponent:(DDTableViewBaseComponent *)comp {
-    if (self == comp) return section;
-    return [self.superComponent convertSection:section toSuperComponent:comp];
-}
-
 - (NSInteger)convertSection:(NSInteger)section toSubComponent:(DDTableViewBaseComponent *)comp {
     if (self == comp) return section;
     return [_currentComponent convertSection:section toSubComponent:comp];

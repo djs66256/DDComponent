@@ -19,7 +19,11 @@ using namespace DD::TableViewComponent;
 
 - (NSInteger)convertSection:(NSInteger)section toSuperComponent:(DDTableViewBaseComponent *)comp {
     if (self == comp) return section;
-    return NSNotFound;
+    return [self.superComponent convertSection:section fromComponent:self toSuperComponent:comp];
+}
+
+- (NSInteger)convertSection:(NSInteger)section fromComponent:(DDTableViewBaseComponent *)from toSuperComponent:(DDTableViewBaseComponent *)comp {
+    return [self convertSection:section toSuperComponent:comp];
 }
 
 - (NSInteger)convertSection:(NSInteger)section toSubComponent:(DDTableViewBaseComponent *)comp {
@@ -87,15 +91,27 @@ using namespace DD::TableViewComponent;
 }
 
 - (NSIndexPath *)convertIndexPath:(NSIndexPath *)indexPath toSuperComponent:(DDTableViewBaseComponent *)comp {
-    if (self == comp || _header == comp || _footer == comp) {
+    if (_header == comp || _footer == comp) {
         return indexPath;
     }
-    return [self.superComponent convertIndexPath:indexPath fromComponent:self toSuperComponent:comp];
+    return [super convertIndexPath:indexPath toSuperComponent:comp];
+}
+
+- (NSIndexPath *)convertIndexPath:(NSIndexPath *)indexPath toSubComponent:(DDTableViewBaseComponent *)comp {
+    if (_header == comp || _footer == comp) {
+        return indexPath;
+    }
+    return [super convertIndexPath:indexPath toSubComponent:comp];
+}
+
+- (NSInteger)convertSection:(NSInteger)section toSuperComponent:(DDTableViewBaseComponent *)comp {
+    if (_header == comp || _footer == comp) return section;
+    return [super convertSection:section toSuperComponent:comp];
 }
 
 - (NSInteger)convertSection:(NSInteger)section toSubComponent:(DDTableViewBaseComponent *)comp {
-    if (self == comp || _header == comp || _footer == comp) return section;
-    return NSNotFound;
+    if (_header == comp || _footer == comp) return section;
+    return [super convertSection:section toSubComponent:comp];
 }
 
 #pragma mark - composite protocol
