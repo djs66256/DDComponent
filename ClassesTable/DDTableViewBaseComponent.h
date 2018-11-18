@@ -21,6 +21,17 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSIndexPath *)convertToGlobalIndexPath:(NSIndexPath *)indexPath;
 - (NSIndexPath *)convertFromGlobalIndexPath:(NSIndexPath *)indexPath;
 
+// Here, indexPath is all relative indexPath, not equal to tableView's indexPath.
+- (__kindof UITableViewCell *)dequeueReusableCellWithIdentifier:(NSString *)identifier forIndexPath:(NSIndexPath *)indexPath;
+
+- (void)selectRowAtIndexPath:(nullable NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(UITableViewScrollPosition)scrollPosition;
+- (void)deselectRowAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated;
+
+- (nullable __kindof UITableViewCell *)cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (nullable NSIndexPath *)indexPathForCell:(UITableViewCell *)cell;
+
+- (void)scrollToRowAtIndexPath:(NSIndexPath *)indexPath atScrollPosition:(UITableViewScrollPosition)scrollPosition animated:(BOOL)animated;
+
 @end
 
 NS_ASSUME_NONNULL_END

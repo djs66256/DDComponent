@@ -66,4 +66,51 @@
     return [self.rootComponent convertIndexPath:indexPath toSubComponent:self];
 }
 
+#pragma mark - bridge for table view
+- (__kindof UITableViewCell *)dequeueReusableCellWithIdentifier:(NSString *)identifier forIndexPath:(NSIndexPath *)indexPath {
+    if (auto root = self.rootComponent) {
+        auto globalIndexPath = [self convertIndexPath:indexPath toSuperComponent:root];
+        return [root.tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:globalIndexPath];
+    }
+    NSAssert(false, @"Must call by root component!");
+    return nil;
+}
+
+- (void)selectRowAtIndexPath:(nullable NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(UITableViewScrollPosition)scrollPosition {
+    if (auto root = self.rootComponent) {
+        auto globalIndexPath = [self convertIndexPath:indexPath toSuperComponent:root];
+        [root.tableView selectRowAtIndexPath:globalIndexPath animated:animated scrollPosition:scrollPosition];
+    }
+}
+
+- (void)deselectRowAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated {
+    if (auto root = self.rootComponent) {
+        auto globalIndexPath = [self convertIndexPath:indexPath toSuperComponent:root];
+        [root.tableView deselectRowAtIndexPath:globalIndexPath animated:animated];
+    }
+}
+
+- (nullable __kindof UITableViewCell *)cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (auto root = self.rootComponent) {
+        auto globalIndexPath = [self convertIndexPath:indexPath toSuperComponent:root];
+        return [root.tableView cellForRowAtIndexPath:globalIndexPath];
+    }
+    return nil;
+}
+
+- (nullable NSIndexPath *)indexPathForCell:(UITableViewCell *)cell {
+    if (auto root = self.rootComponent) {
+        auto indexPath = [root.tableView indexPathForCell:cell];
+        return [root convertIndexPath:indexPath toSubComponent:self];
+    }
+    return nil;
+}
+
+- (void)scrollToRowAtIndexPath:(NSIndexPath *)indexPath atScrollPosition:(UITableViewScrollPosition)scrollPosition animated:(BOOL)animated {
+    if (auto root = self.rootComponent) {
+        auto globalIndexPath = [self convertIndexPath:indexPath toSuperComponent:root];
+        [root.tableView scrollToRowAtIndexPath:globalIndexPath atScrollPosition:scrollPosition animated:animated];
+    }
+}
+
 @end

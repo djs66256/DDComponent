@@ -38,7 +38,7 @@
     
     DDTableViewItemGroupSectionComponent *items2 = [DDTableViewItemGroupSectionComponent new];
     items2.subComponents = @[[DDTableViewItemDemoComponent new], [DDTableViewItemDemoComponent new]];
-    sectionGroup.subComponents = @[items2, [DDTableViewHeaderFooterSectionDemoComponent new]];
+    sectionGroup.subComponents = @[items2, [DDTableViewHeaderFooterSectionDemoComponent new], [DDTableViewHeaderFooterSectionDemoComponent new]];
     
     DDTableViewStatusComponent *status = [DDTableViewStatusComponent new];
     DDTableViewSectionGroupComponent *g = [DDTableViewSectionGroupComponent new];

@@ -49,6 +49,22 @@ using namespace DD::TableViewComponent;
     }
 }
 
+- (nullable UITableViewHeaderFooterView *)headerViewForSection:(NSInteger)section NS_AVAILABLE_IOS(6_0) {
+    if (auto root = self.rootComponent) {
+        auto globalSection = [self convertSection:section toSuperComponent:root];
+        return [root.tableView headerViewForSection:globalSection];
+    }
+    return nil;
+}
+
+- (nullable UITableViewHeaderFooterView *)footerViewForSection:(NSInteger)section NS_AVAILABLE_IOS(6_0) {
+    if (auto root = self.rootComponent) {
+        auto globalSection = [self convertSection:section toSuperComponent:root];
+        return [root.tableView footerViewForSection:globalSection];
+    }
+    return nil;
+}
+
 @end
 
 @implementation DDTableViewHeaderFooterSectionComponent {

@@ -23,6 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSInteger)convertToGlobalSection:(NSInteger)section;
 - (NSInteger)convertFromGlobalSection:(NSInteger)section;
 
+- (nullable UITableViewHeaderFooterView *)headerViewForSection:(NSInteger)section NS_AVAILABLE_IOS(6_0);
+- (nullable UITableViewHeaderFooterView *)footerViewForSection:(NSInteger)section NS_AVAILABLE_IOS(6_0);
+
 @end
 
 @interface DDTableViewHeaderFooterSectionComponent : DDTableViewSectionComponent
