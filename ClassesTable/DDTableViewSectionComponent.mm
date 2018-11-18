@@ -61,7 +61,7 @@ using namespace DD::TableViewComponent;
         _header = header;
         
         _header.superComponent = self;
-        UITableView *tableView = self.tableView;
+        UITableView *tableView = self.rootComponent.tableView;
         if (tableView) [_header prepareCells:tableView];
     }
 }
@@ -75,7 +75,7 @@ using namespace DD::TableViewComponent;
         _footer = footer;
         
         _footer.superComponent = self;
-        UITableView *tableView = self.tableView;
+        UITableView *tableView = self.rootComponent.tableView;
         if (tableView) [_footer prepareCells:tableView];
     }
 }
@@ -231,7 +231,7 @@ static NSIndexPath *indexPathZero;
         
         _subComponents = subComponents.copy;
         
-        UITableView *tableView = self.tableView;
+        UITableView *tableView = self.rootComponent.tableView;
         for (DDTableViewItemComponent *comp in _subComponents) {
             comp.superComponent = self;
             
@@ -280,7 +280,7 @@ static NSIndexPath *indexPathZero;
 #pragma mark - composite
 - (void)rebuildCache {
     [super rebuildCache];
-    _cache.fill(self.subComponents, self.tableView);
+    _cache.fill(self.subComponents, self.rootComponent.tableView);
     
     _myResponds.clear();
     _myResponds.mergeCellResponds(*_cache.myResponds());

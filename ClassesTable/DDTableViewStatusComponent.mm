@@ -10,6 +10,7 @@
 #import "DDTableViewCompositeComponentProtocol.h"
 #import "DDTableViewComponentCache.h"
 #import "DDTableViewComponentInternal.h"
+#import "DDTableViewRootComponent.h"
 
 using namespace DD::TableViewComponent;
 
@@ -37,7 +38,7 @@ using namespace DD::TableViewComponent;
     DDTableViewSectionComponent *prevComp = _components[state];
     if (prevComp.superComponent == self) prevComp.superComponent = nil;
     comp.superComponent = self;
-    if (UITableView *tableView = self.tableView) {
+    if (UITableView *tableView = self.rootComponent.tableView) {
         [comp prepareCells:tableView];
     }
     _components[state] = comp;
@@ -64,10 +65,6 @@ using namespace DD::TableViewComponent;
 }
 
 #pragma mark - convert
-//- (NSIndexPath *)convertIndexPath:(NSIndexPath *)indexPath fromComponent:(nonnull DDTableViewBaseComponent *)from toSuperComponent:(nonnull DDTableViewBaseComponent *)comp {
-//    return [self convertIndexPath:indexPath toSuperComponent:comp];
-//}
-
 - (NSIndexPath *)convertIndexPath:(NSIndexPath *)indexPath toSubComponent:(DDTableViewBaseComponent *)comp {
     if (self == comp) return indexPath;
     return [_currentComponent convertIndexPath:indexPath toSubComponent:comp];

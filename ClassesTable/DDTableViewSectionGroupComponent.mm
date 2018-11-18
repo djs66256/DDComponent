@@ -80,7 +80,7 @@ using namespace DD::TableViewComponent;
         
         _subComponents = subComponents.copy;
         
-        UITableView *tableView = self.tableView;
+        UITableView *tableView = self.rootComponent.tableView;
         for (DDTableViewSectionComponent * comp in subComponents) {
             comp.superComponent = self;
             if (tableView) [self prepareCells:tableView];
@@ -101,7 +101,7 @@ using namespace DD::TableViewComponent;
             [(id<DDTableViewCompositeComponentProtocol>)comp rebuildCache];
         }
     }
-    _cache.fill(self.subComponents, self.tableView);
+    _cache.fill(self.subComponents, self.rootComponent.tableView);
 }
 
 - (const DD::TableViewComponent::TableViewResponds *)respondsInfo {

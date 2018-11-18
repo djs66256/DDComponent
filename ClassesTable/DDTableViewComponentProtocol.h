@@ -14,7 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol DDTableViewComponentProtocol <NSObject, UITableViewDataSource, UITableViewDelegate>
 
-@property (nonatomic, strong, readonly) UITableView *tableView;
 @property (nonatomic, weak, readonly) id<DDTableViewComponentProtocol> superComponent;
 @property (nonatomic, strong, readonly) DDTableViewRootComponent *rootComponent;
 

@@ -12,10 +12,6 @@
 
 @implementation DDTableViewBaseComponent
 
-- (UITableView *)tableView {
-    return self.rootComponent.tableView;
-}
-
 - (DDTableViewRootComponent *)rootComponent {
     return self.superComponent.rootComponent;
 }
