@@ -11,5 +11,6 @@
 #import "DDTableViewComponentMacros.h"
 
 @implementation DDTableViewItemComponent
+@dynamic superComponent;
 
 @end

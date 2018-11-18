@@ -15,6 +15,7 @@
 using namespace DD::TableViewComponent;
 
 @implementation DDTableViewSectionComponent
+@dynamic superComponent;
 
 @end
 

@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface DDTableViewSectionComponent : DDTableViewBaseComponent
 
+@property (nonatomic, weak) DDTableViewSectionComponent *superComponent;
+
 @end
 
 @interface DDTableViewHeaderFooterSectionComponent : DDTableViewSectionComponent
