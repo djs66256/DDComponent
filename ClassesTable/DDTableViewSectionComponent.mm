@@ -17,38 +17,6 @@ using namespace DD::TableViewComponent;
 @implementation DDTableViewSectionComponent
 @dynamic superComponent;
 
-- (NSInteger)convertSection:(NSInteger)section toSuperComponent:(DDTableViewBaseComponent *)comp {
-    if (self == comp) return section;
-    return [self.superComponent convertSection:section fromComponent:self toSuperComponent:comp];
-}
-
-- (NSInteger)convertSection:(NSInteger)section fromComponent:(DDTableViewBaseComponent *)from toSuperComponent:(DDTableViewBaseComponent *)comp {
-    return [self convertSection:section toSuperComponent:comp];
-}
-
-- (NSInteger)convertSection:(NSInteger)section toSubComponent:(DDTableViewBaseComponent *)comp {
-    if (self == comp) return section;
-    return NSNotFound;
-}
-
-- (NSInteger)convertToGlobalSection:(NSInteger)section {
-    if (DDTableViewRootComponent *root = self.rootComponent) {
-        return [self convertSection:section toSuperComponent:root];
-    }
-    else {
-        return NSNotFound;
-    }
-}
-
-- (NSInteger)convertFromGlobalSection:(NSInteger)section {
-    if (DDTableViewRootComponent *root = self.rootComponent) {
-        return [root convertSection:section toSubComponent:self];
-    }
-    else {
-        return NSNotFound;
-    }
-}
-
 - (nullable UITableViewHeaderFooterView *)headerViewForSection:(NSInteger)section NS_AVAILABLE_IOS(6_0) {
     if (auto root = self.rootComponent) {
         auto globalSection = [self convertSection:section toSuperComponent:root];
@@ -151,7 +119,7 @@ using namespace DD::TableViewComponent;
 - (nullable NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     auto rs = _headerFooterCache.footerResponds();
     if (rs->titleForFooterInSection) {
-        return [_footer tableView:tableView titleForHeaderInSection:section];
+        return [_footer tableView:tableView titleForFooterInSection:section];
     }
     return nil;
 }
@@ -306,6 +274,17 @@ static NSIndexPath *indexPathZero;
         else {
             return nil;
         }
+    }
+}
+
+- (DDTableViewBaseComponent *)componentAtIndexPath:(NSIndexPath *)indexPath {
+    auto rs = _cache.getRow(indexPath.row);
+    if (rs == _cache.end()) {
+        return nil;
+    }
+    else {
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.index() inSection:indexPath.section];
+        return [rs.component() componentAtIndexPath:idx];
     }
 }
 

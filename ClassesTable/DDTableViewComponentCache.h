@@ -149,7 +149,7 @@ namespace DD {
                 Iterator(RowCache* cache): cache_(cache) {}
                 Iterator(RowCache* cache, size_t idx): cache_(cache), index_(idx) {}
                 
-                id<DDTableViewComponentProtocol> component() { return cache_->components_[index_]; }
+                DDTableViewItemComponent* component() { return cache_->components_[index_]; }
                 const TableViewResponds* responds() { return cache_->responds_[index_]; }
                 size_t index() { return index_; }
                 
@@ -173,7 +173,7 @@ namespace DD {
                 return Iterator(this, idx);
             }
             
-            void fill(NSArray<id<DDTableViewComponentProtocol>> *components, UITableView *tableView) {
+            void fill(NSArray<DDTableViewItemComponent*> *components, UITableView *tableView) {
                 responds_.clear();
                 responds_.reserve(components.count);
                 components_ = components;
@@ -199,7 +199,7 @@ namespace DD {
         private:
             TableViewResponds myResponds_;
             std::vector<const TableViewResponds*> responds_;
-            __strong NSArray<id<DDTableViewComponentProtocol>> *components_ = nil;
+            __strong NSArray<DDTableViewItemComponent*> *components_ = nil;
         };
         
         class HeaderFooterCache {

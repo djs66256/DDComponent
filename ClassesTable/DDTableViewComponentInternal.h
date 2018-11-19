@@ -15,16 +15,17 @@
 #import "DDTableViewCompositeComponentProtocol.h"
 
 @interface DDTableViewBaseComponent ()
+
+- (NSInteger)convertSection:(NSInteger)section
+              fromComponent:(DDTableViewBaseComponent *)from
+           toSuperComponent:(DDTableViewBaseComponent *)comp;
+
 - (NSIndexPath *)convertIndexPath:(NSIndexPath *)indexPath
                     fromComponent:(DDTableViewBaseComponent *)from
                  toSuperComponent:(DDTableViewBaseComponent *)comp;
 @end
 
 @interface DDTableViewSectionComponent ()
-
-- (NSInteger)convertSection:(NSInteger)section
-              fromComponent:(DDTableViewBaseComponent *)from
-           toSuperComponent:(DDTableViewBaseComponent *)comp;
 @end
 
 @interface DDTableViewHeaderFooterSectionComponent () <DDTableViewCompositeComponentProtocol>

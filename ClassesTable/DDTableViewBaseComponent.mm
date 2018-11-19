@@ -35,6 +35,37 @@
 }
 
 #pragma mark - method
+- (NSInteger)convertSection:(NSInteger)section toSuperComponent:(DDTableViewBaseComponent *)comp {
+    if (self == comp) return section;
+    return [self.superComponent convertSection:section fromComponent:self toSuperComponent:comp];
+}
+
+- (NSInteger)convertSection:(NSInteger)section fromComponent:(DDTableViewBaseComponent *)from toSuperComponent:(DDTableViewBaseComponent *)comp {
+    return [self convertSection:section toSuperComponent:comp];
+}
+
+- (NSInteger)convertSection:(NSInteger)section toSubComponent:(DDTableViewBaseComponent *)comp {
+    if (self == comp) return section;
+    return NSNotFound;
+}
+
+- (NSInteger)convertToGlobalSection:(NSInteger)section {
+    if (DDTableViewRootComponent *root = self.rootComponent) {
+        return [self convertSection:section toSuperComponent:root];
+    }
+    else {
+        return NSNotFound;
+    }
+}
+
+- (NSInteger)convertFromGlobalSection:(NSInteger)section {
+    if (DDTableViewRootComponent *root = self.rootComponent) {
+        return [root convertSection:section toSubComponent:self];
+    }
+    else {
+        return NSNotFound;
+    }
+}
 
 - (NSIndexPath *)convertIndexPath:(NSIndexPath *)indexPath toSuperComponent:(DDTableViewBaseComponent *)comp {
     if (self == comp) {
@@ -64,6 +95,10 @@
 
 - (NSIndexPath *)convertFromGlobalIndexPath:(NSIndexPath *)indexPath {
     return [self.rootComponent convertIndexPath:indexPath toSubComponent:self];
+}
+
+- (DDTableViewBaseComponent *)componentAtIndexPath:(NSIndexPath *)indexPath {
+    return self;
 }
 
 #pragma mark - bridge for table view

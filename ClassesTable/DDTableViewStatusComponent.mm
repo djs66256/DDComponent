@@ -75,6 +75,10 @@ using namespace DD::TableViewComponent;
     return [_currentComponent convertSection:section toSubComponent:comp];
 }
 
+- (DDTableViewBaseComponent *)componentAtIndexPath:(NSIndexPath *)indexPath {
+    return [_currentComponent componentAtIndexPath:indexPath];
+}
+
 #pragma mark - composite
 - (const TableViewResponds *)respondsInfo {
     return _responds;
@@ -118,7 +122,7 @@ using namespace DD::TableViewComponent;
 
 - (nullable NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     if (_responds->titleForFooterInSection) {
-        return [_currentComponent tableView:tableView titleForHeaderInSection:section];
+        return [_currentComponent tableView:tableView titleForFooterInSection:section];
     }
     return nil;
 }

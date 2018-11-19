@@ -10,6 +10,8 @@
 #import "DDTableViewItemDemoComponent.h"
 #import "DDTableViewComponent.h"
 #import "DDTableViewHeaderFooterSectionDemoComponent.h"
+#import "DDTableViewHeaderDemoComponent.h"
+#import "DDTableViewFooterDemoComponent.h"
 
 @interface DDTableComponentCustomViewController ()
 
@@ -34,8 +36,11 @@
                                                      [DDTableViewItemDemoComponent new],
                                                      [DDTableViewItemDemoComponent new]
                                                      ]];
+    section0.header = [DDTableViewHeaderDemoComponent new];
+    section0.footer = [DDTableViewFooterDemoComponent new];
     
-    DDTableViewHeaderFooterSectionDemoComponent *section1 = [DDTableViewHeaderFooterSectionDemoComponent new];
+    DDTableViewHeaderFooterSectionDemoComponent *section1 = [DDTableViewHeaderFooterSectionDemoComponent componentWithHeader:[DDTableViewHeaderDemoComponent new]
+                                                                                                                      footer:[DDTableViewFooterDemoComponent new]];
     
     DDTableViewSectionGroupComponent *sectionGroup = [DDTableViewSectionGroupComponent componentWithSubComponents:
                                                       @[[DDTableViewItemGroupSectionComponent componentWithSubComponents:

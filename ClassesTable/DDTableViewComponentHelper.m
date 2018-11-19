@@ -64,9 +64,9 @@
 
 + (instancetype)componentWithComponents:(NSDictionary<NSString *, DDTableViewSectionComponent *> *)components {
     DDTableViewStatusComponent *comp = [self new];
-    components enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, DDTableViewSectionComponent * _Nonnull obj, BOOL * _Nonnull stop) {
+    [components enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, DDTableViewSectionComponent * _Nonnull obj, BOOL * _Nonnull stop) {
         [comp setComponent:obj forState:key];
-    }
+    }];
     return comp;
 }
 

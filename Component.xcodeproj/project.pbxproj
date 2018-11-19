@@ -25,6 +25,8 @@
 		65C9992F1D68AF5D0019780A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 65C9992E1D68AF5D0019780A /* Assets.xcassets */; };
 		65C999321D68AF5E0019780A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65C999301D68AF5E0019780A /* LaunchScreen.storyboard */; };
 		BE2B18ED21A2527600D07673 /* DDTableViewComponentHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = BE2B18EC21A2527600D07673 /* DDTableViewComponentHelper.m */; };
+		BE2B18F021A2892D00D07673 /* DDTableViewHeaderDemoComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = BE2B18EF21A2892D00D07673 /* DDTableViewHeaderDemoComponent.m */; };
+		BE2B18F321A2893A00D07673 /* DDTableViewFooterDemoComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = BE2B18F221A2893A00D07673 /* DDTableViewFooterDemoComponent.m */; };
 		BE52E71421A137F500A5E969 /* DDTableViewBaseComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = BE52E71321A137F500A5E969 /* DDTableViewBaseComponent.mm */; };
 		BE60217C1EEFC30D007A0F0E /* DDCollectionViewComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = BE6021661EEFC30D007A0F0E /* DDCollectionViewComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BE60217D1EEFC30D007A0F0E /* DDCollectionViewComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = BE6021671EEFC30D007A0F0E /* DDCollectionViewComponent.m */; };
@@ -132,6 +134,10 @@
 		65C999331D68AF5E0019780A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BE2B18EB21A2527600D07673 /* DDTableViewComponentHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDTableViewComponentHelper.h; sourceTree = "<group>"; };
 		BE2B18EC21A2527600D07673 /* DDTableViewComponentHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DDTableViewComponentHelper.m; sourceTree = "<group>"; };
+		BE2B18EE21A2892D00D07673 /* DDTableViewHeaderDemoComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDTableViewHeaderDemoComponent.h; sourceTree = "<group>"; };
+		BE2B18EF21A2892D00D07673 /* DDTableViewHeaderDemoComponent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DDTableViewHeaderDemoComponent.m; sourceTree = "<group>"; };
+		BE2B18F121A2893A00D07673 /* DDTableViewFooterDemoComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDTableViewFooterDemoComponent.h; sourceTree = "<group>"; };
+		BE2B18F221A2893A00D07673 /* DDTableViewFooterDemoComponent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DDTableViewFooterDemoComponent.m; sourceTree = "<group>"; };
 		BE52E71221A137F500A5E969 /* DDTableViewBaseComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDTableViewBaseComponent.h; sourceTree = "<group>"; };
 		BE52E71321A137F500A5E969 /* DDTableViewBaseComponent.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = DDTableViewBaseComponent.mm; sourceTree = "<group>"; };
 		BE6021651EEFC30D007A0F0E /* DDCollectionViewComponent+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DDCollectionViewComponent+Private.h"; sourceTree = "<group>"; };
@@ -265,6 +271,10 @@
 				6501EB1E21A00DD7001D4038 /* DDTableViewItemDemoComponent.m */,
 				6501EB2321A00E23001D4038 /* DDTableViewHeaderFooterSectionDemoComponent.h */,
 				6501EB2421A00E23001D4038 /* DDTableViewHeaderFooterSectionDemoComponent.m */,
+				BE2B18EE21A2892D00D07673 /* DDTableViewHeaderDemoComponent.h */,
+				BE2B18EF21A2892D00D07673 /* DDTableViewHeaderDemoComponent.m */,
+				BE2B18F121A2893A00D07673 /* DDTableViewFooterDemoComponent.h */,
+				BE2B18F221A2893A00D07673 /* DDTableViewFooterDemoComponent.m */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -576,6 +586,8 @@
 				6501EB1F21A00DD7001D4038 /* DDTableViewItemDemoComponent.m in Sources */,
 				6501EB2221A00DF2001D4038 /* DDComponentDemoTableViewCell.m in Sources */,
 				6501EB10219F0B07001D4038 /* DDTableViewSectionComponent.mm in Sources */,
+				BE2B18F321A2893A00D07673 /* DDTableViewFooterDemoComponent.m in Sources */,
+				BE2B18F021A2892D00D07673 /* DDTableViewHeaderDemoComponent.m in Sources */,
 				65C999281D68AF5D0019780A /* AppDelegate.swift in Sources */,
 				BE6021B31EEFEB1E007A0F0E /* TextCollectionReusableView.swift in Sources */,
 				6501EB1921A00D9A001D4038 /* DDTableComponentCustomViewController.m in Sources */,

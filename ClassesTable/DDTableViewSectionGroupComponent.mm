@@ -70,6 +70,17 @@ using namespace DD::TableViewComponent;
     }
 }
 
+- (DDTableViewBaseComponent *)componentAtIndexPath:(NSIndexPath *)indexPath {
+    auto rs = _cache.getSection(indexPath.section);
+    if (rs == _cache.end()) {
+        return nil;
+    }
+    else {
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - rs.range().location];
+        return [rs.component() componentAtIndexPath:idx];
+    }
+}
+
 #pragma mark - interface
 
 - (void)setSubComponents:(NSArray<DDTableViewSectionComponent *> *)subComponents {
@@ -135,7 +146,7 @@ using namespace DD::TableViewComponent;
 - (nullable NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     auto rs = _cache.getSection(section);
     if (rs.responds()->titleForFooterInSection) {
-        return [rs.component() tableView:tableView titleForHeaderInSection:section - rs.range().location];
+        return [rs.component() tableView:tableView titleForFooterInSection:section - rs.range().location];
     }
     return nil;
 }

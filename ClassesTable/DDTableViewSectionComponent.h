@@ -17,12 +17,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak) DDTableViewSectionComponent *superComponent;
 
-- (NSInteger)convertSection:(NSInteger)section toSuperComponent:(DDTableViewBaseComponent *)comp;
-- (NSInteger)convertSection:(NSInteger)section toSubComponent:(DDTableViewBaseComponent *)comp;
-
-- (NSInteger)convertToGlobalSection:(NSInteger)section;
-- (NSInteger)convertFromGlobalSection:(NSInteger)section;
-
 - (nullable UITableViewHeaderFooterView *)headerViewForSection:(NSInteger)section NS_AVAILABLE_IOS(6_0);
 - (nullable UITableViewHeaderFooterView *)footerViewForSection:(NSInteger)section NS_AVAILABLE_IOS(6_0);
 

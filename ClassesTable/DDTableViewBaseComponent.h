@@ -15,11 +15,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak) __kindof DDTableViewBaseComponent *superComponent;
 
+- (NSInteger)convertSection:(NSInteger)section toSuperComponent:(DDTableViewBaseComponent *)comp;
+- (NSInteger)convertSection:(NSInteger)section toSubComponent:(DDTableViewBaseComponent *)comp;
+
+- (NSInteger)convertToGlobalSection:(NSInteger)section;
+- (NSInteger)convertFromGlobalSection:(NSInteger)section;
+
 - (NSIndexPath *)convertIndexPath:(NSIndexPath *)indexPath toSuperComponent:(DDTableViewBaseComponent *)comp;
 - (NSIndexPath *)convertIndexPath:(NSIndexPath *)indexPath toSubComponent:(DDTableViewBaseComponent *)comp;
 
 - (NSIndexPath *)convertToGlobalIndexPath:(NSIndexPath *)indexPath;
 - (NSIndexPath *)convertFromGlobalIndexPath:(NSIndexPath *)indexPath;
+
+- (DDTableViewBaseComponent *)componentAtIndexPath:(NSIndexPath *)indexPath;
 
 // Here, indexPath is all relative indexPath, not equal to tableView's indexPath.
 - (__kindof UITableViewCell *)dequeueReusableCellWithIdentifier:(NSString *)identifier forIndexPath:(NSIndexPath *)indexPath;
