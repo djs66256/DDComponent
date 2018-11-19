@@ -11,6 +11,12 @@
 
 @implementation DDTableViewHeaderFooterSectionDemoComponent
 
++ (instancetype)componentWithData:(NSArray *)demoData {
+    DDTableViewHeaderFooterSectionDemoComponent *comp = [self new];
+    comp.demoData = demoData;
+    return comp;
+}
+
 - (void)prepareCells:(UITableView *)tableView {
     [super prepareCells:tableView];
     printf("%s\n", sel_getName(_cmd));
@@ -19,17 +25,17 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 2;
+    return self.demoData.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 2;
+    return [self.demoData[section] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     printf("%s\n", sel_getName(_cmd));
     DDComponentDemoTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DDComponentDemoTableViewCell"];
-    cell.contentView.backgroundColor = arc4random()%100 > 50 ? UIColor.redColor : UIColor.greenColor;
+    cell.contentView.backgroundColor = UIColor.redColor;// arc4random()%100 > 50 ? UIColor.redColor : UIColor.greenColor;
     NSIndexPath *idx = [self convertToGlobalIndexPath:indexPath];
     NSIndexPath *lidx = [self convertFromGlobalIndexPath:idx];
     cell.textLabel.text = [NSString stringWithFormat:@"(%zd, %zd),(%zd, %zd)", idx.section, idx.row, lidx.section, lidx.row];

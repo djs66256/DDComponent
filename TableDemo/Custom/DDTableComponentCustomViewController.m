@@ -41,6 +41,7 @@
     
     DDTableViewHeaderFooterSectionDemoComponent *section1 = [DDTableViewHeaderFooterSectionDemoComponent componentWithHeader:[DDTableViewHeaderDemoComponent new]
                                                                                                                       footer:[DDTableViewFooterDemoComponent new]];
+    section1.demoData = @[@[@"", @"", @""]];
     
     DDTableViewSectionGroupComponent *sectionGroup = [DDTableViewSectionGroupComponent componentWithSubComponents:
                                                       @[[DDTableViewItemGroupSectionComponent componentWithSubComponents:
@@ -48,8 +49,8 @@
                                                            [DDTableViewItemDemoComponent new],
                                                            [DDTableViewItemDemoComponent new]
                                                            ]],
-                                                        [DDTableViewHeaderFooterSectionDemoComponent new],
-                                                        [DDTableViewHeaderFooterSectionDemoComponent new]
+                                                        [DDTableViewHeaderFooterSectionDemoComponent componentWithData:@[@[@"", @""], @[@"", @"", @""]]],
+                                                        [DDTableViewHeaderFooterSectionDemoComponent  componentWithData:@[@[@"", @""], @[@"", @"", @""], @[@"", @"", @"", @""]]]
                                                         ]];
     
     DDTableViewSectionGroupComponent *g = [DDTableViewSectionGroupComponent componentWithSubComponents:

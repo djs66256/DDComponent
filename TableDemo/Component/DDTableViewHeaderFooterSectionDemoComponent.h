@@ -12,6 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface DDTableViewHeaderFooterSectionDemoComponent : DDTableViewHeaderFooterSectionComponent
 
+@property (nonatomic, strong) NSArray<NSArray<NSString *> *> *demoData;
+
++ (instancetype)componentWithData:(NSArray<NSArray<NSString *> *> *)demoData;
+
 @end
 
 NS_ASSUME_NONNULL_END
