@@ -29,24 +29,35 @@
     
     self.rootComponent = [[DDTableViewRootComponent alloc] initWithTableView:self.tableView];
     
-    DDTableViewItemGroupSectionComponent *items = [DDTableViewItemGroupSectionComponent new];
-    items.subComponents = @[[DDTableViewItemDemoComponent new], [DDTableViewItemDemoComponent new]];
+    DDTableViewItemGroupSectionComponent *section0 = [DDTableViewItemGroupSectionComponent componentWithSubComponents:
+                                                   @[
+                                                     [DDTableViewItemDemoComponent new],
+                                                     [DDTableViewItemDemoComponent new]
+                                                     ]];
     
-    DDTableViewHeaderFooterSectionDemoComponent *section = [DDTableViewHeaderFooterSectionDemoComponent new];
+    DDTableViewHeaderFooterSectionDemoComponent *section1 = [DDTableViewHeaderFooterSectionDemoComponent new];
     
-    DDTableViewSectionGroupComponent *sectionGroup = [DDTableViewSectionGroupComponent new];
+    DDTableViewSectionGroupComponent *sectionGroup = [DDTableViewSectionGroupComponent componentWithSubComponents:
+                                                      @[[DDTableViewItemGroupSectionComponent componentWithSubComponents:
+                                                         @[
+                                                           [DDTableViewItemDemoComponent new],
+                                                           [DDTableViewItemDemoComponent new]
+                                                           ]],
+                                                        [DDTableViewHeaderFooterSectionDemoComponent new],
+                                                        [DDTableViewHeaderFooterSectionDemoComponent new]
+                                                        ]];
     
-    DDTableViewItemGroupSectionComponent *items2 = [DDTableViewItemGroupSectionComponent new];
-    items2.subComponents = @[[DDTableViewItemDemoComponent new], [DDTableViewItemDemoComponent new]];
-    sectionGroup.subComponents = @[items2, [DDTableViewHeaderFooterSectionDemoComponent new], [DDTableViewHeaderFooterSectionDemoComponent new]];
-    
-    DDTableViewStatusComponent *status = [DDTableViewStatusComponent new];
-    DDTableViewSectionGroupComponent *g = [DDTableViewSectionGroupComponent new];
-    g.subComponents = @[items, section, sectionGroup];
-    status[@"normal"] = g;
-    status.state = @"normal";
-    
+    DDTableViewSectionGroupComponent *g = [DDTableViewSectionGroupComponent componentWithSubComponents:
+                                           @[
+                                             section0,
+                                             section1,
+                                             sectionGroup
+                                             ]];
+    DDTableViewStatusComponent *status = [DDTableViewStatusComponent componentWithComponents:
+                                          @{ @"normal": g }];
     self.rootComponent.subComponents = @[status];
+    
+    status.state = @"normal";
     
     [self.rootComponent reloadData];
 }
