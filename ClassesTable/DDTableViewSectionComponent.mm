@@ -203,14 +203,9 @@ using namespace DD::TableViewComponent;
 
 @end
 
-static NSIndexPath *indexPathZero;
 @implementation DDTableViewItemGroupSectionComponent {
-    RowCache _cache;
+    SectionCache _cache;
     TableViewResponds _myResponds;
-}
-
-+ (void)initialize {
-    indexPathZero = [NSIndexPath indexPathForRow:0 inSection:0];
 }
 
 - (instancetype)init
@@ -254,36 +249,31 @@ static NSIndexPath *indexPathZero;
         return nil;
     }
     else {
-        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row + rs.index() inSection:indexPath.section];
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row + rs.range().location inSection:indexPath.section];
         return [self convertIndexPath:idx toSuperComponent:comp];
     }
 }
 
 - (NSIndexPath *)convertIndexPath:(NSIndexPath *)indexPath toSubComponent:(DDTableViewBaseComponent *)comp {
-    if (NSIndexPath *idx = [super convertIndexPath:indexPath toSubComponent:comp])
-        return idx;
+    if (self == comp) return indexPath;
     
-    auto rs = _cache.getRow(indexPath.row);
+    auto rs = _cache.getLocation(indexPath.section);
     if (rs == _cache.end()) {
         return nil;
     }
     else {
-        if (indexPath.row == rs.index()) {
-            return indexPathZero;
-        }
-        else {
-            return nil;
-        }
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.range().location inSection:indexPath.section];
+        return [rs.component() convertIndexPath:idx toSubComponent:comp];
     }
 }
 
 - (DDTableViewBaseComponent *)componentAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.getRow(indexPath.row);
+    auto rs = _cache.getLocation(indexPath.row);
     if (rs == _cache.end()) {
         return nil;
     }
     else {
-        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.index() inSection:indexPath.section];
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.range().length inSection:indexPath.section];
         return [rs.component() componentAtIndexPath:idx];
     }
 }
@@ -291,7 +281,10 @@ static NSIndexPath *indexPathZero;
 #pragma mark - composite
 - (void)rebuildCache {
     [super rebuildCache];
-    _cache.fill(self.subComponents, self.rootComponent.tableView);
+    auto tableView = self.rootComponent.tableView;
+    _cache.fill(self.subComponents, [&](DDTableViewBaseComponent *comp) {
+        return [comp tableView:tableView numberOfRowsInSection:0]; // item comp section is always 0.
+    });
     
     _myResponds.clear();
     _myResponds.mergeCellResponds(*_cache.myResponds());
@@ -306,224 +299,252 @@ static NSIndexPath *indexPathZero;
 
 #pragma mark - table dataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return _cache.numberOfRows() == 0 ? 0 : 1;
+    return _cache.numberOfComponents() == 0 ? 0 : 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return _cache.numberOfRows();
+    return _cache.numberOfComponents();
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.getRow(indexPath.row);
-    return [rs.component() tableView:tableView cellForRowAtIndexPath:indexPathZero];
+    auto rs = _cache.getLocation(indexPath.row);
+    NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.range().location inSection:indexPath.section];
+    return [rs.component() tableView:tableView cellForRowAtIndexPath:idx];
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.getRow(indexPath.row);
+    auto rs = _cache.getLocation(indexPath.row);
     if (rs.responds()->canEditRowAtIndexPath) {
-        return [rs.component() tableView:tableView canEditRowAtIndexPath:indexPathZero];
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.range().location inSection:indexPath.section];
+        return [rs.component() tableView:tableView canEditRowAtIndexPath:idx];
     }
     return NO;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.getRow(indexPath.row);
+    auto rs = _cache.getLocation(indexPath.row);
     if (rs.responds()->commitEditingStyle) {
-        [rs.component() tableView:tableView commitEditingStyle:editingStyle forRowAtIndexPath:indexPathZero];
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.range().location inSection:indexPath.section];
+        [rs.component() tableView:tableView commitEditingStyle:editingStyle forRowAtIndexPath:idx];
     }
 }
 
 #pragma mark - delegate
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.getRow(indexPath.row);
+    auto rs = _cache.getLocation(indexPath.row);
     if (rs.responds()->willDisplayCell) {
-        [rs.component() tableView:tableView willDisplayCell:cell forRowAtIndexPath:indexPathZero];
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.range().location inSection:indexPath.section];
+        [rs.component() tableView:tableView willDisplayCell:cell forRowAtIndexPath:idx];
     }
 }
 
 - (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath*)indexPath NS_AVAILABLE_IOS(6_0) {
-    auto rs = _cache.getRow(indexPath.row);
+    auto rs = _cache.getLocation(indexPath.row);
     if (rs.responds()->didEndDisplayingCell) {
-        [rs.component() tableView:tableView didEndDisplayingCell:cell forRowAtIndexPath:indexPathZero];
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.range().location inSection:indexPath.section];
+        [rs.component() tableView:tableView didEndDisplayingCell:cell forRowAtIndexPath:idx];
     }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.getRow(indexPath.row);
+    auto rs = _cache.getLocation(indexPath.row);
     if (rs.responds()->heightForRowAtIndexPath) {
-        return [rs.component() tableView:tableView heightForRowAtIndexPath:indexPathZero];
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.range().location inSection:indexPath.section];
+        return [rs.component() tableView:tableView heightForRowAtIndexPath:idx];
     }
     return 0;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(7_0) {
-    auto rs = _cache.getRow(indexPath.row);
+    auto rs = _cache.getLocation(indexPath.row);
     if (rs.responds()->estimatedHeightForRowAtIndexPath) {
-        return [rs.component() tableView:tableView estimatedHeightForRowAtIndexPath:indexPathZero];
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.range().location inSection:indexPath.section];
+        return [rs.component() tableView:tableView estimatedHeightForRowAtIndexPath:idx];
     }
     return 0;
 }
 
 - (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(6_0) {
-    auto rs = _cache.getRow(indexPath.row);
+    auto rs = _cache.getLocation(indexPath.row);
     if (rs.responds()->shouldHighlightRowAtIndexPath) {
-        return [rs.component() tableView:tableView shouldHighlightRowAtIndexPath:indexPathZero];
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.range().location inSection:indexPath.section];
+        return [rs.component() tableView:tableView shouldHighlightRowAtIndexPath:idx];
     }
     return YES;
 }
 
 - (void)tableView:(UITableView *)tableView didHighlightRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(6_0) {
-    auto rs = _cache.getRow(indexPath.row);
+    auto rs = _cache.getLocation(indexPath.row);
     if (rs.responds()->didHighlightRowAtIndexPath) {
-        [rs.component() tableView:tableView didHighlightRowAtIndexPath:indexPathZero];
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.range().location inSection:indexPath.section];
+        [rs.component() tableView:tableView didHighlightRowAtIndexPath:idx];
     }
 }
 
 - (void)tableView:(UITableView *)tableView didUnhighlightRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(6_0) {
-    auto rs = _cache.getRow(indexPath.row);
+    auto rs = _cache.getLocation(indexPath.row);
     if (rs.responds()->didUnhighlightRowAtIndexPath) {
-        [rs.component() tableView:tableView didUnhighlightRowAtIndexPath:indexPathZero];
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.range().location inSection:indexPath.section];
+        [rs.component() tableView:tableView didUnhighlightRowAtIndexPath:idx];
     }
 }
 
 - (nullable NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.getRow(indexPath.row);
+    auto rs = _cache.getLocation(indexPath.row);
     if (rs.responds()->willSelectRowAtIndexPath) {
-        [rs.component() tableView:tableView willSelectRowAtIndexPath:indexPathZero];
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.range().location inSection:indexPath.section];
+        [rs.component() tableView:tableView willSelectRowAtIndexPath:idx];
     }
     return indexPath;
 }
 
 - (nullable NSIndexPath *)tableView:(UITableView *)tableView willDeselectRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(3_0) {
-    auto rs = _cache.getRow(indexPath.row);
+    auto rs = _cache.getLocation(indexPath.row);
     if (rs.responds()->canEditRowAtIndexPath) {
-        [rs.component() tableView:tableView willSelectRowAtIndexPath:indexPathZero];
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.range().location inSection:indexPath.section];
+        [rs.component() tableView:tableView willSelectRowAtIndexPath:idx];
     }
     return indexPath;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.getRow(indexPath.row);
+    auto rs = _cache.getLocation(indexPath.row);
     if (rs.responds()->didSelectRowAtIndexPath) {
-        [rs.component() tableView:tableView didSelectRowAtIndexPath:indexPathZero];
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.range().location inSection:indexPath.section];
+        [rs.component() tableView:tableView didSelectRowAtIndexPath:idx];
     }
 }
 
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(3_0) {
-    auto rs = _cache.getRow(indexPath.row);
+    auto rs = _cache.getLocation(indexPath.row);
     if (rs.responds()->didDeselectRowAtIndexPath) {
-        [rs.component() tableView:tableView didDeselectRowAtIndexPath:indexPathZero];
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.range().location inSection:indexPath.section];
+        [rs.component() tableView:tableView didDeselectRowAtIndexPath:idx];
     }
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.getRow(indexPath.row);
+    auto rs = _cache.getLocation(indexPath.row);
     if (rs.responds()->editingStyleForRowAtIndexPath) {
-        return [rs.component() tableView:tableView editingStyleForRowAtIndexPath:indexPathZero];
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.range().location inSection:indexPath.section];
+        return [rs.component() tableView:tableView editingStyleForRowAtIndexPath:idx];
     }
     return UITableViewCellEditingStyleNone;
 }
 
 - (nullable NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(3_0) __TVOS_PROHIBITED {
-    auto rs = _cache.getRow(indexPath.row);
+    auto rs = _cache.getLocation(indexPath.row);
     if (rs.responds()->titleForDeleteConfirmationButtonForRowAtIndexPath) {
-        return [rs.component() tableView:tableView titleForDeleteConfirmationButtonForRowAtIndexPath:indexPathZero];
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.range().location inSection:indexPath.section];
+        return [rs.component() tableView:tableView titleForDeleteConfirmationButtonForRowAtIndexPath:idx];
     }
     return nil;
 }
 
 - (nullable NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(8_0) __TVOS_PROHIBITED {
-    auto rs = _cache.getRow(indexPath.row);
+    auto rs = _cache.getLocation(indexPath.row);
     if (rs.responds()->editActionsForRowAtIndexPath) {
-        return [rs.component() tableView:tableView editActionsForRowAtIndexPath:indexPathZero];
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.range().location inSection:indexPath.section];
+        return [rs.component() tableView:tableView editActionsForRowAtIndexPath:idx];
     }
     return nil;
 }
 
 - (nullable UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath API_AVAILABLE(ios(11.0)) API_UNAVAILABLE(tvos) {
-    auto rs = _cache.getRow(indexPath.row);
+    auto rs = _cache.getLocation(indexPath.row);
     if (rs.responds()->leadingSwipeActionsConfigurationForRowAtIndexPath) {
-        return [rs.component() tableView:tableView leadingSwipeActionsConfigurationForRowAtIndexPath:indexPathZero];
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.range().location inSection:indexPath.section];
+        return [rs.component() tableView:tableView leadingSwipeActionsConfigurationForRowAtIndexPath:idx];
     }
     return nil;
 }
 
 - (nullable UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath API_AVAILABLE(ios(11.0)) API_UNAVAILABLE(tvos) {
-    auto rs = _cache.getRow(indexPath.row);
+    auto rs = _cache.getLocation(indexPath.row);
     if (rs.responds()->trailingSwipeActionsConfigurationForRowAtIndexPath) {
-        return [rs.component() tableView:tableView trailingSwipeActionsConfigurationForRowAtIndexPath:indexPathZero];
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.range().location inSection:indexPath.section];
+        return [rs.component() tableView:tableView trailingSwipeActionsConfigurationForRowAtIndexPath:idx];
     }
     return nil;
 }
 
 - (BOOL)tableView:(UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.getRow(indexPath.row);
+    auto rs = _cache.getLocation(indexPath.row);
     if (rs.responds()->shouldIndentWhileEditingRowAtIndexPath) {
-        return [rs.component() tableView:tableView shouldIndentWhileEditingRowAtIndexPath:indexPathZero];
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.range().location inSection:indexPath.section];
+        return [rs.component() tableView:tableView shouldIndentWhileEditingRowAtIndexPath:idx];
     }
     return NO;
 }
 
 - (void)tableView:(UITableView *)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath __TVOS_PROHIBITED {
-    auto rs = _cache.getRow(indexPath.row);
+    auto rs = _cache.getLocation(indexPath.row);
     if (rs.responds()->willBeginEditingRowAtIndexPath) {
-        [rs.component() tableView:tableView willBeginEditingRowAtIndexPath:indexPathZero];
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.range().location inSection:indexPath.section];
+        [rs.component() tableView:tableView willBeginEditingRowAtIndexPath:idx];
     }
 }
 
 - (void)tableView:(UITableView *)tableView didEndEditingRowAtIndexPath:(nullable NSIndexPath *)indexPath __TVOS_PROHIBITED {
-    auto rs = _cache.getRow(indexPath.row);
+    auto rs = _cache.getLocation(indexPath.row);
     if (rs.responds()->didEndEditingRowAtIndexPath) {
-        return [rs.component() tableView:tableView didEndEditingRowAtIndexPath:indexPathZero];
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.range().location inSection:indexPath.section];
+        return [rs.component() tableView:tableView didEndEditingRowAtIndexPath:idx];
     }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView indentationLevelForRowAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.getRow(indexPath.row);
+    auto rs = _cache.getLocation(indexPath.row);
     if (rs.responds()->indentationLevelForRowAtIndexPath) {
-        return [rs.component() tableView:tableView indentationLevelForRowAtIndexPath:indexPathZero];
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.range().location inSection:indexPath.section];
+        return [rs.component() tableView:tableView indentationLevelForRowAtIndexPath:idx];
     }
     return 0;
 }
 
 - (BOOL)tableView:(UITableView *)tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(5_0) {
-    auto rs = _cache.getRow(indexPath.row);
+    auto rs = _cache.getLocation(indexPath.row);
     if (rs.responds()->shouldShowMenuForRowAtIndexPath) {
-        return [rs.component() tableView:tableView shouldShowMenuForRowAtIndexPath:indexPathZero];
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.range().location inSection:indexPath.section];
+        return [rs.component() tableView:tableView shouldShowMenuForRowAtIndexPath:idx];
     }
     return NO;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canPerformAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(nullable id)sender NS_AVAILABLE_IOS(5_0) {
-    auto rs = _cache.getRow(indexPath.row);
+    auto rs = _cache.getLocation(indexPath.row);
     if (rs.responds()->canPerformAction) {
-        return [rs.component() tableView:tableView canPerformAction:action forRowAtIndexPath:indexPathZero withSender:sender];
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.range().location inSection:indexPath.section];
+        return [rs.component() tableView:tableView canPerformAction:action forRowAtIndexPath:idx withSender:sender];
     }
     return NO;
 }
 
 - (void)tableView:(UITableView *)tableView performAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(nullable id)sender NS_AVAILABLE_IOS(5_0) {
-    auto rs = _cache.getRow(indexPath.row);
+    auto rs = _cache.getLocation(indexPath.row);
     if (rs.responds()->performAction) {
-        [rs.component() tableView:tableView performAction:action forRowAtIndexPath:indexPathZero withSender:sender];
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.range().location inSection:indexPath.section];
+        [rs.component() tableView:tableView performAction:action forRowAtIndexPath:idx withSender:sender];
     }
 }
 
 // Focus
 
 - (BOOL)tableView:(UITableView *)tableView canFocusRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(9_0) {
-    auto rs = _cache.getRow(indexPath.row);
+    auto rs = _cache.getLocation(indexPath.row);
     if (rs.responds()->canFocusRowAtIndexPath) {
-        return [rs.component() tableView:tableView canFocusRowAtIndexPath:indexPathZero];
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.range().location inSection:indexPath.section];
+        return [rs.component() tableView:tableView canFocusRowAtIndexPath:idx];
     }
     return NO;
 }
 
 - (BOOL)tableView:(UITableView *)tableView shouldSpringLoadRowAtIndexPath:(NSIndexPath *)indexPath withContext:(id<UISpringLoadedInteractionContext>)context API_AVAILABLE(ios(11.0)) API_UNAVAILABLE(tvos, watchos) {
-    auto rs = _cache.getRow(indexPath.row);
+    auto rs = _cache.getLocation(indexPath.row);
     if (rs.responds()->shouldSpringLoadRowAtIndexPath) {
-        return [rs.component() tableView:tableView shouldSpringLoadRowAtIndexPath:indexPathZero withContext:context];
+        NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row - rs.range().location inSection:indexPath.section];
+        return [rs.component() tableView:tableView shouldSpringLoadRowAtIndexPath:idx withContext:context];
     }
     return NO;
 }

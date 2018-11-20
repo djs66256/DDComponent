@@ -46,7 +46,7 @@
     DDTableViewSectionGroupComponent *sectionGroup = [DDTableViewSectionGroupComponent componentWithSubComponents:
                                                       @[[DDTableViewItemGroupSectionComponent componentWithSubComponents:
                                                          @[
-                                                           [DDTableViewItemDemoComponent new],
+                                                           [DDTableViewItemDemo1Component new],
                                                            [DDTableViewItemDemoComponent new]
                                                            ]],
                                                         [DDTableViewHeaderFooterSectionDemoComponent componentWithData:@[@[@"", @""], @[@"", @"", @""]]],

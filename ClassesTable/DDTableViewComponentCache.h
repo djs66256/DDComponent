@@ -79,7 +79,7 @@ namespace DD {
                 Iterator(SectionCache* cache, size_t idx): cache_(cache), index_(idx) {}
                 
                 Range& range() { return cache_->indexPaths_[index_]; }
-                DDTableViewSectionComponent* component() { return cache_->components_[index_]; }
+                DDTableViewBaseComponent* component() { return cache_->components_[index_]; }
                 const TableViewResponds* responds() { return cache_->responds_[index_]; }
                 
                 friend bool operator== (const Iterator& l, const Iterator& r) { return l.index_ == r.index_; }
@@ -88,7 +88,7 @@ namespace DD {
                 size_t index_ = NSNotFound;
             };
             
-            void fill(NSArray<DDTableViewSectionComponent*> *components, UITableView *tableView) {
+            void fill(NSArray<DDTableViewBaseComponent*> *components, std::function<NSUInteger(DDTableViewBaseComponent*)> numberOfComponent) {
                 indexPaths_.clear();
                 responds_.clear();
                 indexPaths_.reserve(components.count);
@@ -100,7 +100,7 @@ namespace DD {
                 const TableViewResponds *rs, *prev = nullptr;
                 auto manager = RespondsManager::getInstance();
                 for (DDTableViewSectionComponent* comp in components) {
-                    Range r = Range(location, static_cast<NSUInteger>([comp numberOfSectionsInTableView:tableView]));
+                    Range r = Range(location, numberOfComponent(comp));
                     indexPaths_.push_back(r);
                     location += r.length;
                     if ([comp conformsToProtocol:@protocol(DDTableViewCompositeComponentProtocol)]) {
@@ -122,24 +122,24 @@ namespace DD {
             
             Iterator begin() { return Iterator(this, indexPaths_.size() > 0 ? 0 : NSNotFound); }
             Iterator end() { return Iterator(this); }
-            Iterator getSection(NSInteger section) {
+            Iterator getLocation(NSInteger location) {
                 // Use binary search!
-                auto i = std::lower_bound(indexPaths_.begin(), indexPaths_.end(), section, [](auto& r, auto sec) {
+                auto i = std::lower_bound(indexPaths_.begin(), indexPaths_.end(), location, [](auto& r, auto sec) {
                     return r.location <= sec;
                 });
                 if (i == indexPaths_.end()) {
                     auto last = indexPaths_.rbegin();
-                    if (last->contains(section)) {
+                    if (last->contains(location)) {
                         return Iterator(this, indexPaths_.size() - 1);
                     }
                 }
                 else if (i != indexPaths_.begin()) {
                     --i;
-                    if (i->contains(section)) {
+                    if (i->contains(location)) {
                         return Iterator(this, i - indexPaths_.begin());
                     }
                 }
-                NSCAssert(false, @"Can not find info in section %zd!", section);
+                NSCAssert(false, @"Can not find info in section %zd!", location);
                 return end();
             }
             Iterator getComponent(id<DDTableViewComponentProtocol> comp) {
@@ -149,10 +149,10 @@ namespace DD {
             
             const TableViewResponds* myResponds() { return &myResponds_; }
             
-            NSInteger numberOfSection() {
+            NSInteger numberOfComponents() {
                 if (indexPaths_.size()) {
-                    auto& last = indexPaths_[indexPaths_.size() - 1];
-                    return last.location + last.length;
+                    auto last = indexPaths_.rbegin();
+                    return last->location + last->length;
                 }
                 return 0;
             }
@@ -161,67 +161,7 @@ namespace DD {
             TableViewResponds myResponds_;
             std::vector<Range> indexPaths_;
             std::vector<const TableViewResponds*> responds_;
-            __strong NSArray<DDTableViewSectionComponent*> *components_ = nil;
-        };
-        
-        class RowCache {
-        public:
-            class Iterator {
-            public:
-                Iterator(RowCache* cache): cache_(cache) {}
-                Iterator(RowCache* cache, size_t idx): cache_(cache), index_(idx) {}
-                
-                DDTableViewItemComponent* component() { return cache_->components_[index_]; }
-                const TableViewResponds* responds() { return cache_->responds_[index_]; }
-                size_t index() { return index_; }
-                
-                friend bool operator== (const Iterator& l, const Iterator& r) { return l.index_ == r.index_; }
-            private:
-                RowCache *cache_;
-                size_t index_ = NSNotFound;
-            };
-            
-            Iterator begin() { return Iterator(this, responds_.size() > 0 ? 0 : NSNotFound); }
-            Iterator end() { return Iterator(this); }
-            Iterator getRow(NSInteger row) {
-                if (row < responds_.size()) {
-                    return Iterator(this, row);
-                }
-                NSCAssert(false, @"Can not find info at row %zd!", row);
-                return end();
-            }
-            Iterator getComponent(id<DDTableViewComponentProtocol> comp) {
-                auto idx = [components_ indexOfObject:comp];
-                return Iterator(this, idx);
-            }
-            
-            void fill(NSArray<DDTableViewItemComponent*> *components, UITableView *tableView) {
-                responds_.clear();
-                responds_.reserve(components.count);
-                components_ = components;
-                
-                auto manager = RespondsManager::getInstance();
-                TableViewResponds totalResponds;
-                const TableViewResponds *rs, *prev = nullptr;
-                for (id<DDTableViewComponentProtocol> comp in components) {
-                    rs = manager.respondsForObject(comp);
-                    responds_.push_back(rs);
-                    if (prev != rs) {
-                        totalResponds |= (*rs);
-                    }
-                    prev = rs;
-                }
-                myResponds_ = totalResponds;
-            }
-            
-            const TableViewResponds* myResponds() { return &myResponds_; }
-            
-            NSInteger numberOfRows() { return responds_.size(); }
-            
-        private:
-            TableViewResponds myResponds_;
-            std::vector<const TableViewResponds*> responds_;
-            __strong NSArray<DDTableViewItemComponent*> *components_ = nil;
+            __strong NSArray<DDTableViewBaseComponent*> *components_ = nil;
         };
         
         class HeaderFooterCache {

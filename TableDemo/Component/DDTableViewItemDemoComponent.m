@@ -232,10 +232,17 @@
       forCellReuseIdentifier:@"DDComponentDemoTableViewCell"];
 }
 
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return 2;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     printf("%s\n", sel_getName(_cmd));
     DDComponentDemoTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DDComponentDemoTableViewCell"];
     cell.contentView.backgroundColor = UIColor.grayColor;
+    NSIndexPath *idx = [self convertToGlobalIndexPath:indexPath];
+    NSIndexPath *lidx = [self convertFromGlobalIndexPath:idx];
+    cell.textLabel.text = [NSString stringWithFormat:@"(%zd, %zd),(%zd, %zd)", idx.section, idx.row, lidx.section, lidx.row];
     return cell;
 }
 

@@ -35,7 +35,7 @@ using namespace DD::TableViewComponent;
 - (NSIndexPath *)convertIndexPath:(NSIndexPath *)indexPath toSubComponent:(DDTableViewBaseComponent *)comp {
     if (self == comp) return indexPath;
     
-    auto rs = _cache.getSection(indexPath.section);
+    auto rs = _cache.getLocation(indexPath.section);
     if (rs == _cache.end()) {
         return nil;
     }
@@ -60,7 +60,7 @@ using namespace DD::TableViewComponent;
 - (NSInteger)convertSection:(NSInteger)section toSubComponent:(DDTableViewBaseComponent *)comp {
     if (self == comp) return section;
     
-    auto rs = _cache.getSection(section);
+    auto rs = _cache.getLocation(section);
     if (rs == _cache.end()) {
         return NSNotFound;
     }
@@ -71,7 +71,7 @@ using namespace DD::TableViewComponent;
 }
 
 - (DDTableViewBaseComponent *)componentAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.getSection(indexPath.section);
+    auto rs = _cache.getLocation(indexPath.section);
     if (rs == _cache.end()) {
         return nil;
     }
@@ -112,7 +112,10 @@ using namespace DD::TableViewComponent;
             [(id<DDTableViewCompositeComponentProtocol>)comp rebuildCache];
         }
     }
-    _cache.fill(self.subComponents, self.rootComponent.tableView);
+    auto tableView = self.rootComponent.tableView;
+    _cache.fill(self.subComponents, [&](DDTableViewBaseComponent *comp) {
+        return [comp numberOfSectionsInTableView:tableView];
+    });
 }
 
 - (const DD::TableViewComponent::TableViewResponds *)respondsInfo {
@@ -121,22 +124,22 @@ using namespace DD::TableViewComponent;
 
 #pragma mark - table view datasource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return _cache.numberOfSection();
+    return _cache.numberOfComponents();
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    auto rs = _cache.getSection(section);
+    auto rs = _cache.getLocation(section);
     return [rs.component() tableView:tableView numberOfRowsInSection:section - rs.range().location];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.getSection(indexPath.section);
+    auto rs = _cache.getLocation(indexPath.section);
     NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - rs.range().location];
     return [rs.component() tableView:tableView cellForRowAtIndexPath:idx];
 }
 
 - (nullable NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    auto rs = _cache.getSection(section);
+    auto rs = _cache.getLocation(section);
     if (rs.responds()->titleForHeaderInSection) {
         return [rs.component() tableView:tableView titleForHeaderInSection:section - rs.range().location];
     }
@@ -144,7 +147,7 @@ using namespace DD::TableViewComponent;
 }
 
 - (nullable NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
-    auto rs = _cache.getSection(section);
+    auto rs = _cache.getLocation(section);
     if (rs.responds()->titleForFooterInSection) {
         return [rs.component() tableView:tableView titleForFooterInSection:section - rs.range().location];
     }
@@ -152,7 +155,7 @@ using namespace DD::TableViewComponent;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.getSection(indexPath.section);
+    auto rs = _cache.getLocation(indexPath.section);
     if (rs.responds()->canEditRowAtIndexPath) {
         NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - rs.range().location];
         return [rs.component() tableView:tableView canEditRowAtIndexPath:idx];
@@ -161,7 +164,7 @@ using namespace DD::TableViewComponent;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.getSection(indexPath.section);
+    auto rs = _cache.getLocation(indexPath.section);
     if (rs.responds()->commitEditingStyle) {
         NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - rs.range().location];
         [rs.component() tableView:tableView commitEditingStyle:editingStyle forRowAtIndexPath:idx];
@@ -171,7 +174,7 @@ using namespace DD::TableViewComponent;
 #pragma mark - delegate
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.getSection(indexPath.section);
+    auto rs = _cache.getLocation(indexPath.section);
     if (rs.responds()->willDisplayCell) {
         NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - rs.range().location];
         [rs.component() tableView:tableView willDisplayCell:cell forRowAtIndexPath:idx];
@@ -179,21 +182,21 @@ using namespace DD::TableViewComponent;
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section NS_AVAILABLE_IOS(6_0) {
-    auto rs = _cache.getSection(section);
+    auto rs = _cache.getLocation(section);
     if (rs.responds()->willDisplayHeaderView) {
         [rs.component() tableView:tableView willDisplayHeaderView:view forSection:section - rs.range().location];
     }
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayFooterView:(UIView *)view forSection:(NSInteger)section NS_AVAILABLE_IOS(6_0) {
-    auto rs = _cache.getSection(section);
+    auto rs = _cache.getLocation(section);
     if (rs.responds()->willDisplayFooterView) {
         [rs.component() tableView:tableView willDisplayFooterView:view forSection:section - rs.range().location];
     }
 }
 
 - (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath*)indexPath NS_AVAILABLE_IOS(6_0) {
-    auto rs = _cache.getSection(indexPath.section);
+    auto rs = _cache.getLocation(indexPath.section);
     if (rs.responds()->didEndDisplayingCell) {
         NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - rs.range().location];
         [rs.component() tableView:tableView didEndDisplayingCell:cell forRowAtIndexPath:idx];
@@ -201,21 +204,21 @@ using namespace DD::TableViewComponent;
 }
 
 - (void)tableView:(UITableView *)tableView didEndDisplayingHeaderView:(UIView *)view forSection:(NSInteger)section NS_AVAILABLE_IOS(6_0) {
-    auto rs = _cache.getSection(section);
+    auto rs = _cache.getLocation(section);
     if (rs.responds()->willDisplayCell) {
         [rs.component() tableView:tableView didEndDisplayingHeaderView:view forSection:section - rs.range().location];
     }
 }
 
 - (void)tableView:(UITableView *)tableView didEndDisplayingFooterView:(UIView *)view forSection:(NSInteger)section NS_AVAILABLE_IOS(6_0) {
-    auto rs = _cache.getSection(section);
+    auto rs = _cache.getLocation(section);
     if (rs.responds()->willDisplayCell) {
         [rs.component() tableView:tableView didEndDisplayingFooterView:view forSection:section - rs.range().location];
     }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.getSection(indexPath.section);
+    auto rs = _cache.getLocation(indexPath.section);
     if (rs.responds()->heightForRowAtIndexPath) {
         NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - rs.range().location];
         return [rs.component() tableView:tableView heightForRowAtIndexPath:idx];
@@ -224,7 +227,7 @@ using namespace DD::TableViewComponent;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    auto rs = _cache.getSection(section);
+    auto rs = _cache.getLocation(section);
     if (rs.responds()->heightForHeaderInSection) {
         return [rs.component() tableView:tableView heightForHeaderInSection:section - rs.range().location];
     }
@@ -232,7 +235,7 @@ using namespace DD::TableViewComponent;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
-    auto rs = _cache.getSection(section);
+    auto rs = _cache.getLocation(section);
     if (rs.responds()->heightForFooterInSection) {
         return [rs.component() tableView:tableView heightForFooterInSection:section - rs.range().location];
     }
@@ -240,7 +243,7 @@ using namespace DD::TableViewComponent;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(7_0) {
-    auto rs = _cache.getSection(indexPath.section);
+    auto rs = _cache.getLocation(indexPath.section);
     if (rs.responds()->estimatedHeightForRowAtIndexPath) {
         NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - rs.range().location];
         return [rs.component() tableView:tableView estimatedHeightForRowAtIndexPath:idx];
@@ -249,7 +252,7 @@ using namespace DD::TableViewComponent;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForHeaderInSection:(NSInteger)section NS_AVAILABLE_IOS(7_0) {
-    auto rs = _cache.getSection(section);
+    auto rs = _cache.getLocation(section);
     if (rs.responds()->estimatedHeightForHeaderInSection) {
         return [rs.component() tableView:tableView estimatedHeightForHeaderInSection:section - rs.range().location];
     }
@@ -257,7 +260,7 @@ using namespace DD::TableViewComponent;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForFooterInSection:(NSInteger)section NS_AVAILABLE_IOS(7_0) {
-    auto rs = _cache.getSection(section);
+    auto rs = _cache.getLocation(section);
     if (rs.responds()->estimatedHeightForFooterInSection) {
         return [rs.component() tableView:tableView estimatedHeightForFooterInSection:section - rs.range().location];
     }
@@ -265,7 +268,7 @@ using namespace DD::TableViewComponent;
 }
 
 - (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    auto rs = _cache.getSection(section);
+    auto rs = _cache.getLocation(section);
     if (rs.responds()->viewForHeaderInSection) {
         return [rs.component() tableView:tableView viewForHeaderInSection:section - rs.range().location];
     }
@@ -273,7 +276,7 @@ using namespace DD::TableViewComponent;
 }
 
 - (nullable UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    auto rs = _cache.getSection(section);
+    auto rs = _cache.getLocation(section);
     if (rs.responds()->viewForFooterInSection) {
         return [rs.component() tableView:tableView viewForFooterInSection:section - rs.range().location];
     }
@@ -281,7 +284,7 @@ using namespace DD::TableViewComponent;
 }
 
 - (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(6_0) {
-    auto rs = _cache.getSection(indexPath.section);
+    auto rs = _cache.getLocation(indexPath.section);
     if (rs.responds()->shouldHighlightRowAtIndexPath) {
         NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - rs.range().location];
         return [rs.component() tableView:tableView shouldHighlightRowAtIndexPath:idx];
@@ -290,7 +293,7 @@ using namespace DD::TableViewComponent;
 }
 
 - (void)tableView:(UITableView *)tableView didHighlightRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(6_0) {
-    auto rs = _cache.getSection(indexPath.section);
+    auto rs = _cache.getLocation(indexPath.section);
     if (rs.responds()->didHighlightRowAtIndexPath) {
         NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - rs.range().location];
         [rs.component() tableView:tableView didHighlightRowAtIndexPath:idx];
@@ -298,7 +301,7 @@ using namespace DD::TableViewComponent;
 }
 
 - (void)tableView:(UITableView *)tableView didUnhighlightRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(6_0) {
-    auto rs = _cache.getSection(indexPath.section);
+    auto rs = _cache.getLocation(indexPath.section);
     if (rs.responds()->didUnhighlightRowAtIndexPath) {
         NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - rs.range().location];
         [rs.component() tableView:tableView didUnhighlightRowAtIndexPath:idx];
@@ -306,7 +309,7 @@ using namespace DD::TableViewComponent;
 }
 
 - (nullable NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.getSection(indexPath.section);
+    auto rs = _cache.getLocation(indexPath.section);
     if (rs.responds()->willSelectRowAtIndexPath) {
         NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - rs.range().location];
         NSIndexPath *ret = [rs.component() tableView:tableView willSelectRowAtIndexPath:idx];
@@ -317,7 +320,7 @@ using namespace DD::TableViewComponent;
 }
 
 - (nullable NSIndexPath *)tableView:(UITableView *)tableView willDeselectRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(3_0) {
-    auto rs = _cache.getSection(indexPath.section);
+    auto rs = _cache.getLocation(indexPath.section);
     if (rs.responds()->canEditRowAtIndexPath) {
         NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - rs.range().location];
         NSIndexPath *ret = [rs.component() tableView:tableView willDeselectRowAtIndexPath:idx];
@@ -328,7 +331,7 @@ using namespace DD::TableViewComponent;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.getSection(indexPath.section);
+    auto rs = _cache.getLocation(indexPath.section);
     if (rs.responds()->didSelectRowAtIndexPath) {
         NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - rs.range().location];
         [rs.component() tableView:tableView didSelectRowAtIndexPath:idx];
@@ -336,7 +339,7 @@ using namespace DD::TableViewComponent;
 }
 
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(3_0) {
-    auto rs = _cache.getSection(indexPath.section);
+    auto rs = _cache.getLocation(indexPath.section);
     if (rs.responds()->didDeselectRowAtIndexPath) {
         NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - rs.range().location];
         [rs.component() tableView:tableView didDeselectRowAtIndexPath:idx];
@@ -344,7 +347,7 @@ using namespace DD::TableViewComponent;
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.getSection(indexPath.section);
+    auto rs = _cache.getLocation(indexPath.section);
     if (rs.responds()->editingStyleForRowAtIndexPath) {
         NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - rs.range().location];
         return [rs.component() tableView:tableView editingStyleForRowAtIndexPath:idx];
@@ -353,7 +356,7 @@ using namespace DD::TableViewComponent;
 }
 
 - (nullable NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(3_0) __TVOS_PROHIBITED {
-    auto rs = _cache.getSection(indexPath.section);
+    auto rs = _cache.getLocation(indexPath.section);
     if (rs.responds()->titleForDeleteConfirmationButtonForRowAtIndexPath) {
         NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - rs.range().location];
         return [rs.component() tableView:tableView titleForDeleteConfirmationButtonForRowAtIndexPath:idx];
@@ -362,7 +365,7 @@ using namespace DD::TableViewComponent;
 }
 
 - (nullable NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(8_0) __TVOS_PROHIBITED {
-    auto rs = _cache.getSection(indexPath.section);
+    auto rs = _cache.getLocation(indexPath.section);
     if (rs.responds()->editActionsForRowAtIndexPath) {
         NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - rs.range().location];
         return [rs.component() tableView:tableView editActionsForRowAtIndexPath:idx];
@@ -371,7 +374,7 @@ using namespace DD::TableViewComponent;
 }
 
 - (nullable UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath API_AVAILABLE(ios(11.0)) API_UNAVAILABLE(tvos) {
-    auto rs = _cache.getSection(indexPath.section);
+    auto rs = _cache.getLocation(indexPath.section);
     if (rs.responds()->leadingSwipeActionsConfigurationForRowAtIndexPath) {
         NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - rs.range().location];
         return [rs.component() tableView:tableView leadingSwipeActionsConfigurationForRowAtIndexPath:idx];
@@ -380,7 +383,7 @@ using namespace DD::TableViewComponent;
 }
 
 - (nullable UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath API_AVAILABLE(ios(11.0)) API_UNAVAILABLE(tvos) {
-    auto rs = _cache.getSection(indexPath.section);
+    auto rs = _cache.getLocation(indexPath.section);
     if (rs.responds()->trailingSwipeActionsConfigurationForRowAtIndexPath) {
         NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - rs.range().location];
         return [rs.component() tableView:tableView trailingSwipeActionsConfigurationForRowAtIndexPath:idx];
@@ -389,7 +392,7 @@ using namespace DD::TableViewComponent;
 }
 
 - (BOOL)tableView:(UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.getSection(indexPath.section);
+    auto rs = _cache.getLocation(indexPath.section);
     if (rs.responds()->shouldIndentWhileEditingRowAtIndexPath) {
         NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - rs.range().location];
         return [rs.component() tableView:tableView shouldIndentWhileEditingRowAtIndexPath:idx];
@@ -398,7 +401,7 @@ using namespace DD::TableViewComponent;
 }
 
 - (void)tableView:(UITableView *)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath __TVOS_PROHIBITED {
-    auto rs = _cache.getSection(indexPath.section);
+    auto rs = _cache.getLocation(indexPath.section);
     if (rs.responds()->willBeginEditingRowAtIndexPath) {
         NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - rs.range().location];
         [rs.component() tableView:tableView willBeginEditingRowAtIndexPath:idx];
@@ -406,7 +409,7 @@ using namespace DD::TableViewComponent;
 }
 
 - (void)tableView:(UITableView *)tableView didEndEditingRowAtIndexPath:(nullable NSIndexPath *)indexPath __TVOS_PROHIBITED {
-    auto rs = _cache.getSection(indexPath.section);
+    auto rs = _cache.getLocation(indexPath.section);
     if (rs.responds()->didEndEditingRowAtIndexPath) {
         NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - rs.range().location];
         return [rs.component() tableView:tableView didEndEditingRowAtIndexPath:idx];
@@ -414,7 +417,7 @@ using namespace DD::TableViewComponent;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView indentationLevelForRowAtIndexPath:(NSIndexPath *)indexPath {
-    auto rs = _cache.getSection(indexPath.section);
+    auto rs = _cache.getLocation(indexPath.section);
     if (rs.responds()->indentationLevelForRowAtIndexPath) {
         NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - rs.range().location];
         return [rs.component() tableView:tableView indentationLevelForRowAtIndexPath:idx];
@@ -423,7 +426,7 @@ using namespace DD::TableViewComponent;
 }
 
 - (BOOL)tableView:(UITableView *)tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(5_0) {
-    auto rs = _cache.getSection(indexPath.section);
+    auto rs = _cache.getLocation(indexPath.section);
     if (rs.responds()->shouldShowMenuForRowAtIndexPath) {
         NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - rs.range().location];
         return [rs.component() tableView:tableView shouldShowMenuForRowAtIndexPath:idx];
@@ -432,7 +435,7 @@ using namespace DD::TableViewComponent;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canPerformAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(nullable id)sender NS_AVAILABLE_IOS(5_0) {
-    auto rs = _cache.getSection(indexPath.section);
+    auto rs = _cache.getLocation(indexPath.section);
     if (rs.responds()->canPerformAction) {
         NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - rs.range().location];
         return [rs.component() tableView:tableView canPerformAction:action forRowAtIndexPath:idx withSender:sender];
@@ -441,7 +444,7 @@ using namespace DD::TableViewComponent;
 }
 
 - (void)tableView:(UITableView *)tableView performAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(nullable id)sender NS_AVAILABLE_IOS(5_0) {
-    auto rs = _cache.getSection(indexPath.section);
+    auto rs = _cache.getLocation(indexPath.section);
     if (rs.responds()->performAction) {
         NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - rs.range().location];
         [rs.component() tableView:tableView performAction:action forRowAtIndexPath:idx withSender:sender];
@@ -451,7 +454,7 @@ using namespace DD::TableViewComponent;
 // Focus
 
 - (BOOL)tableView:(UITableView *)tableView canFocusRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(9_0) {
-    auto rs = _cache.getSection(indexPath.section);
+    auto rs = _cache.getLocation(indexPath.section);
     if (rs.responds()->canFocusRowAtIndexPath) {
         NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - rs.range().location];
         return [rs.component() tableView:tableView canFocusRowAtIndexPath:idx];
@@ -460,7 +463,7 @@ using namespace DD::TableViewComponent;
 }
 
 - (BOOL)tableView:(UITableView *)tableView shouldSpringLoadRowAtIndexPath:(NSIndexPath *)indexPath withContext:(id<UISpringLoadedInteractionContext>)context API_AVAILABLE(ios(11.0)) API_UNAVAILABLE(tvos, watchos) {
-    auto rs = _cache.getSection(indexPath.section);
+    auto rs = _cache.getLocation(indexPath.section);
     if (rs.responds()->shouldSpringLoadRowAtIndexPath) {
         NSIndexPath *idx = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - rs.range().location];
         return [rs.component() tableView:tableView shouldSpringLoadRowAtIndexPath:idx withContext:context];
