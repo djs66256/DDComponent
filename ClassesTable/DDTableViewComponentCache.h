@@ -23,6 +23,18 @@
 @class DDTableViewSectionComponent;
 namespace DD {
     namespace TableViewComponent {
+        struct Range {
+            NSUInteger location;
+            NSUInteger length;
+            
+            Range() : location(0), length(0) {}
+            Range(NSInteger loc, NSInteger len): location(loc), length(len) {}
+            
+            bool contains(NSInteger loc) {
+                return location <= loc && (location + length) > loc;
+            }
+        };
+        
         class RespondsManager {
         public:
             static RespondsManager& getInstance() {
@@ -66,7 +78,7 @@ namespace DD {
                 Iterator(SectionCache* cache): cache_(cache) {}
                 Iterator(SectionCache* cache, size_t idx): cache_(cache), index_(idx) {}
                 
-                NSRange& range() { return cache_->indexPaths_[index_]; }
+                Range& range() { return cache_->indexPaths_[index_]; }
                 DDTableViewSectionComponent* component() { return cache_->components_[index_]; }
                 const TableViewResponds* responds() { return cache_->responds_[index_]; }
                 
@@ -88,7 +100,7 @@ namespace DD {
                 const TableViewResponds *rs, *prev = nullptr;
                 auto manager = RespondsManager::getInstance();
                 for (DDTableViewSectionComponent* comp in components) {
-                    NSRange r = { location, static_cast<NSUInteger>([comp numberOfSectionsInTableView:tableView]) };
+                    Range r = Range(location, static_cast<NSUInteger>([comp numberOfSectionsInTableView:tableView]));
                     indexPaths_.push_back(r);
                     location += r.length;
                     if ([comp conformsToProtocol:@protocol(DDTableViewCompositeComponentProtocol)]) {
@@ -111,10 +123,20 @@ namespace DD {
             Iterator begin() { return Iterator(this, indexPaths_.size() > 0 ? 0 : NSNotFound); }
             Iterator end() { return Iterator(this); }
             Iterator getSection(NSInteger section) {
-                for (NSInteger i = 0; i < indexPaths_.size(); ++i) {
-                    auto& r = indexPaths_[i];
-                    if (r.location <= section && r.location + r.length > section) {
-                        return Iterator(this, i);
+                // Use binary search!
+                auto i = std::lower_bound(indexPaths_.begin(), indexPaths_.end(), section, [](auto& r, auto sec) {
+                    return r.location <= sec;
+                });
+                if (i == indexPaths_.end()) {
+                    auto last = indexPaths_.rbegin();
+                    if (last->contains(section)) {
+                        return Iterator(this, indexPaths_.size() - 1);
+                    }
+                }
+                else if (i != indexPaths_.begin()) {
+                    --i;
+                    if (i->contains(section)) {
+                        return Iterator(this, i - indexPaths_.begin());
                     }
                 }
                 NSCAssert(false, @"Can not find info in section %zd!", section);
@@ -137,7 +159,7 @@ namespace DD {
             
         private:
             TableViewResponds myResponds_;
-            std::vector<NSRange> indexPaths_;
+            std::vector<Range> indexPaths_;
             std::vector<const TableViewResponds*> responds_;
             __strong NSArray<DDTableViewSectionComponent*> *components_ = nil;
         };
