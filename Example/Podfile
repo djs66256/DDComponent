@@ -1,0 +1,16 @@
+# use_frameworks!
+
+install! 'cocoapods', :warn_for_multiple_pod_sources => false, :deterministic_uuids => false
+inhibit_all_warnings!
+
+platform :ios, '13.0'
+
+target 'DDComponent_Example' do
+  pod 'DDComponent', :path => '../'
+  pod 'SnapKit', :git=>'https://github.com/SnapKit/SnapKit.git'
+  pod 'Then', :git => 'https://github.com/devxoul/Then.git'
+
+  target 'DDComponent_Tests' do
+    inherit! :search_paths
+  end
+end
