@@ -1,0 +1,10 @@
+{
+  "enabledPlugins": {
+    "claude-md-management@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true,
+    "github@claude-plugins-official": true,
+    "swift-lsp@claude-plugins-official": true
+  }
+}
