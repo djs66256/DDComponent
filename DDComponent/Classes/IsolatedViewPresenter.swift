@@ -53,13 +53,8 @@ where P : ViewPresenter<V>, UI: UIView {
     }
     
     public override func notify<T>(listener: T.Type, scope: NotifyScope, from: AnyObject?, _ closure: (T) -> Void) {
-        if scope != .childrenAndSelf {
-            notify(listener: listener, scope: .childrenAndSelf, from: from, closure)
-        }
-        else {
-            notifyManager.notify(listener: listener, from: from, closure)
-            super.notify(listener: listener, scope: scope, from: from, closure)
-        }
+        notifyManager.notify(listener: listener, from: from, closure)
+        super.notify(listener: listener, scope: .childrenAndSelf, from: from, closure)
     }
     
     public override var rootPresenter: RootViewPresentable? {

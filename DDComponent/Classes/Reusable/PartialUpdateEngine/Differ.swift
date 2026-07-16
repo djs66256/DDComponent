@@ -24,10 +24,6 @@ extension Engine {
             var reloads: IndexSet = IndexSet()
             var moves: [Move] = []
             
-            var hasChanges: Bool {
-                inserts.count == 0 && deletes.count == 0 && moves.count == 0
-            }
-            
             fileprivate var oldIndexes: [ObjectIdentifier: Int] = [:]
             fileprivate var newIndexes: [ObjectIdentifier: Int] = [:]
             
@@ -48,10 +44,6 @@ extension Engine {
             var inserts: [IndexPath] = []
             var deletes: [IndexPath] = []
             var moves: [Move] = []
-            
-            var hasChanges: Bool {
-                inserts.count == 0 && deletes.count == 0 && moves.count == 0
-            }
         }
         
         

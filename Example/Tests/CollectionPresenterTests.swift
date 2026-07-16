@@ -69,7 +69,6 @@ final class CollectionPresenterTests: XCTestCase {
         section.setItems([item1])
         section.setItems([item1])
 
-        // Should not add duplicate children
         XCTAssertEqual(section.items.count, 1)
     }
 
@@ -140,12 +139,36 @@ final class CollectionPresenterTests: XCTestCase {
 
     // MARK: - CollectionItemPresenter: Shadow Presenter
 
-    func testCollectionItemPresenter_shadowPresenterPattern() {
+    func testCollectionItemPresenter_shadowPresenter_bindViewDelegates() {
         let item = MockCollectionItemPresenter()
+        let shadow = CollectionItemPresenter<MockItemView>.ShadowPresenter()
+        let view = MockItemView()
 
-        // The ShadowPresenter should be created when bound
-        // This tests that the class hierarchy is correct
-        XCTAssertNotNil(item)
+        item.onBindReusablePresenter(shadow)
+        shadow.bindView(view)
+
+        XCTAssertTrue(item.onBindViewCalled)
+    }
+
+    func testCollectionItemPresenter_shadowPresenter_onUpdatePropagates() {
+        let item = MockCollectionItemPresenter()
+        let shadow = CollectionItemPresenter<MockItemView>.ShadowPresenter()
+        item.onBindReusablePresenter(shadow)
+
+        item.setState(updater: {})
+        item.updateView(context: ViewUpdateContext())
+
+        XCTAssertTrue(item.onUpdateCalled)
+    }
+
+    func testCollectionItemPresenter_shadowPresenter_onUnbindClearsSource() {
+        let item = MockCollectionItemPresenter()
+        let shadow = CollectionItemPresenter<MockItemView>.ShadowPresenter()
+        item.onBindReusablePresenter(shadow)
+
+        item.onUnbindReusablePresenter(shadow)
+
+        XCTAssertNil(shadow.shadowSource)
     }
 
     // MARK: - SuperPresenter
