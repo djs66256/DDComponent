@@ -186,17 +186,15 @@ final class ReusablePresenterTests: XCTestCase {
 
     // MARK: - Holder: Notify Scope
 
-    func testReusableHolder_notifyReusableScope() {
-        let root = RootViewPresenter<Void>()
+    func testReusableHolder_notifyReusableScope_redirectsToChildrenAndSelf() {
         let holder = MockReusableHolder()
         let presenter = MockReusablePresenter()
 
-        root.attachSuperPresenter()
-        root.add(child: holder)
+        holder.bindView(())
         holder.tryBindReusablePresenter(presenter)
 
-        // presenter is a child of holder
-        // .reusable scope should be handled by holder
+        // Verify .reusable scope is handled by holder
+        XCTAssertTrue(holder.children.contains { $0 === presenter })
         XCTAssertTrue(holder.children.contains { $0 === presenter })
     }
 

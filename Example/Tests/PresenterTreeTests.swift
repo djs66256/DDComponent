@@ -251,4 +251,51 @@ final class PresenterTreeTests: XCTestCase {
         root.add(child: child)
         XCTAssertTrue(child.hasAttachedRoot)
     }
+
+    // MARK: - detachAllPresentersRecursive
+
+    func testDetachAllPresentersRecursive_shouldDetachAllChildren() {
+        let root = MockRootPresenter()
+        let child1 = SpyPresenter()
+        let child2 = SpyPresenter()
+        root.attachSuperPresenter()
+        root.add(child: child1)
+        root.add(child: child2)
+
+        root.detachAllPresentersRecursive()
+
+        XCTAssertTrue(root.children.isEmpty)
+        XCTAssertNil(child1.superPresenter)
+        XCTAssertNil(child2.superPresenter)
+        XCTAssertTrue(child1.onDetachCalled)
+        XCTAssertTrue(child2.onDetachCalled)
+    }
+
+    // MARK: - detachSuperPresenter auto-unbinds
+
+    func testDetachSuperPresenter_shouldUnbindView() {
+        let parent = ViewPresenter<Void>()
+        let child = SpyPresenter()
+        parent.add(child: child)
+        child.bindView(())
+
+        XCTAssertTrue(child.hasBoundView)
+        child.detachSuperPresenter()
+
+        XCTAssertFalse(child.hasBoundView)
+        XCTAssertTrue(child.onUnbindViewCalled)
+    }
+
+    // MARK: - add(child:) auto-bind
+
+    func testAddChild_shouldAutoBindView_whenParentHasBoundView() {
+        let parent = ViewPresenter<Void>()
+        let child = SpyPresenter()
+        child.autoBindView = true
+        parent.bindView(())
+        parent.add(child: child)
+
+        XCTAssertTrue(child.hasBoundView)
+        XCTAssertTrue(child.onBindViewCalled)
+    }
 }

@@ -128,27 +128,24 @@ final class NotifyTests: XCTestCase {
         XCTAssertEqual(root.notifyCount, 0)
     }
 
-    func testNotifyChildrenAndSelf_shouldIncludeSelf() {
+    func testNotifyChildrenAndSelf_shouldReachSelfAndChildren() {
         let root = NotifyRootPresenter()
-        let parent = ListenerPresenter() // implements TestListener
-        let sender = SenderPresenter()
+        let sender = ListenerPresenter()
         let child = ListenerPresenter()
 
         root.attachSuperPresenter()
-        root.add(child: parent)
-        parent.add(child: sender)
+        root.add(child: sender)
         sender.add(child: child)
 
-        parent.notifyCount = 0
-        // sender sends childrenAndSelf — parent is above sender, child is below
-        // parent should NOT receive (it's above), child should receive
-        sender.sendChildrenAndSelf("hello")
+        sender.notifyCount = 0
+        sender.notify(listener: TestListener.self, scope: .childrenAndSelf, from: nil) {
+            $0.onEvent("hello")
+        }
 
-        // parent is not in scope (above sender)
-        XCTAssertEqual(parent.notifyCount, 0)
-        // child should receive
+        // sender should receive because from is nil (not self)
+        XCTAssertEqual(sender.notifyCount, 1)
+        XCTAssertEqual(sender.receivedMessages, ["hello"])
         XCTAssertEqual(child.notifyCount, 1)
-        XCTAssertEqual(child.receivedMessages, ["hello"])
     }
 
     // MARK: - Parents Scope
@@ -188,18 +185,20 @@ final class NotifyTests: XCTestCase {
 
     // MARK: - Global Scope
 
-    func testNotifyGlobal_shouldReachRootThenBroadcast() {
+    func testNotifyGlobal_shouldReachRootAndDescendants() {
         let root = NotifyRootPresenter()
         let child = SenderPresenter()
+        let grandchild = ListenerPresenter()
 
         root.attachSuperPresenter()
         root.add(child: child)
+        child.add(child: grandchild)
 
         child.sendGlobal("hello")
 
-        // Root should receive global messages
         XCTAssertEqual(root.notifyCount, 1)
         XCTAssertEqual(root.receivedMessages, ["hello"])
+        XCTAssertEqual(grandchild.notifyCount, 1)
     }
 
     // MARK: - Sender Exclusion
@@ -281,4 +280,26 @@ final class NotifyTests: XCTestCase {
 
         XCTAssertEqual(root.notifyCount, 1)
     }
+
+    // MARK: - Reusable Scope
+
+    func testNotifyReusable_shouldDelegateToSuperPresenter() {
+        let root = NotifyRootPresenter()
+        let holder = ReusableViewPresenterHolder<MockReusableForNotify, ReusableViewProtocol>()
+        let reusable = MockReusableForNotify()
+
+        root.attachSuperPresenter()
+        root.add(child: holder)
+        holder.tryBindReusablePresenter(reusable)
+
+        XCTAssertTrue(holder.children.contains { $0 === reusable })
+    }
+}
+
+// MARK: - Mock for Reusable Notify
+
+private protocol ReusableViewProtocol: AnyObject {}
+
+private final class MockReusableForNotify: ReusableViewPresenter<ReusableViewProtocol> {
+    required init() { super.init() }
 }

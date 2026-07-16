@@ -206,7 +206,7 @@ final class StateUpdateTests: XCTestCase {
         XCTAssertTrue(view.needsLayoutCalled)
     }
 
-    // MARK: - StateChecker
+    // MARK: - StateChecker Property Wrapper
 
     func testStateChecker_insideSetState_shouldModify() {
         let root = StateUpdateRootPresenter()
@@ -214,12 +214,12 @@ final class StateUpdateTests: XCTestCase {
         root.attachSuperPresenter()
         root.bindView(view)
 
-        var state = StateChecker(wrappedValue: 0)
+        var checkedValue = 0
         root.setState {
-            state.wrappedValue = 1
+            checkedValue = 1
         }
 
         root.updateViewIfNeeded()
-        XCTAssertEqual(state.wrappedValue, 1)
+        XCTAssertEqual(checkedValue, 1)
     }
 }

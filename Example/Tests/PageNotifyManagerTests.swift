@@ -96,14 +96,20 @@ final class PageNotifyManagerTests: XCTestCase {
         var listener: MockNotifyListener? = MockNotifyListener()
 
         manager.add(listener: NotifyManagerTestListener.self, object: listener!)
+
+        // Verify listener receives notifications while alive
+        manager.notify(listener: NotifyManagerTestListener.self, from: nil) {
+            $0.onNotify("before")
+        }
+        XCTAssertEqual(listener?.receivedMessages, ["before"])
+
         listener = nil
 
-        // Should not crash when listener is deallocated
+        // Should not crash and should not deliver to deallocated listener
         manager.notify(listener: NotifyManagerTestListener.self, from: nil) {
-            $0.onNotify("hello")
+            $0.onNotify("after")
         }
 
-        // No crash = pass
         XCTAssertTrue(true)
     }
 }

@@ -136,6 +136,7 @@ final class ServiceTests: XCTestCase {
         // is functional. The downgrade is consulted when no local service is registered.
 
         let oldDowngrade = RootViewPresenterConfig.serviceDowngrade
+        defer { RootViewPresenterConfig.serviceDowngrade = oldDowngrade }
 
         var downgradeCalled = false
         final class GlobalDowngrade: RootViewPresenterServiceDowngrade {
@@ -155,8 +156,6 @@ final class ServiceTests: XCTestCase {
         let _ = root.getService(DataService.self)
 
         XCTAssertTrue(downgradeCalled, "Global downgrade should be consulted")
-
-        RootViewPresenterConfig.serviceDowngrade = oldDowngrade
     }
 
     // MARK: - Unregister

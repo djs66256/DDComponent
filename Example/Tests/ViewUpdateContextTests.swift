@@ -134,4 +134,57 @@ final class ViewUpdateContextTests: XCTestCase {
         let context = ViewUpdateContext.dryRun
         XCTAssertTrue(context.isDryRun)
     }
+
+    // MARK: - animate Method
+
+    func testAnimate_default_shouldExecuteImmediately() {
+        var context = ViewUpdateContext()
+        var executed = false
+        context.animate { executed = true }
+        XCTAssertTrue(executed)
+    }
+
+    func testAnimate_forceDisableAnimation_shouldExecute() {
+        var context = ViewUpdateContext()
+        context.forceDisableAnimation = true
+        var executed = false
+        context.animate { executed = true }
+        XCTAssertTrue(executed)
+    }
+
+    // MARK: - animator Property
+
+    func testAnimator_setAndGet() {
+        var context = ViewUpdateContext()
+        XCTAssertNil(context.animator)
+        struct MockAnimator: ViewUpdateAnimator {
+            func animate(with context: ViewUpdateContext, _ updater: @escaping () -> Void) {
+                updater()
+            }
+        }
+        context.animator = MockAnimator()
+        XCTAssertNotNil(context.animator)
+    }
+
+    // MARK: - ViewUpdateContextInfoKey Subscript
+
+    func testInfoKeySubscript_defaultValue() {
+        var context = ViewUpdateContext()
+        struct TestKey: ViewUpdateContextInfoKey {
+            typealias ValueType = String
+            static var defaultValue: String { "default" }
+        }
+        let value: String = context[TestKey.self]
+        XCTAssertEqual(value, "default")
+    }
+
+    func testInfoKeySubscript_setAndGet() {
+        var context = ViewUpdateContext()
+        struct TestKey: ViewUpdateContextInfoKey {
+            typealias ValueType = String
+            static var defaultValue: String { "default" }
+        }
+        context[TestKey.self] = "custom"
+        XCTAssertEqual(context[TestKey.self], "custom")
+    }
 }
