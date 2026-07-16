@@ -1,63 +1,65 @@
-//
-//  ViewController.swift
-//  DDComponent
-//
-//  Created by daniel on 08/30/2022.
-//  Copyright (c) 2022 daniel. All rights reserved.
-//
-
 import UIKit
+import DDComponent
 
-@objc(BMMainViewController)
-class MainViewController: UITableViewController {
-    
-    struct DataSource {
-        let name: String
-        let vc: () -> UIViewController
-        let action: (()->Void)?
+/// A minimal table row presenter for the main navigation list.
+/// Shows how to use `onUpdate` for cell config and `onDidSelect` for tap handling.
+final class MainRowItemPresenter: UITableViewItemPresenter<UITableViewCell> {
+    var title: String?
+    var onTap: (() -> Void)?
+
+    override func onUpdate(view: UITableViewCell, context: ViewUpdateContext) {
+        var config = view.defaultContentConfiguration()
+        config.text = title
+        view.contentConfiguration = config
+        view.accessoryType = .disclosureIndicator
     }
-    
-    let dataSource: [DataSource] = [
-        .init(name: "Persenter 1 Example", vc: { Page1ViewController() }, action: nil),
-        .init(name: "CyclePageView Example", vc: {TestCyclePageViewController()}, action: nil),
-        .init(name: "CyclePageView with Presenter Example", vc: {TestPresenterCyclePageViewController()}, action: nil),
-        .init(name: "Collection Static View", vc: { CollectionStaticViewController() }, action: nil),
-//        .init(name: "EffectsSelectionViewController", vc: { EffectsSelectionViewController() }, action: nil),
-        .init(name: "DefaultTableViewController", vc: { DefaultTableViewController() }, action: nil)
+
+    override var shouldSelect: Bool { true }
+
+    override func onDidSelect() {
+        onTap?()
+    }
+}
+
+/// Main navigation page. Uses DDComponent's UITablePageDefaultViewController
+/// to render the demo list — the framework demo eats its own dog food.
+final class MainViewController: UITablePageDefaultViewController {
+
+    struct DemoEntry {
+        let title: String
+        let vc: () -> UIViewController
+    }
+
+    private let demos: [DemoEntry] = [
+        .init(title: "🟢 01  HelloDDComponent", vc: { HelloViewController() }),
+        .init(title: "🟢 02  Service & DI", vc: { ServiceDIViewController() }),
+        .init(title: "🟢 03  Notify 事件系统", vc: { NotifyViewController() }),
+        .init(title: "🟡 04  P-Tree 组合", vc: { PTreeViewController() }),
+        .init(title: "🟡 05  列表与部分更新", vc: { ListViewController() }),
+        .init(title: "🟡 06  Header/Footer", vc: { HeaderFooterViewController() }),
+        .init(title: "🟡 07  动画与 ViewUpdateContext", vc: { AnimationViewController() }),
+        .init(title: "🔴 08  IsolatedViewPresenter", vc: { IsolatedViewController() }),
+        .init(title: "🔴 09  AutoBind & Shadow", vc: { AutoBindViewController() }),
+        .init(title: "🔴 10  综合示例 — Feed", vc: { FeedViewController() }),
+        .init(title: "📦     CyclePageView 集成", vc: { CyclePageViewController() }),
     ]
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        view.backgroundColor = .white
-        self.title = "Main View Controller"
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-    }
+        title = "DDComponent Demo"
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dataSource.count
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = dataSource[indexPath.row].name
-        return cell
-    }
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        
-        let data = dataSource[indexPath.row]
-        if let action = data.action {
-            action()
+        let items = demos.map { entry -> MainRowItemPresenter in
+            let item = MainRowItemPresenter()
+            item.title = entry.title
+            item.onTap = { [weak self] in
+                let vc = entry.vc()
+                self?.navigationController?.pushViewController(vc, animated: true)
+            }
+            return item
         }
-        else {
-            let vc = data.vc()
-            navigationController?.pushViewController(vc, animated: true)
-        }
+
+        presenter.sections = [
+            UITableViewSectionPresenter(items: items)
+        ]
     }
 }
