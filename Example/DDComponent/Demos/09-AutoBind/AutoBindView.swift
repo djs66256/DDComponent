@@ -18,6 +18,20 @@ final class AutoBindView: UIView, AutoBindRootViewable {
     override init(frame: CGRect) {
         super.init(frame: frame); backgroundColor = .systemBackground
         [topSection, middleSection, bottomSection, statusLabel].forEach(addSubview)
+
+        /// autoBind: each child presenter has a distinct View TYPE.
+        /// BFS walks subviews and binds `view as? T` — first match wins.
+        /// So each section gets a child that conforms to ONLY its protocol.
+        let topChild = TopSectionChildView()
+        let middleChild = MiddleSectionChildView()
+        let bottomChild = BottomSectionChildView()
+        topSection.addSubview(topChild)
+        middleSection.addSubview(middleChild)
+        bottomSection.addSubview(bottomChild)
+        [topChild, middleChild, bottomChild].forEach {
+            $0.snp.makeConstraints { $0.edges.equalToSuperview() }
+        }
+
         topSection.snp.makeConstraints { make in
             make.top.equalTo(safeAreaLayoutGuide).offset(20); make.left.right.equalToSuperview().inset(20); make.height.equalTo(80)
         }
@@ -34,12 +48,43 @@ final class AutoBindView: UIView, AutoBindRootViewable {
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 }
 
-/// View protocol for child presenters that auto-bind.
-protocol AutoBindChildViewable: AnyObject {
+// MARK: - Distinct View protocols for autoBind type matching
+
+/// autoBind matches by Swift type via BFS (`view as? T`).
+/// Each presenter must use a **unique** View protocol so BFS can distinguish them.
+protocol TopSectionViewable: AnyObject {
+    var sectionLabel: UILabel { get }
+}
+protocol MiddleSectionViewable: AnyObject {
+    var sectionLabel: UILabel { get }
+}
+protocol BottomSectionViewable: AnyObject {
     var sectionLabel: UILabel { get }
 }
 
-final class AutoBindChildView: UIView, AutoBindChildViewable {
+/// Each child view conforms to only ONE protocol.
+/// This is essential: if a view conformed to all three, BFS would
+/// match the first one for every presenter.
+
+final class TopSectionChildView: UIView, TopSectionViewable {
+    let sectionLabel = UILabel().then { $0.font = .systemFont(ofSize: 15, weight: .medium); $0.textAlignment = .center; $0.textColor = .label }
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        addSubview(sectionLabel); sectionLabel.snp.makeConstraints { $0.center.equalToSuperview() }
+    }
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+}
+
+final class MiddleSectionChildView: UIView, MiddleSectionViewable {
+    let sectionLabel = UILabel().then { $0.font = .systemFont(ofSize: 15, weight: .medium); $0.textAlignment = .center; $0.textColor = .label }
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        addSubview(sectionLabel); sectionLabel.snp.makeConstraints { $0.center.equalToSuperview() }
+    }
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+}
+
+final class BottomSectionChildView: UIView, BottomSectionViewable {
     let sectionLabel = UILabel().then { $0.font = .systemFont(ofSize: 15, weight: .medium); $0.textAlignment = .center; $0.textColor = .label }
     override init(frame: CGRect) {
         super.init(frame: frame)

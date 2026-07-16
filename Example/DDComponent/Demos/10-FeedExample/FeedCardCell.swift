@@ -9,6 +9,9 @@ final class FeedCardCell: UICollectionViewCell {
     let imagePlaceholder = UIView().then { $0.backgroundColor = .systemGray5; $0.layer.cornerRadius = 6 }
     let likeContainer = UIView()
 
+    /// The like button view, created once and reused across bind/unbind cycles.
+    let likeButtonView = LikeButtonView()
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.backgroundColor = .systemBackground
@@ -16,6 +19,7 @@ final class FeedCardCell: UICollectionViewCell {
         contentView.layer.borderColor = UIColor.separator.cgColor
 
         [avatarView, nameLabel, contentLabel, imagePlaceholder, likeContainer].forEach { contentView.addSubview($0) }
+        likeContainer.addSubview(likeButtonView)
 
         avatarView.snp.makeConstraints { make in
             make.top.left.equalToSuperview().offset(12); make.width.height.equalTo(40)
@@ -32,6 +36,7 @@ final class FeedCardCell: UICollectionViewCell {
         likeContainer.snp.makeConstraints { make in
             make.top.equalTo(imagePlaceholder.snp.bottom).offset(10); make.left.right.equalToSuperview().inset(12); make.height.equalTo(30); make.bottom.equalToSuperview().offset(-12)
         }
+        likeButtonView.snp.makeConstraints { $0.left.centerY.equalToSuperview() }
     }
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 }

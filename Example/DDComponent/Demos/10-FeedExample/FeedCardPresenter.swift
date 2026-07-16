@@ -21,11 +21,13 @@ final class FeedCardPresenter: ReusableViewPresenter<FeedCardCell> {
 
     override func onBindView(_ view: FeedCardCell) {
         super.onBindView(view)
-        // Bind child like presenter to the like container in the cell
-        let likeView = LikeButtonView()
-        view.likeContainer.addSubview(likeView)
-        likeView.snp.makeConstraints { $0.left.centerY.equalToSuperview() }
-        likePresenter.bindView(likeView)
+        // Bind to the likeButtonView that the cell owns (created once in Cell.init).
+        likePresenter.bindView(view.likeButtonView)
+    }
+
+    override func onUnbindView() {
+        super.onUnbindView()
+        likePresenter.unbindView()
     }
 
     override func onUpdate(view: FeedCardCell, context: ViewUpdateContext) {
