@@ -46,6 +46,7 @@ public final class PageNotifyManager: NotifyRegistrar {
         assert(object is T, "Object MUST implement type \(T.self)")
         if var container = listeners[ObjectIdentifier(listener)] {
             container.insert(ListenerObject(object))
+            listeners[ObjectIdentifier(listener)] = container
         }
         else {
             var set = Set<ListenerObject>()
@@ -60,8 +61,9 @@ public final class PageNotifyManager: NotifyRegistrar {
     }
     
     public func removeAllListeners(of object: AnyObject) {
-        for var (_, v) in listeners {
+        for (key, var v) in listeners {
             v.remove(ListenerObject(object))
+            listeners[key] = v
         }
     }
     

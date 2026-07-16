@@ -41,3 +41,5 @@ Pods/
 # Swift Package Manager
 .build/
 .swiftpm/
+.claude/worktrees/
+superpowers/
