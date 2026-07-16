@@ -14,10 +14,10 @@ protocol AnimationViewable: AnyObject {
 final class AnimationView: UIView, AnimationViewable {
     let square = UIView().then { $0.backgroundColor = .systemBlue; $0.layer.cornerRadius = 8 }
     let infoLabel = UILabel().then { $0.font = .systemFont(ofSize: 14); $0.textAlignment = .center; $0.textColor = .secondaryLabel; $0.numberOfLines = 0 }
-    let moveBtn = makeBtn("Move (animated)", .systemBlue)
-    let resizeBtn = makeBtn("Resize (bounce)", .systemPurple)
-    let colorBtn = makeBtn("Color (silent)", .systemGray)
-    let layoutBtn = makeBtn("Expand (layout)", .systemOrange)
+    let moveBtn = makeBtn("Move + Rotate (default animate)", .systemBlue)
+    let resizeBtn = makeBtn("Resize (spring bounce)", .systemPurple)
+    let colorBtn = makeBtn("Rotate + Color (slow 1.2s)", .systemGray)
+    let layoutBtn = makeBtn("Expand All (default animate)", .systemOrange)
 
     private var squareTopConstraint: Constraint?
     private var squareSizeConstraint: Constraint?
