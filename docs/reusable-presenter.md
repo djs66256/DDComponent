@@ -277,20 +277,161 @@ setState {
 
 ### UICollectionView 布局信息
 
-`UICollectionViewFlowSectionPresenter` 和 `UICollectionViewFlowItemPresenter` 支持自定义布局：
+CollectionView 的布局由两处 `layoutInfo` 控制：**Item 级别**和 **Section 级别**。
+
+#### Item 布局：`UICollectionItemFlowLayoutInfo`
+
+每个 Cell（以及 Header/Footer）Presenter 都持有一个 `layoutInfo`，定义在 `UICollectionItemFlowPresentable` 协议中。框架在运行时会通过 `UICollectionViewFlowLayoutProxy` 读取这些配置来计算 Cell 的 `sizeForItemAt`。
+
+| Presenter 基类 | 是否自带 `layoutInfo` |
+|---|---|
+| `UICollectionViewFlowItemPresenter<View>` | ✅ `public var layoutInfo` |
+| `UICollectionViewFlowItemPresenterHolder<P, V>` | ✅，转发到 Holder 上 |
+| `UICollectionViewReusableFlowItemPresenter<View>` | ✅ |
+| `CollectionItemPresenter<View>` | ❌ 不含，需手动实现 `UICollectionItemFlowPresentable` |
+
+**`UICollectionItemFlowLayoutInfo` 结构：**
 
 ```swift
-class MyItemPresenter: UICollectionViewFlowItemPresenter<MyCell> {
-    override func sectionInset(for section: Int) -> UIEdgeInsets {
-        UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
+public struct UICollectionItemFlowLayoutInfo {
+    /// 是否自动计算 size。为 true 时框架根据 layoutType 自动计算。
+    /// 为 false 时需重写 calculateSize(containerSize:) 手动返回 size。
+    public var calculateSizeAutomatically: Bool = true
+
+    /// 自动计算时使用的算法
+    public var layoutType: LayoutType = .autoLayout
+    public enum LayoutType {
+        case autoLayout              // Auto Layout 约束计算（推荐）
+        case sizeThatFits            // 调用 sizeThatFits(_:)
+        case intrinsicContentSize    // 使用 intrinsicContentSize
     }
 
-    override func itemSpacing(for section: Int) -> CGFloat {
-        8
+    /// 仅 layoutType = .autoLayout 时生效，控制传给 Auto Layout 的容器尺寸
+    public var autoLayoutSizeFitting: SizeFitting = .auto
+    public enum SizeFitting {
+        case auto               // 根据 sectionInset + columnCount 自动推导
+        case containerWidth     // 使用容器宽度
+        case containerHeight    // 使用容器高度
+        case containerSize      // 使用容器宽高
+        case unlimited          // 不限制宽高
+    }
+}
+```
+
+**自动计算（推荐，使用 Auto Layout 约束）：**
+
+```swift
+class CardItemPresenter: UICollectionViewFlowItemPresenter<CardCell> {
+    override init() {
+        super.init()
+        layoutInfo.calculateSizeAutomatically = true  // 默认值
+        // Cell 的 Auto Layout 约束决定了高度，框架自动用 containerWidth 计算
+    }
+}
+```
+
+**手动计算：**
+
+```swift
+class CustomSizeItem: UICollectionViewFlowItemPresenter<CustomCell> {
+    override init() {
+        super.init()
+        layoutInfo.calculateSizeAutomatically = false
     }
 
-    override func lineSpacing(for section: Int) -> CGFloat {
-        12
+    override func calculateSize(containerSize: CGSize) -> CGSize {
+        return CGSize(width: containerSize.width, height: 80)
+    }
+}
+```
+
+**非 UICollectionViewFlowItemPresenter 子类需要手动声明：**
+
+```swift
+class CardItemPresenter: CollectionItemPresenter<CardCell>, UICollectionItemFlowPresentable {
+    var layoutInfo = UICollectionItemFlowLayoutInfo()
+    override init() { super.init(); layoutInfo.calculateSizeAutomatically = true }
+}
+```
+
+#### Section 布局：`UICollectionViewFlowSectionLayoutInfo`
+
+Section 级别的布局信息控制 inset、间距和列数：
+
+```swift
+public struct UICollectionViewFlowSectionLayoutInfo {
+    public var inset: UIEdgeInsets = .zero       // section 内边距
+    public var lineSpacing: CGFloat = 0          // 行间距（垂直滚动时）
+    public var itemSpacing: CGFloat = 0          // 列间距（垂直滚动时）
+    public var columnCount: Int = 1              // 列数（>1 时按列均分宽度）
+}
+```
+
+**使用示例：**
+
+```swift
+let section = UICollectionViewFlowSectionPresenter()
+section.layoutInfo.inset = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
+section.layoutInfo.lineSpacing = 12
+section.layoutInfo.itemSpacing = 8
+section.layoutInfo.columnCount = 2  // 两列布局
+
+section.setItems(items)
+sections = [section]
+```
+
+### UITableView 布局信息
+
+TableView Cell 的高度由 `UITableViewCellLayoutInfo` 控制：
+
+| Presenter 基类 | 是否自带 `layoutInfo` |
+|---|---|
+| `UITableViewItemPresenter<V>` | ✅ `public var layoutInfo` |
+| `UITableViewItemPresenterHolder<P, V>` | ✅ |
+| `UITableViewItemReusablePresenter<View>` | ✅ |
+
+**`UITableViewCellLayoutInfo` 结构：**
+
+```swift
+public struct UITableViewCellLayoutInfo {
+    /// 是否自动计算高度。为 true 时根据 layoutType 自动计算。
+    public var calculateSizeAutomatically: Bool = true
+
+    /// 自动计算时使用的算法
+    public var layoutType: LayoutType = .autoLayout
+    public enum LayoutType {
+        case autoLayout      // Auto Layout 约束计算
+        case sizeThatFits    // 调用 sizeThatFits(_:)
+    }
+
+    /// 预估高度（用于优化 TableView 滚动性能）
+    public var estimatedHeight: CGFloat = UITableView.automaticDimension
+}
+```
+
+**自动计算（推荐）：**
+
+```swift
+class CommentItem: UITableViewItemPresenter<CommentCell> {
+    override init() {
+        super.init()
+        // calculateSizeAutomatically = true 是默认值
+        layoutInfo.estimatedHeight = 120  // 设置预估高度提升滚动性能
+    }
+}
+```
+
+**手动计算：**
+
+```swift
+class FixedHeightItem: UITableViewItemPresenter<FixedCell> {
+    override init() {
+        super.init()
+        layoutInfo.calculateSizeAutomatically = false
+    }
+
+    override func calculateHeight(containerSize: CGSize) -> CGFloat {
+        return 60  // 固定高度
     }
 }
 ```

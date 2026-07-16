@@ -223,7 +223,74 @@ class LegacyViewController: UIViewController {
 }
 ```
 
-## 示例 5：Service 注册的多种方式
+## 示例 5：layoutInfo 布局配置
+
+### CollectionView Item 自动计算
+
+```swift
+class CardItemPresenter: UICollectionViewFlowItemPresenter<CardCell> {
+    var card: CardData? { didSet { setState {} } }
+
+    override init() {
+        super.init()
+        layoutInfo.calculateSizeAutomatically = true  // 默认，Cell 用 Auto Layout 约束
+    }
+
+    override func onUpdate(view: CardCell, context: ViewUpdateContext) {
+        view.configure(card)
+    }
+}
+```
+
+### CollectionView Item 手动计算
+
+```swift
+class FixedSizeItem: UICollectionViewFlowItemPresenter<FixedCell> {
+    override init() {
+        super.init()
+        layoutInfo.calculateSizeAutomatically = false
+    }
+
+    override func calculateSize(containerSize: CGSize) -> CGSize {
+        CGSize(width: containerSize.width, height: 60)
+    }
+}
+```
+
+### Section 布局配置
+
+```swift
+let section = UICollectionViewFlowSectionPresenter()
+section.layoutInfo.inset = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
+section.layoutInfo.lineSpacing = 12
+section.layoutInfo.itemSpacing = 8
+section.layoutInfo.columnCount = 2   // 两列网格
+section.setItems(items)
+sections = [section]
+```
+
+### TableView Item 配置
+
+```swift
+class MessageItem: UITableViewItemPresenter<MessageCell> {
+    override init() {
+        super.init()
+        layoutInfo.estimatedHeight = 80   // 预估高度
+        // calculateSizeAutomatically = true 是默认值
+    }
+}
+```
+
+### 非标准基类的 Item（需手动 conform 协议）
+
+```swift
+class MyCustomItem: CollectionItemPresenter<MyCell>, UICollectionItemFlowPresentable {
+    var layoutInfo = UICollectionItemFlowLayoutInfo()
+    override init() { super.init(); layoutInfo.calculateSizeAutomatically = true }
+}
+```
+
+## 示例 6：Service 注册的多种方式
 
 ```swift
 // 方式一：pageInstallers（推荐）
