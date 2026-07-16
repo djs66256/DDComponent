@@ -7,12 +7,15 @@ final class MainRowItemPresenter: UITableViewItemPresenter<UITableViewCell> {
     var title: String?
     var onTap: (() -> Void)?
 
+    override init() {
+        super.init()
+        shouldHighlight = true
+    }
+
     override func onUpdate(view: UITableViewCell, context: ViewUpdateContext) {
         view.textLabel?.text = title
         view.accessoryType = .disclosureIndicator
     }
-
-    override var shouldHighlight: Bool { get { true } set { } }
 
     override func onDidSelect() {
         onTap?()
