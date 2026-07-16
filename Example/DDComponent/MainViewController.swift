@@ -8,13 +8,11 @@ final class MainRowItemPresenter: UITableViewItemPresenter<UITableViewCell> {
     var onTap: (() -> Void)?
 
     override func onUpdate(view: UITableViewCell, context: ViewUpdateContext) {
-        var config = view.defaultContentConfiguration()
-        config.text = title
-        view.contentConfiguration = config
+        view.textLabel?.text = title
         view.accessoryType = .disclosureIndicator
     }
 
-    override var shouldSelect: Bool { true }
+    override var shouldHighlight: Bool { true }
 
     override func onDidSelect() {
         onTap?()
@@ -31,23 +29,24 @@ final class MainViewController: UITablePageDefaultViewController {
     }
 
     private let demos: [DemoEntry] = [
-        .init(title: "🟢 01  HelloDDComponent", vc: { HelloViewController() }),
-        .init(title: "🟢 02  Service & DI", vc: { ServiceDIViewController() }),
-        .init(title: "🟢 03  Notify 事件系统", vc: { NotifyViewController() }),
-        .init(title: "🟡 04  P-Tree 组合", vc: { PTreeViewController() }),
-        .init(title: "🟡 05  列表与部分更新", vc: { ListViewController() }),
-        .init(title: "🟡 06  Header/Footer", vc: { HeaderFooterViewController() }),
-        .init(title: "🟡 07  动画与 ViewUpdateContext", vc: { AnimationViewController() }),
-        .init(title: "🔴 08  IsolatedViewPresenter", vc: { IsolatedViewController() }),
-        .init(title: "🔴 09  AutoBind & Shadow", vc: { AutoBindViewController() }),
-        .init(title: "🔴 10  综合示例 — Feed", vc: { FeedViewController() }),
-        .init(title: "📦     CyclePageView 集成", vc: { CyclePageViewController() }),
+        DemoEntry(title: "01  HelloDDComponent", vc: { HelloViewController() }),
+        DemoEntry(title: "02  Service & DI", vc: { ServiceDIViewController() }),
+        DemoEntry(title: "03  Notify", vc: { NotifyViewController() }),
+        DemoEntry(title: "04  P-Tree", vc: { PTreeViewController() }),
+        DemoEntry(title: "05  List & Diff", vc: { ListViewController() }),
+        DemoEntry(title: "06  Header/Footer", vc: { HeaderFooterViewController() }),
+        DemoEntry(title: "07  Animation & Context", vc: { AnimationViewController() }),
+        DemoEntry(title: "08  IsolatedViewPresenter", vc: { IsolatedViewController() }),
+        DemoEntry(title: "09  AutoBind & Shadow", vc: { AutoBindViewController() }),
+        DemoEntry(title: "10  Feed Example", vc: { FeedViewController() }),
+        DemoEntry(title: "CyclePageView", vc: { CyclePageViewController() }),
     ]
 
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "DDComponent Demo"
 
+        let demos = self.demos
         let items = demos.map { entry -> MainRowItemPresenter in
             let item = MainRowItemPresenter()
             item.title = entry.title

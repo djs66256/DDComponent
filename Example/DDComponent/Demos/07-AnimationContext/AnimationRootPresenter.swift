@@ -17,9 +17,9 @@ final class AnimationRootPresenter: RootViewPresenter<AnimationViewable> {
 
     override func onUpdate(view: AnimationViewable, context: ViewUpdateContext) {
         view.square.backgroundColor = squareColor
-        if context.invalidateLayout {
+        if context.invalidateLayout, let sv = view.square.superview {
             view.square.snp.updateConstraints { make in
-                make.top.equalTo(view.safeAreaLayoutGuide).offset(offset)
+                make.top.equalTo(sv.safeAreaLayoutGuide).offset(offset)
                 make.width.height.equalTo(squareSize)
             }
         }

@@ -51,8 +51,6 @@ final class HeaderFooterRootPresenter: UICollectionViewRootPresenter<UICollectio
             let section = UICollectionViewFlowSectionPresenter()
             section.layoutInfo.inset = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
             section.layoutInfo.lineSpacing = 8
-            section.layoutInfo.headerReferenceSize = CGSize(width: 0, height: 44)
-            section.layoutInfo.footerReferenceSize = CGSize(width: 0, height: 24)
 
             let header = SectionHeaderPresenter()
             header.title = "Section \(names[i])"
