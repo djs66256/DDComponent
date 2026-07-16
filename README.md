@@ -142,6 +142,31 @@ pod 'DDComponent'
 | [使用指南](./docs/usage-guide.md) | 固定视图、列表视图、Service 与 Notify、装配方式 |
 | [复用 Presenter](./docs/reusable-presenter.md) | 列表 Cell 复用、CollectionPresenter 体系、增量更新引擎 |
 
+## 测试
+
+框架包含 122 个单元测试，覆盖所有核心能力。测试位于 `Example/Tests/` 目录下。
+
+```bash
+# 运行全部测试
+cd Example
+xcodebuild test -project DDComponent.xcodeproj -scheme DDComponent-Example -destination 'platform=iOS Simulator,name=iPhone 17'
+```
+
+| 测试套件 | 覆盖能力 |
+|---|---|
+| PresenterTreeTests | P-Tree 生命周期：add/remove child、attach/detach |
+| ViewBindingTests | View 绑定：bind/unbind/weak/auto-bind |
+| StateUpdateTests | setState：onUpdate、Pipeline、ViewUpdateContext |
+| NotifyTests | Notify 通信：所有作用域、sender 排除 |
+| ServiceTests | Service DI：register/get、lookup chain、downgrade |
+| ReusablePresenterTests | 复用 Presenter：bind/unbind holder、prepareForReuse |
+| CollectionPresenterTests | Collection 层级：section/items/supplementaries |
+| DifferTests | Diff 算法：增/删/移/复杂场景 |
+| PageNotifyManagerTests | NotifyManager：listener 管理、弱引用 |
+| PageServiceManagerTests | ServiceManager：eager/lazy、fallthrough |
+| IsolatedViewPresenterTests | 独立 Presenter：绑定、Pipeline 切换 |
+| ViewUpdateContextTests | ViewUpdateContext：flag merge、bindView |
+
 ## 最低要求
 
 - iOS 13.0+

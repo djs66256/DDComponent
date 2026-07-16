@@ -13,11 +13,35 @@ cd Example && pod install
 # Open workspace
 open Example/DDComponent.xcworkspace
 
+# Run tests
+xcodebuild test -project Example/DDComponent.xcodeproj -scheme DDComponent-Example -destination 'platform=iOS Simulator,name=iPhone 17'
+
 # Lint podspec
 pod lib lint DDComponent.podspec
 ```
 
 The framework source lives in `DDComponent/Classes/**/*.swift`. The Example app (in `Example/DDComponent/`) demonstrates usage patterns.
+
+## Testing
+
+122 unit tests across 12 test suites covering all core capabilities. Tests live in `Example/Tests/`:
+
+| Test file | Coverage |
+|---|---|
+| `PresenterTreeTests.swift` | P-Tree lifecycle: add/remove child, attach/detach, ordering |
+| `ViewBindingTests.swift` | View binding: bind/unbind/weak/auto-bind, type matching |
+| `StateUpdateTests.swift` | setState: onUpdate, pipeline, context, StateChecker |
+| `NotifyTests.swift` | Notify: all scopes, sender exclusion, detach behavior |
+| `ServiceTests.swift` | Service DI: register/get, lookup chain, downgrade |
+| `ReusablePresenterTests.swift` | Reuse lifecycle: bind/unbind holder, prepareForReuse |
+| `CollectionPresenterTests.swift` | Collection hierarchy: section/items/supplementaries |
+| `DifferTests.swift` | Diff algorithm: insert/delete/move/edge cases |
+| `PageNotifyManagerTests.swift` | NotifyManager: listener add/remove/weak reference |
+| `PageServiceManagerTests.swift` | ServiceManager: eager/lazy, fallthrough, priority |
+| `IsolatedViewPresenterTests.swift` | IsolatedViewPresenter: binding, pipeline switching |
+| `ViewUpdateContextTests.swift` | ViewUpdateContext: merge flags, bindView, reloadData |
+
+Tests use `@testable import DDComponent` and run on the `DDComponent-Example` scheme.
 
 ## Architecture
 
@@ -44,7 +68,7 @@ The framework source lives in `DDComponent/Classes/**/*.swift`. The Example app 
 ### Lifecycle order
 
 ```
-init() → onAttach(presenter:) → onAttachToRoot() → onBindView(_:) → onUpdate(view:context:) [×N] → onUnbindView() → onDetachFromRoot() → onDetach() → deinit
+init() → onAttach(presenter:) → onAttachToRoot() → onBindView(_:) → onUpdate(view:context:) [×N] → onUnbindView() → onDetach() → onDetachFromRoot() → deinit
 ```
 
 ### State-driven updates

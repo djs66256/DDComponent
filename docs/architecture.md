@@ -152,10 +152,10 @@ class SuperPresenter: ViewPresenter<SuperViewProtocol> {
   onUnbindView()        ← unbindView() 或页面销毁时
        │
        ▼
-  onDetachFromRoot()
+  onDetach()            ← removeFromSuper() 时先调用
        │
        ▼
-  onDetach()            ← removeFromSuper() 或页面销毁时
+  onDetachFromRoot()    ← 然后脱离 RootPresenter
        │
        ▼
      deinit
