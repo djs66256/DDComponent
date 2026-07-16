@@ -274,15 +274,20 @@ class LifecycleTracePresenter: ViewPresenter<TraceService>, PageLifecycle {
 
 ### 2.3 将 Presenter 装配到页面
 
+**关键规则：`PageViewController.makePresenter()` 已经创建了 RootPresenter，不要在 `pageInstallers` 中再次注册它。** `pageInstallers` 中的 `PresenterInstaller` 用于注册 RootPresenter 的**子 Presenter**，而不是 RootPresenter 本身。
+
 ```swift
-// 在 RootPresenter 中：
-required init() {
-    super.init()
-    typeBox(MyFeaturePresenter())        // 常驻 Presenter
-    typeBoxLazy({ ExpensivePresenter() }) // 懒加载
+// 方式一：在 RootPresenter 的 init 中注册子 Presenter（推荐）
+class MyRootPresenter: RootViewPresenter<MyViewProtocol> {
+    required init() {
+        super.init()
+        typeBox(MyFeaturePresenter())        // 常驻 Presenter
+        typeBoxLazy({ ExpensivePresenter() }) // 懒加载
+    }
 }
 
-// 或在 pageInstallers 中：
+// 方式二：在 pageInstallers 中注册子 Presenter
+// ⚠️ 注意：这里注册的是子 Presenter，不是 RootPresenter 本身
 @PageInstallerBuilder override var pageInstallers: PageInstaller {
     PresenterInstaller(lazyLoad: true, { MyFeaturePresenter() })
 }
@@ -385,7 +390,7 @@ getService(RouterService.self)?.navigate(to: .profile)
 - **`onBindView` 中设置回调，`onUnbindView` 中清空回调**
 - **`onBindView` 中先调用 `super.onBindView(view)`**
 - **子 Presenter 必须 `add(child:)` 才能加入 P-Tree**，否则收不到生命周期
-- **Service 和常驻 Presenter 在 `presenterDidLoad()` 或 `pageInstallers` 中注册**
+- **Service 和子 Presenter 在 `pageInstallers` 中注册，或在 RootPresenter 的 `init()` 和 `presenterDidLoad()` 中注册**
 - **异步回调中使用 `[weak self]`**
 
 ### ❌ DON'T
@@ -394,6 +399,7 @@ getService(RouterService.self)?.navigate(to: .profile)
 - **不要在 `setState` 外部修改会影响 UI 的状态**
 - **不要在 `viewDidLoad` 之前注册 Service**（时机不对）
 - **不要忘记在 `onUnbindView` 中清理回调**
+- **不要在 `pageInstallers` 中注册 RootPresenter** — `PageViewController.makePresenter()` 已经创建了它。`pageInstallers` 中注册的是子 Presenter
 
 ## 六、setState 和 onUpdate 详解
 

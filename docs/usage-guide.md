@@ -8,7 +8,7 @@
 
 ### 1. 创建 ViewController
 
-ViewController 需要继承 `PageViewController`，否则需要自行实现 Presenter 初始绑定操作。将服务和常驻 Presenter 的注册放置于 `presenterDidLoad` 或 `pageInstallers` 中，否则可能时机不正确。
+ViewController 需要继承 `PageViewController`，否则需要自行实现 Presenter 初始绑定操作。`PageViewController.makePresenter()` 已创建 RootPresenter，在 `presenterDidLoad` 或 `pageInstallers` 中注册 Service 和子 Presenter，否则可能时机不正确。
 
 ```swift
 class MyViewController: PageViewController<MyRootView, MyRootPresenter, MyRootPresenterView> {
@@ -43,15 +43,17 @@ class MyViewController: PageViewController<MyRootView, MyRootPresenter, MyRootPr
 
 ### 2. 使用 `pageInstallers` 声明式装配
 
-更推荐使用 `@PageInstallerBuilder` 声明式地注册 Presenter 和 Service：
+更推荐使用 `@PageInstallerBuilder` 声明式地注册 Service 和子 Presenter：
+
+> **注意：`PageViewController.makePresenter()` 已经创建了 RootPresenter，不要在 `pageInstallers` 中再次注册它。这里注册的是 RootPresenter 的**子 Presenter**。
 
 ```swift
 @PageInstallerBuilder override var pageInstallers: PageInstaller {
     ServiceInstaller(LikeService.self, { LikeServiceImpl() })
     ServiceInstaller(DataLoader.self, { MockDataLoader() })
     ServiceInstaller(RouterService.self, { RouterServiceImpl() })
-    PresenterInstaller(lazyLoad: true, { LikePresenter() })
-    PresenterInstaller(lazyLoad: true, { SharePresenter() })
+    PresenterInstaller(lazyLoad: true, { LikePresenter() })     // 子 Presenter
+    PresenterInstaller(lazyLoad: true, { SharePresenter() })    // 子 Presenter
 }
 ```
 
