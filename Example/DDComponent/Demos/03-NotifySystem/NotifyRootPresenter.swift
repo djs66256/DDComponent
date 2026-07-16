@@ -16,12 +16,15 @@ final class NotifyRootPresenter: RootViewPresenter<NotifyDemoViewable> {
         add(listener: ReusableNotifyListener.self, object: logger)
         add(listener: ParentsNotifyListener.self, object: parent)
         add(listener: ChildrenNotifyListener.self, object: child)
-        add(child: logger); add(child: parent); add(child: child)
+        add(child: logger); add(child: parent)
+        parent.add(child: child)  // Child is a child of Parent in P-Tree — enables .children ↓ and .parents ↑
     }
 
     override func onBindView(_ view: NotifyDemoViewable) {
         super.onBindView(view)
         logger.bindView(view.loggerZone)
+        parent.bindView(view.parentZone)
+        child.bindView(view.childZone)
 
         // .global: broadcast from root to all listeners
         view.globalZone.onTap = { [weak self] in
