@@ -51,6 +51,7 @@ final class PTreeView: UIView, PTreeViewable {
 }
 
 protocol ThemeableViewable: AnyObject {
+    var titleLabel: UILabel { get }
     func applyTheme(_ theme: Theme)
 }
 

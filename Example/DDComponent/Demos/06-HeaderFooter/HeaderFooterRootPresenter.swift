@@ -83,7 +83,7 @@ final class HeaderFooterRootPresenter: UICollectionViewRootPresenter<UICollectio
     }
 }
 
-final class SectionFooterViewPresenter: UICollectionViewReusablePresenter<SectionFooterView> {
+final class SectionFooterViewPresenter: UICollectionViewReusableFlowItemPresenter<SectionFooterView> {
     var count: Int = 0 { didSet { setState {} } }
     override func onUpdate(view: SectionFooterView, context: ViewUpdateContext) {
         view.text = "\(count) items"

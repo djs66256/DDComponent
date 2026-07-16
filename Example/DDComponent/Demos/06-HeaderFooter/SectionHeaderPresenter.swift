@@ -1,7 +1,7 @@
 import UIKit
 import DDComponent
 
-final class SectionHeaderPresenter: UICollectionViewReusablePresenter<SectionHeaderView> {
+final class SectionHeaderPresenter: UICollectionViewReusableFlowItemPresenter<SectionHeaderView> {
     var title: String = "" { didSet { setState {} } }
     var isCollapsed: Bool = false { didSet { setState {} } }
     var onTap: (() -> Void)?
