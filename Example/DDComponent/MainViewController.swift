@@ -10,11 +10,16 @@ final class MainRowItemPresenter: UITableViewItemPresenter<UITableViewCell> {
     override init() {
         super.init()
         shouldHighlight = true
+        layoutInfo.calculateSizeAutomatically = false
     }
 
     override func onUpdate(view: UITableViewCell, context: ViewUpdateContext) {
         view.textLabel?.text = title
         view.accessoryType = .disclosureIndicator
+    }
+
+    override func calculateHeight(containerSize: CGSize) -> CGFloat {
+        44
     }
 
     override func onDidSelect() {
