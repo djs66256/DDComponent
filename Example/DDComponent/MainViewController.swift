@@ -12,7 +12,7 @@ final class MainRowItemPresenter: UITableViewItemPresenter<UITableViewCell> {
         view.accessoryType = .disclosureIndicator
     }
 
-    override var shouldHighlight: Bool { true }
+    override var shouldHighlight: Bool { get { true } set { } }
 
     override func onDidSelect() {
         onTap?()

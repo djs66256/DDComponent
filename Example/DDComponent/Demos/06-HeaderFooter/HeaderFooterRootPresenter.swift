@@ -61,7 +61,7 @@ final class HeaderFooterRootPresenter: UICollectionViewRootPresenter<UICollectio
                 else { self.collapsedSections.insert(i) }
                 self.rebuildSections()
             }
-            section.setSupplementary("UICollectionElementKindSectionHeader", [header])
+            section.setSupplementary("UICollectionElementKindSectionHeader", [header as CollectionItemPresentable])
 
             let items: [SectionItemPresenter]
             if collapsedSections.contains(i) {
