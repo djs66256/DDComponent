@@ -228,16 +228,16 @@ class LegacyViewController: UIViewController {
 ### CollectionView Item 自动计算
 
 ```swift
-class CardItemPresenter: UICollectionViewFlowItemPresenter<CardCell> {
-    var card: CardData? { didSet { setState {} } }
+class MyItemPresenter: UICollectionViewFlowItemPresenter<MyCell> {
+    var data: MyData? { didSet { setState {} } }
 
     override init() {
         super.init()
         layoutInfo.calculateSizeAutomatically = true  // 默认，Cell 用 Auto Layout 约束
     }
 
-    override func onUpdate(view: CardCell, context: ViewUpdateContext) {
-        view.configure(card)
+    override func onUpdate(view: MyCell, context: ViewUpdateContext) {
+        view.configure(data)
     }
 }
 ```
@@ -271,27 +271,20 @@ sections = [section]
 
 ### Section Header/Footer 便捷 API
 
-`UICollectionViewFlowSectionPresenter` 提供 `.header` / `.footer` 属性，比 `setSupplementary` 更简洁。Header/Footer Presenter 必须继承 `UICollectionViewFlowItemPresenter<View>`。
+`UICollectionViewFlowSectionPresenter` 提供 `.header` / `.footer` 属性，比 `setSupplementary` 更简洁。Header/Footer Presenter 必须继承 `UICollectionViewFlowItemPresenter<View>`（或实现 `UICollectionItemFlowPresentable`）。
 
 ```swift
 // Header Presenter — 必须继承 UICollectionViewFlowItemPresenter
-class SectionHeaderPresenter: UICollectionViewFlowItemPresenter<SectionHeaderView> {
+class MyHeaderPresenter: UICollectionViewFlowItemPresenter<MyHeaderView> {
     var title: String = "" { didSet { setState {} } }
-    var isCollapsed: Bool = false { didSet { setState {} } }
-    var onTap: (() -> Void)?
 
     override init() {
         super.init()
         layoutInfo.calculateSizeAutomatically = false
     }
 
-    override func onBindView(_ view: SectionHeaderView) {
-        super.onBindView(view)
-        view.onTap = { [weak self] in self?.onTap?() }
-    }
-
-    override func onUpdate(view: SectionHeaderView, context: ViewUpdateContext) {
-        view.title = title; view.isCollapsed = isCollapsed
+    override func onUpdate(view: MyHeaderView, context: ViewUpdateContext) {
+        view.title = title
     }
 
     override func calculateSize(containerSize: CGSize) -> CGSize {
@@ -301,16 +294,11 @@ class SectionHeaderPresenter: UICollectionViewFlowItemPresenter<SectionHeaderVie
 
 // 使用 .header / .footer 便捷属性
 let section = UICollectionViewFlowSectionPresenter()
-let header = SectionHeaderPresenter()
-header.title = "评论"
-section.header = header   // ✅ 便捷，一行
-
-let footer = SectionFooterPresenter(); footer.count = 10
-section.footer = footer   // ✅ 便捷，一行
+section.header = MyHeaderPresenter()
+section.footer = MyFooterPresenter()
 
 // ❌ BAD — 不要用 setSupplementary
 section.setSupplementary("UICollectionElementKindSectionHeader", [header])
-section.setSupplementary("UICollectionElementKindSectionFooter", [footer])
 ```
 
 ### TableView Item 配置
