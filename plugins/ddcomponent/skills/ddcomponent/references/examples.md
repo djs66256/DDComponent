@@ -269,6 +269,50 @@ section.setItems(items)
 sections = [section]
 ```
 
+### Section Header/Footer 便捷 API
+
+`UICollectionViewFlowSectionPresenter` 提供 `.header` / `.footer` 属性，比 `setSupplementary` 更简洁。Header/Footer Presenter 必须继承 `UICollectionViewFlowItemPresenter<View>`。
+
+```swift
+// Header Presenter — 必须继承 UICollectionViewFlowItemPresenter
+class SectionHeaderPresenter: UICollectionViewFlowItemPresenter<SectionHeaderView> {
+    var title: String = "" { didSet { setState {} } }
+    var isCollapsed: Bool = false { didSet { setState {} } }
+    var onTap: (() -> Void)?
+
+    override init() {
+        super.init()
+        layoutInfo.calculateSizeAutomatically = false
+    }
+
+    override func onBindView(_ view: SectionHeaderView) {
+        super.onBindView(view)
+        view.onTap = { [weak self] in self?.onTap?() }
+    }
+
+    override func onUpdate(view: SectionHeaderView, context: ViewUpdateContext) {
+        view.title = title; view.isCollapsed = isCollapsed
+    }
+
+    override func calculateSize(containerSize: CGSize) -> CGSize {
+        CGSize(width: containerSize.width, height: 44)
+    }
+}
+
+// 使用 .header / .footer 便捷属性
+let section = UICollectionViewFlowSectionPresenter()
+let header = SectionHeaderPresenter()
+header.title = "评论"
+section.header = header   // ✅ 便捷，一行
+
+let footer = SectionFooterPresenter(); footer.count = 10
+section.footer = footer   // ✅ 便捷，一行
+
+// ❌ BAD — 不要用 setSupplementary
+section.setSupplementary("UICollectionElementKindSectionHeader", [header])
+section.setSupplementary("UICollectionElementKindSectionFooter", [footer])
+```
+
 ### TableView Item 配置
 
 ```swift

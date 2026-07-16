@@ -498,6 +498,34 @@ section.layoutInfo.lineSpacing = 12
 section.layoutInfo.columnCount = 2   // 两列布局
 ```
 
+### UICollectionView Section Header/Footer 便捷 API
+
+`UICollectionViewFlowSectionPresenter` 提供 `.header` / `.footer` 属性，比 `setSupplementary(_:_:)` 更简洁：
+
+```swift
+public extension UICollectionViewFlowSectionPresenter {
+    var header: UICollectionViewItemPresentable?   // get/set，单元素便捷访问
+    var footer: UICollectionViewItemPresentable?   // get/set，单元素便捷访问
+}
+```
+
+**Header/Footer Presenter 必须继承 `UICollectionViewFlowItemPresenter<View>`（或实现 `UICollectionItemFlowPresentable`），不能用 `CollectionItemPresenter<View>`。**
+
+```swift
+// ✅ GOOD — 用 .header/.footer 便捷属性
+let section = UICollectionViewFlowSectionPresenter()
+let header = SectionHeaderPresenter()
+header.title = "评论"
+section.header = header
+
+let footer = SectionFooterPresenter(); footer.count = 10
+section.footer = footer
+
+// ❌ BAD — 避免直接操作 supplementaries 字典
+section.setSupplementary("UICollectionElementKindSectionHeader", [header])
+section.setSupplementary("UICollectionElementKindSectionFooter", [footer])
+```
+
 ### UITableView Item 布局：`UITableViewCellLayoutInfo`
 
 | Presenter 基类 | 自带 layoutInfo |
@@ -527,6 +555,8 @@ class CommentItem: UITableViewItemPresenter<CommentCell> {
 - ✅ **Section 的 inset/spacing 必须在 Section Presenter 的 `layoutInfo` 上设置**，不要在 UICollectionViewFlowLayout 上直接设置
 - ✅ **Item 的 `calculateSizeAutomatically = true`（默认）配合 Auto Layout 约束即可**，无需手动计算
 - ✅ **设置预估高度（`estimatedHeight`）可显著提升 TableView 滚动性能**
+- ✅ **Section Header/Footer 用 `section.header = ...` / `section.footer = ...`**，不要用 `setSupplementary(_:_:)`
+- ✅ **Header/Footer Presenter 必须继承 `UICollectionViewFlowItemPresenter<View>`**，不能用 `CollectionItemPresenter<View>`
 - ❌ **不要把布局信息放在 View 层**，`layoutInfo` 属于 Presenter 层
 
 ## 八、新文件创建时的命名和模板

@@ -8,8 +8,7 @@ struct SectionItemData {
 }
 
 /// Inline collection item presenter — self-contained within Demo 06.
-final class SectionItemPresenter: CollectionItemPresenter<SectionItemCell>, UICollectionItemFlowPresentable {
-    var layoutInfo = UICollectionItemFlowLayoutInfo()
+final class SectionItemPresenter: UICollectionViewFlowItemPresenter<SectionItemCell> {
     var data: SectionItemData? { didSet { setState {} } }
 
     override init() { super.init(); layoutInfo.calculateSizeAutomatically = true }
@@ -35,7 +34,26 @@ final class SectionItemCell: UICollectionViewCell {
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 }
 
+/// SectionFooter presenter — uses UICollectionViewFlowItemPresenter so it's compatible with section.footer = ...
+final class SectionFooterViewPresenter: UICollectionViewFlowItemPresenter<SectionFooterView> {
+    var count: Int = 0 { didSet { setState {} } }
+
+    override init() {
+        super.init()
+        layoutInfo.calculateSizeAutomatically = false
+    }
+
+    override func onUpdate(view: SectionFooterView, context: ViewUpdateContext) {
+        view.text = "\(count) items"
+    }
+
+    override func calculateSize(containerSize: CGSize) -> CGSize {
+        CGSize(width: containerSize.width, height: 30)
+    }
+}
+
 /// Shows header/footer supplementary views with collapsible sections.
+/// Uses section.header = ... / section.footer = ... convenience API (preferred over raw setSupplementary).
 final class HeaderFooterRootPresenter: UICollectionViewRootPresenter<UICollectionView> {
     private var collapsedSections: Set<Int> = []
 
@@ -52,6 +70,7 @@ final class HeaderFooterRootPresenter: UICollectionViewRootPresenter<UICollectio
             section.layoutInfo.inset = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
             section.layoutInfo.lineSpacing = 8
 
+            // ✅ section.header = ... (convenience API, preferred)
             let header = SectionHeaderPresenter()
             header.title = "Section \(names[i])"
             header.isCollapsed = collapsedSections.contains(i)
@@ -61,7 +80,7 @@ final class HeaderFooterRootPresenter: UICollectionViewRootPresenter<UICollectio
                 else { self.collapsedSections.insert(i) }
                 self.rebuildSections()
             }
-            section.setSupplementary("UICollectionElementKindSectionHeader", [header as CollectionItemPresentable])
+            section.header = header
 
             let items: [SectionItemPresenter]
             if collapsedSections.contains(i) {
@@ -73,17 +92,13 @@ final class HeaderFooterRootPresenter: UICollectionViewRootPresenter<UICollectio
                     return p
                 }
             }
-            let footer = SectionFooterViewPresenter(); footer.count = items.count
-            section.setSupplementary("UICollectionElementKindSectionFooter", [footer])
             section.setItems(items)
+
+            // ✅ section.footer = ... (convenience API, preferred)
+            let footer = SectionFooterViewPresenter(); footer.count = items.count
+            section.footer = footer
+
             return section
         }
-    }
-}
-
-final class SectionFooterViewPresenter: CollectionItemPresenter<SectionFooterView> {
-    var count: Int = 0 { didSet { setState {} } }
-    override func onUpdate(view: SectionFooterView, context: ViewUpdateContext) {
-        view.text = "\(count) items"
     }
 }

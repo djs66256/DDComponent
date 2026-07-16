@@ -243,6 +243,20 @@ extension MyPresenter: LikeListener {
 
 **Service 不应持有 Presenter 的强引用。**
 
+**UICollectionView Header/Footer 便捷 API：** 必须用 `section.header = ...` / `section.footer = ...`，不要直接调用 `setSupplementary(_:_:)`。
+
+```swift
+// ❌ BAD — 用 setSupplementary 字符串 key
+section.setSupplementary("UICollectionElementKindSectionHeader", [header])
+section.setSupplementary("UICollectionElementKindSectionFooter", [footer])
+
+// ✅ GOOD — 用 .header / .footer 便捷属性
+section.header = header
+section.footer = footer
+```
+
+**Header/Footer Presenter 必须继承 `UICollectionViewFlowItemPresenter<View>`**，不能用 `CollectionItemPresenter<View>`（后者不兼容 `.header`/`.footer` 的类型约束）。
+
 ### 6. Logical Cohesion（逻辑内聚性）
 
 **检查 Presenter 是否职责单一：**
