@@ -1,0 +1,21 @@
+{
+  "name": "ddcomponent",
+  "owner": {
+    "name": "Daniel",
+    "email": "djs66256@163.com"
+  },
+  "description": "DDComponent iOS page decomposition framework plugins",
+  "plugins": [
+    {
+      "name": "ddcomponent",
+      "source": "./plugins/ddcomponent",
+      "description": "DDComponent iOS framework — skills and agents for building MVP-based pages with Presenter tree architecture. Includes a code-reviewer agent.",
+      "version": "0.6.0",
+      "author": {
+        "name": "Daniel",
+        "email": "djs66256@163.com"
+      },
+      "keywords": ["ios", "swift", "mvp", "uikit", "presenter"]
+    }
+  ]
+}

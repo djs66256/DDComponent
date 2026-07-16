@@ -5,15 +5,5 @@
   "author": {
     "name": "Daniel",
     "email": "djs66256@163.com"
-  },
-  "skills": [
-    "build-page",
-    "add-child-presenter",
-    "add-service",
-    "add-notify",
-    "add-collection-scene"
-  ],
-  "agents": [
-    "code-reviewer"
-  ]
+  }
 }
