@@ -46,7 +46,7 @@ final class AnimationRootPresenter: RootViewPresenter<AnimationViewable> {
         setState {} context: {
             $0.invalidateLayout = true
             $0.animated = true            // required: layoutIfNeeded() only runs in animation block when animated=true
-            $0.animator = BounceAnimator()   // takes priority over default 0.3s UIView.animate
+            $0.animator = SpringAnimator.bouncy   // takes priority over default 0.3s UIView.animate
         }
     }
 
@@ -58,7 +58,7 @@ final class AnimationRootPresenter: RootViewPresenter<AnimationViewable> {
             : .identity
         setState {} context: {
             $0.animated = true
-            $0.animator = SlowAnimator()      // takes priority over default 0.3s, uses 1.2s ease-in-out
+            $0.animator = EaseAnimator.slow      // takes priority over default 0.3s, uses 0.8s ease-in-out
         }
     }
 

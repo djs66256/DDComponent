@@ -345,3 +345,62 @@ override func presenterDidLoad() {
 // 方式三：直接调用 register
 presenter.register(service: MyService.self) { MyServiceImpl() }
 ```
+
+## 示例 7：使用内置 Animator
+
+框架内置了 `SpringAnimator` 和 `EaseAnimator`，无需自己实现 `ViewUpdateAnimator`。
+
+### 使用预设
+
+```swift
+// SpringAnimator 预设
+SpringAnimator.default   // 通用弹簧 (0.5s, damping 0.7)
+SpringAnimator.bouncy    // 弹跳效果 (0.6s, damping 0.4)
+SpringAnimator.gentle    // 柔和弹簧 (0.8s, damping 0.8)
+SpringAnimator.snappy    // 快速弹簧 (0.35s, damping 0.65)
+
+// EaseAnimator 预设
+EaseAnimator.default  // 标准缓入缓出 (0.3s)
+EaseAnimator.quick    // 微交互 (0.15s)
+EaseAnimator.slow     // 慢速过渡 (0.8s)
+EaseAnimator.easeIn   // 仅缓入 (0.3s)
+EaseAnimator.easeOut  // 仅缓出 (0.3s)
+```
+
+### 使用方式
+
+```swift
+// 使用预设
+setState { self.size = 150 } context: {
+    $0.invalidateLayout = true
+    $0.animated = true
+    $0.animator = SpringAnimator.bouncy
+}
+
+// 自定义参数
+setState { self.color = .systemPink } context: {
+    $0.animated = true
+    $0.animator = EaseAnimator(duration: 0.5, delay: 0, options: [.curveEaseOut])
+}
+```
+
+### 自定义 Animator（实现协议）
+
+```swift
+class MySpringAnimator: ViewUpdateAnimator {
+    func animate(with context: ViewUpdateContext, _ updater: @escaping () -> Void) {
+        UIView.animate(
+            withDuration: 0.6, delay: 0,
+            usingSpringWithDamping: 0.4, initialSpringVelocity: 0.8,
+            options: [.allowUserInteraction],
+            animations: updater
+        )
+    }
+}
+
+// 使用
+setState { ... } context: {
+    $0.animated = true
+    $0.animator = MySpringAnimator()
+}
+```

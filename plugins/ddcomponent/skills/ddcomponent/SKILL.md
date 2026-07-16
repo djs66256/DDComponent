@@ -434,9 +434,16 @@ override func onUpdate(view: MyViewProtocol, context: ViewUpdateContext) {
 | `invalidateDataSource = true` | 列表数据源变了（触发 Diff + reload） |
 | `invalidateContentSize = true` | 只有 Cell 尺寸变了 |
 | `updateViewImmediately = true` | 需要立即更新，不等待批处理 |
-| `animator = MyAnimator()` | 自定义动画器（替代默认 0.3s UIView.animate） |
+| `animator = SpringAnimator.bouncy` | 自定义动画器（内置 SpringAnimator/EaseAnimator） |
 
-**自定义 Animator：** 实现 `ViewUpdateAnimator` 协议即可替换默认动画。管道分两步执行——`updateView`（更新属性）和 `layoutViewIfNeeded`（应用约束布局）。第二步只在 `animated = true` 或 `layoutImmediately = true` 时进入动画块。因此使用自定义 `animator` 时必须同时设置 `animated = true`：
+**自定义 Animator：** 实现 `ViewUpdateAnimator` 协议即可替换默认动画。管道分两步执行——`updateView`（更新属性）和 `layoutViewIfNeeded`（应用约束布局）。第二步只在 `animated = true` 或 `layoutImmediately = true` 时进入动画块。因此使用自定义 `animator` 时必须同时设置 `animated = true`。
+
+框架内置了两种常用 Animator：
+
+| Animator | 用途 | 预设 |
+|---|---|---|
+| `SpringAnimator` | 弹簧动画 | `.default` / `.bouncy` / `.gentle` / `.snappy` |
+| `EaseAnimator` | 缓动动画 | `.default` / `.quick` / `.slow` / `.easeIn` / `.easeOut` |
 
 ```swift
 // ViewUpdateAnimator 协议
@@ -444,7 +451,20 @@ public protocol ViewUpdateAnimator {
     func animate(with context: ViewUpdateContext, _ updater: @escaping () -> Void)
 }
 
-// 使用方式
+// 使用内置预设
+setState { self.size = newSize } context: {
+    $0.invalidateLayout = true
+    $0.animated = true
+    $0.animator = SpringAnimator.bouncy  // 弹簧弹跳
+}
+
+// 使用自定义参数
+setState { self.color = newColor } context: {
+    $0.animated = true
+    $0.animator = EaseAnimator(duration: 0.5, delay: 0.1, options: [.curveEaseOut])
+}
+
+// 实现自定义 Animator（实现协议即可）
 setState {
     self.size = newSize
 } context: {
@@ -453,6 +473,8 @@ setState {
     $0.animator = MySpringAnimator()  // 优先级高于默认 0.3s UIView.animate
 }
 ```
+
+
 
 ## 七、layoutInfo：列表 Cell 和 Section 的布局配置
 

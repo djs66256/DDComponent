@@ -1,25 +1,18 @@
 import UIKit
 import DDComponent
 
-/// Custom animator: spring-based bounce for lively size changes.
-final class BounceAnimator: ViewUpdateAnimator {
-    func animate(with context: ViewUpdateContext, _ updater: @escaping () -> Void) {
-        UIView.animate(
-            withDuration: 0.6, delay: 0,
-            usingSpringWithDamping: 0.4, initialSpringVelocity: 0.8,
-            options: [.allowUserInteraction],
-            animations: updater
-        )
-    }
-}
-
-/// Custom animator: slow ease-in-out for deliberate pacing.
-final class SlowAnimator: ViewUpdateAnimator {
-    func animate(with context: ViewUpdateContext, _ updater: @escaping () -> Void) {
-        UIView.animate(
-            withDuration: 1.2, delay: 0,
-            options: [.curveEaseInOut, .allowUserInteraction],
-            animations: updater
-        )
-    }
-}
+/// Demo: using built-in framework animators.
+///
+/// Instead of defining custom animator classes, use the framework-provided presets:
+///
+/// ```swift
+/// // Spring bounce
+/// $0.animator = SpringAnimator.bouncy
+///
+/// // Slow ease-in-out
+/// $0.animator = EaseAnimator.slow
+///
+/// // Or customize parameters:
+/// $0.animator = SpringAnimator(duration: 0.7, damping: 0.5, velocity: 1.0)
+/// $0.animator = EaseAnimator(duration: 0.5, delay: 0.1, options: [.curveEaseOut])
+/// ```
