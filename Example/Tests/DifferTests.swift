@@ -136,9 +136,10 @@ final class DifferTests: XCTestCase {
 
         let result = differ.diff(old: old, new: new)
 
-        // b moved, c deleted, d inserted, e inserted, a moved
-        let totalChanges = result.inserts.count + result.deletes.count + result.moves.count
-        XCTAssertGreaterThan(totalChanges, 0)
+        // Expected: 1 delete (c), 2 inserts (d, e), 2 moves (a, b)
+        XCTAssertEqual(result.deletes.count, 1)
+        XCTAssertEqual(result.inserts.count, 2)
+        XCTAssertEqual(result.moves.count, 2)
     }
 
     // MARK: - Identical Objects
