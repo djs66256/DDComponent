@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 /// SectionPresenter for UICollectionView
 public protocol UICollectionSectionPresentable: CollectionSectionPresentable {

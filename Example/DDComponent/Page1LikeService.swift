@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 protocol Page1LikeService {
     func toggleLike(id: String,

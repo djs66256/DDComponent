@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 open class UITableViewItemPresenterHolder<P, V>: CollectionItemReusablePresenterHolder<P, V>, UITableViewItemPresentable
 where P: ReusablePresentable, P: ReusableViewPresenter<V>, V: UITableViewCell {

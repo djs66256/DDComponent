@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 /// Item presenter type, used by view of collection type.
 public protocol CollectionItemPresentable: ViewPresentable {

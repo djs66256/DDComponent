@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 open class CollectionRootPresenter<View>: RootViewPresenter<View>, CollectionRootPresentable {
     private var _sections: [CollectionSectionPresentable] = []

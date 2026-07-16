@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 extension UICollectionItemFlowLayoutInfo.LayoutType {
     var sizeCaculatorLayoutType : SizeCaculator.LayoutType {

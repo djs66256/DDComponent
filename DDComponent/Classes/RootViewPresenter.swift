@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 public protocol RootViewPresenterServiceDowngrade {
     func getService<T>(_ type: T.Type) -> T?

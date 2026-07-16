@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 open class ManagedViewPresenter<View>: ViewPresenter<View>, ServiceRegistrar {
     lazy var serviceManager = PageServiceManager(provider: PageServiceManager.Provider(self),

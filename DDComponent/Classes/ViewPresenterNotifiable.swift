@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 public enum NotifyScope {
     case global             // Notify from root.

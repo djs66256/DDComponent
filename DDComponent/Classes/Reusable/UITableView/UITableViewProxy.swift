@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 extension UITableViewCellLayoutInfo.LayoutType {
     var sizeCaculatorLayoutType: SizeCaculator.LayoutType {

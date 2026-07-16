@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 open class UITableViewHeaderFooterPresenter<V: UIView>: CollectionItemPresenter<V>, UITableViewItemPresentable, UITableViewItemSizeCaculatable {
     public var layoutInfo = UITableViewCellLayoutInfo()

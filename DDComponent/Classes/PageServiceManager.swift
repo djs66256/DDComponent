@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 public protocol PageServiceManagerFallthroughService {
     func getService<T>(_ service: T.Type) -> T?

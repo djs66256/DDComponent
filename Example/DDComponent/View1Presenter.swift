@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 import DDComponent
 
 protocol View1Presentable: ViewPresentable {

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 open class CollectionItemPresenter<V: UIView>: CollectionItemReusablePresenterHolder<CollectionItemPresenter.ShadowPresenter, V>
 where V: UIView {

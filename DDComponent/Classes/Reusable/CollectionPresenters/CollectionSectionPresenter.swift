@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 enum CollectionElementKind { }
 // Use the same name for UITableView & UICollectionView

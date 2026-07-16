@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 /// Used when without root presenter.
 /// When a ViewPresenter migrate to a place not using PagePrensenter, it's helpful with `IsolatedViewPresenter`.

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 protocol RouterService {
     func open(route: String) -> Bool

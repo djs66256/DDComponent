@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 /// Config flow layout for item
 public struct UITableViewCellLayoutInfo {

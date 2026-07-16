@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 extension ViewPresentable {
     fileprivate var nearestItemPresenter: CollectionItemPresentable? {

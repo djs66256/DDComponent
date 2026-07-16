@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 /// PageViewController for UICollectionView, like UICollectionViewController.
 open class UICollectionPageViewController<P, V, LayoutType>: PageViewController<V, P, V>, UIScrollViewDelegate

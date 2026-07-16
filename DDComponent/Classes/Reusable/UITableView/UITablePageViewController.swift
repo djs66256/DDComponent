@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 open class UITablePageViewController<P, V>: PageViewController<V, P, V>, UIScrollViewDelegate
 where P: UITableViewRootPresenter<V>, V: UITableView {

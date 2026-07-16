@@ -37,3 +37,7 @@ Carthage/Build
 Pods/
 .temp/
 ./todos.md
+
+# Swift Package Manager
+.build/
+.swiftpm/

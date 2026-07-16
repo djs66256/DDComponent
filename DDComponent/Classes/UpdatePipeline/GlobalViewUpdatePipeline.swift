@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 public protocol ViewUpdatePipelineQueue {
     func async(_ closure: @escaping @MainActor () -> Void)

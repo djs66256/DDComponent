@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 import Then
 
 class Page1Model {

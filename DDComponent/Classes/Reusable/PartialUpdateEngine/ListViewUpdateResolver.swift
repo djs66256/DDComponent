@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 protocol ListUpdateProtocol {
     typealias IndexDiffResult = Engine.Differ.IndexDiffResult
