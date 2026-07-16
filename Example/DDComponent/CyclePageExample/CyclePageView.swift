@@ -168,8 +168,10 @@ public class CyclePageView: UIView {
         viewModel.beforeLayoutItems = {[weak self](total,offset)in
             guard let self = self else {return}
             UIView.performWithoutAnimation {
-                self.containerView.size = CGSize(width: self.scrollView.bounds.width, height: total)
-                self.scrollView.contentSize = self.containerView.size
+                var containerFrame = self.containerView.frame
+                containerFrame.size = CGSize(width: self.scrollView.bounds.width, height: total)
+                self.containerView.frame = containerFrame
+                self.scrollView.contentSize = containerFrame.size
                 self.scrollView.contentOffset.y = offset
             }
         }
@@ -286,7 +288,7 @@ extension CyclePageView {
     
     func updateCurrentItem(_ scrollView: UIScrollView) {
         let y = scrollView.contentOffset.y
-        let index = Int(y / scrollView.height + 0.5)
+        let index = Int(y / scrollView.bounds.height + 0.5)
         let items = viewModel.pageItems.compactMap {$0.item}
         guard index >= 0, index < items.count else {
             return
