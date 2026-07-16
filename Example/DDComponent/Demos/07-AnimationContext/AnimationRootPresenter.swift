@@ -45,7 +45,8 @@ final class AnimationRootPresenter: RootViewPresenter<AnimationViewable> {
         squareSize = squareSize == 80 ? 150 : 80
         setState {} context: {
             $0.invalidateLayout = true
-            $0.animator = BounceAnimator()   // spring animation
+            $0.animated = true            // required: layoutIfNeeded() only runs in animation block when animated=true
+            $0.animator = BounceAnimator()   // takes priority over default 0.3s UIView.animate
         }
     }
 
@@ -56,7 +57,8 @@ final class AnimationRootPresenter: RootViewPresenter<AnimationViewable> {
             ? CGAffineTransform(rotationAngle: .pi).scaledBy(x: 0.5, y: 0.5)
             : .identity
         setState {} context: {
-            $0.animator = SlowAnimator()      // slow 1.2s ease-in-out
+            $0.animated = true
+            $0.animator = SlowAnimator()      // takes priority over default 0.3s, uses 1.2s ease-in-out
         }
     }
 

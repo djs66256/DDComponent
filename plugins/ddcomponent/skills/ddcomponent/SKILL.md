@@ -434,6 +434,32 @@ override func onUpdate(view: MyViewProtocol, context: ViewUpdateContext) {
 | `invalidateDataSource = true` | 列表数据源变了（触发 Diff + reload） |
 | `invalidateContentSize = true` | 只有 Cell 尺寸变了 |
 | `updateViewImmediately = true` | 需要立即更新，不等待批处理 |
+| `animator = MyAnimator()` | 自定义动画器（替代默认 0.3s UIView.animate） |
+
+**自定义 Animator：** 管道分两步执行——`updateView`（更新属性）和 `layoutViewIfNeeded`（应用约束布局）。第二步只在 `animated = true` 或 `layoutImmediately = true` 时进入动画块。因此使用自定义 `animator` 时必须同时设置 `animated = true`：
+
+```swift
+// ❌ BAD — animator 没配 animated，layoutIfNeeded 不在动画块内，约束变更无动画
+$0.invalidateLayout = true
+$0.animator = BounceAnimator()
+
+// ✅ GOOD — 同时设 animated = true（animator 优先级高于默认 0.3s）
+$0.invalidateLayout = true
+$0.animated = true
+$0.animator = BounceAnimator()
+
+// 自定义 Animator 实现
+final class BounceAnimator: ViewUpdateAnimator {
+    func animate(with context: ViewUpdateContext, _ updater: @escaping () -> Void) {
+        UIView.animate(
+            withDuration: 0.6, delay: 0,
+            usingSpringWithDamping: 0.4, initialSpringVelocity: 0.8,
+            options: [.allowUserInteraction],
+            animations: updater
+        )
+    }
+}
+```
 
 ## 七、layoutInfo：列表 Cell 和 Section 的布局配置
 
