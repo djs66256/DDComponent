@@ -94,7 +94,7 @@ class MyPageRootPresenter: RootViewPresenter<MyPageViewProtocol> {
 }
 
 // ===== Step 4: 创建 ViewController =====
-class MyPageViewController: PageViewController<MyPageRootView, MyPageRootPresenter, MyPageViewProtocol> {
+class MyPageViewController: PageViewController<MyPageRootView, MyPageRootPresenter> {
 
     override func makeView() -> MyPageRootView {
         MyPageRootView()
@@ -400,6 +400,133 @@ getService(RouterService.self)?.navigate(to: .profile)
 - **不要在 `viewDidLoad` 之前注册 Service**（时机不对）
 - **不要忘记在 `onUnbindView` 中清理回调**
 - **不要在 `pageInstallers` 中注册 RootPresenter** — `PageViewController.makePresenter()` 已经创建了它。`pageInstallers` 中注册的是子 Presenter
+
+## 五-A、生命周期方法职责详解
+
+每个生命周期方法都有明确的职责边界。以下是完整分析：
+
+### 生命周期顺序
+
+```
+init() → onAttach → onAttachToRoot → onBindView → onUpdate (×N) → onUnbindView → onDetach → onDetachFromRoot → deinit
+```
+
+### 1. `init()` — 创建
+
+**触发时机：** Presenter 初始化。
+
+| ✅ 应该做 | ❌ 不应该做 |
+|---|---|
+| 初始化自身属性、设置默认值 | 访问 `view`（尚未绑定） |
+| RootPresenter 中通过 `typeBox()` 注册子 Presenter | 访问 `superPresenter` / `rootPresenter`（尚未挂载） |
+| | 调用 `getService()` / `notify()`（Pipeline 不存在） |
+
+### 2. `onAttach(presenter:)` / `onAttach()` — 挂载到 P-Tree
+
+**触发时机：** 被 `add(child:)` 加入父 Presenter。RootPresenter 使用无参版本 `onAttach()`。
+
+| ✅ 应该做 | ❌ 不应该做 |
+|---|---|
+| **`add(child:)` 注册子 Presenter**（组建 P-Tree 的核心时机） | 访问 `view`（View 可能尚未绑定） |
+| 初始化内部结构、创建子节点 | 依赖 `rootPresenter` 非空（父节点可能还没挂到 Root） |
+| | 做需要 Pipeline 的操作 |
+
+> **源码执行顺序：** `attachSuperPresenter()` 内部先调 `onAttach` → 再挂 Root → 最后 auto-bind View。所以 `onAttach` 被调用时，Root 和 View 都还没就位。
+
+### 3. `onAttachToRoot(rootPresenter:)` — 关联到 RootPresenter
+
+**触发时机：** 自身或祖先挂到 RootPresenter 上时，递归所有子 Presenter。
+
+| ✅ 应该做 | ❌ 不应该做 |
+|---|---|
+| **注册 Effect（副作用）** — 这是注册 Effect 的最佳时机（Pipeline 已可用） | 操作 View 的 UI（View 可能未绑定） |
+| 监听全局事件、注册全局 Notify listener | 假设 `view` 非空 |
+| 启动需要页面级别的定时器、监听 | |
+| 获取 Service 引用并缓存 | |
+
+> **Effect 机制：** `onAttachToRoot` 时启动 effect 的 `action()`，`onDetachFromRoot` 时自动调用返回的 cancel 函数。这是注册/清理配对资源的最佳方式。
+
+### 4. `onBindView(_ view: View)` — 绑定 View
+
+**触发时机：** `bindView(_:)` / `bindWeakView(_:)` / `tryBindView(_:)` 时。
+
+| ✅ 应该做 | ❌ 不应该做 |
+|---|---|
+| **先调用 `super.onBindView(view)`** | 直接修改 View 的属性值（应让 `onUpdate` 统一处理，`bindView` 会自动触发首次 `onUpdate`） |
+| **设置 View 的回调闭包**（`view.onButtonTapped = { ... }`） | 注册 Effect（应放在 `onAttachToRoot`） |
+| 绑定子 Presenter 到对应的子 View | 调用 `add(child:)`（应在 `onAttach` 中完成） |
+
+> **注意：** `bindView()` 内部会自动触发一次 `setState {} context: { $0.bindView() }` 来执行首次 `onUpdate`，所以初始数据不需要在这里手动赋值给 View。
+
+### 5. `onUpdate(view: View, context: ViewUpdateContext)` — 状态同步到 View
+
+**触发时机：** 每次 `setState {}` 后由 Pipeline 调用。可被多次调用。
+
+| ✅ 应该做 | ❌ 不应该做 |
+|---|---|
+| **将 Presenter 状态同步到 View**（这是它唯一正确的职责） | **修改 Presenter 的状态**（造成死循环） |
+| 读取 `context` flags 做条件判断（极少需要） | **执行业务逻辑**（网络请求、页面跳转等） |
+| | 修改 View 的布局约束（应通过 `context.invalidateLayout` 处理） |
+| | 做耗时操作（高频滚动时频繁调用） |
+
+> **核心原则：** `onUpdate` 是幂等的、无副作用的纯映射函数——"这是我的当前状态，请把 View 更新到这个状态"。**遗漏状态同步会导致 View 展示不一致的 bug**。
+
+### 6. `onUnbindView()` — 解绑 View
+
+**触发时机：** `unbindView()`、绑定新 View（先解绑旧 View）、`detachSuperPresenter()`（自动解绑）、页面销毁。
+
+| ✅ 应该做 | ❌ 不应该做 |
+|---|---|
+| **先调用 `super.onUnbindView()`** | 假设 `view` 非空（弱引用场景下可能已是 nil） |
+| **清理 View 的回调闭包**（设 `nil` 防循环引用） | 做业务逻辑清理（应在 `onDetach` 中做） |
+| 清理与 View 实例绑定的资源（定时器等） | 移除 Effect（应在 `onDetachFromRoot` 中清理） |
+
+> **注意：** `unbindView()` 会自动递归解绑所有子 Presenter，子 Presenter 的 `onUnbindView` 会被调用。
+
+### 7. `onDetach()` — 从 P-Tree 移除
+
+**触发时机：** `removeFromSuper()` / `remove(child:)` / `detachAllPresentersRecursive()`。
+
+| ✅ 应该做 | ❌ 不应该做 |
+|---|---|
+| 释放 P-Tree 维度的资源（移除子 Presenter） | 访问 `view`（此时已 unbind） |
+| 取消在此 Presenter 范围内注册的东西 | 访问 `superPresenter`（之后会被置 nil） |
+
+> **执行顺序：** `detachSuperPresenter()` 内部：先 `unbindView()` → 再 `onDetach()` → 最后 `detachRootPresenter()`。
+
+### 8. `onDetachFromRoot()` — 脱离 RootPresenter
+
+**触发时机：** 自身或祖先从 RootPresenter 脱离时。先递归子 Presenter，再调用自身。
+
+| ✅ 应该做 | ❌ 不应该做 |
+|---|---|
+| 清理全局 listener 注册 | 假设 `rootPresenter` 非空（调用时还未置 nil，但之后会） |
+| 释放通过 Service 获取的引用 | |
+
+> **Effect 自动清理：** 基类 `onDetachFromRoot()` 已调用 `effect.onDetach()`，若在 `onAttachToRoot` 中用 Effect 注册的副作用无需手动清理。
+
+### 9. `prepareForReuse()` — 列表 Cell 复用前重置
+
+**触发时机：** 列表 Cell 被复用时。仅 `ReusableViewPresenter` 有此方法。
+
+| ✅ 应该做 | ❌ 不应该做 |
+|---|---|
+| **重置 Presenter 的所有状态**（清空数据、取消请求、重置标记） | 操作 View（此时 View 可能还是旧的） |
+| 恢复到初始状态 | 调用 `setState`（重置后由外部配置数据时再触发） |
+
+### 职责速查表
+
+| 方法 | 核心职责 | 一句话 |
+|------|---------|--------|
+| `init()` | 初始化自身属性 | 设置默认值，不依赖外部 |
+| `onAttach` | 组装 P-Tree | `add(child:)`，创建子 Presenter |
+| `onAttachToRoot` | 注册全局依赖 | 注册 Effect、监听全局事件 |
+| `onBindView` | 连接 View | 设回调闭包，绑子 View，**不**直接改 View 值 |
+| `onUpdate` | 同步数据 | **仅**把状态写到 View，纯映射，无副作用 |
+| `onUnbindView` | 断开 View | 清回调闭包，防止循环引用 |
+| `onDetach` | 清理 P-Tree | 移除子 Presenter，清理内部引用 |
+| `onDetachFromRoot` | 注销全局依赖 | 框架自动清理 Effect |
+| `prepareForReuse` | 重置状态 | 清空数据，恢复到初始值 |
 
 ## 六、setState 和 onUpdate 详解
 

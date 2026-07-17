@@ -21,10 +21,17 @@ public protocol RootViewPresentable: ViewPresentable, NotifyRegistrar {
     /// Root presenter do not has super presenters.
     /// Use this method instead of `func attachSuperPresenter(_ superPresenter: ViewPresentable)`
     func attachSuperPresenter()
-    
+
     /// Root presenter do not has super presenters.
     /// Use this method instead of `func onAttach(presenter: ViewPresentable)`
     func onAttach()
+}
+
+public protocol RootViewPresenterProtocol: RootViewPresentable, ServiceRegistrar, ViewPresenterIdentify {
+    associatedtype ViewType
+    var view: ViewType? { get }
+    func removeAllListeners(of object: AnyObject)
+    init()
 }
 
 /// The root of presenters.
@@ -145,4 +152,10 @@ open class RootViewPresenter<View>: IdentifierViewGroupPresenter<View>, RootView
     public func removeAllListeners(of object: AnyObject) {
         notifyManager.removeAllListeners(of: object)
     }
+}
+
+// MARK: - RootViewPresenterProtocol conformance
+
+extension RootViewPresenter: RootViewPresenterProtocol {
+    public typealias ViewType = View
 }

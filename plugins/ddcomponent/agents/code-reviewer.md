@@ -96,30 +96,164 @@ override func onUpdate(view: MyViewProtocol, context: ViewUpdateContext) {
 
 ### 3. Lifecycle Correctness（生命周期正确性）
 
-**`onBindView` 必须调用 `super.onBindView(view)`。**
+生命周期顺序：`init() → onAttach → onAttachToRoot → onBindView → onUpdate (×N) → onUnbindView → onDetach → onDetachFromRoot → deinit`
+
+每个方法有明确的职责边界，跨职责使用会导致时序 bug。
+
+#### 3.1 `init()` — 创建
+
+| ✅ 允许 | ❌ 禁止 |
+|---|---|
+| 初始化自身属性、设置默认值 | 访问 `view`、`superPresenter`、`rootPresenter` |
+| RootPresenter 中 `typeBox()` 注册子 Presenter | 调用 `getService()` / `notify()` |
+
+#### 3.2 `onAttach(presenter:)` / `onAttach()` — 挂载到 P-Tree
+
+**触发时机：** `add(child:)` 时。RootPresenter 用无参 `onAttach()`。
+
+| ✅ 允许（应该做） | ❌ 禁止 |
+|---|---|
+| **`add(child:)` 注册子 Presenter** | 访问 `view`（可能尚未绑定） |
+| 初始化内部结构 | 依赖 `rootPresenter` 非空 |
+| | 做需要 Pipeline 的操作 |
+
+> **源码执行顺序：** `attachSuperPresenter()` 内部：`onAttach` → 挂 Root → auto-bind View。`onAttach` 调用时 Root 和 View 都未就位。
+
+**Review 检查：**
+```swift
+// ❌ BAD — onAttach 中访问 view（此时尚未绑定）
+override func onAttach(presenter: ViewPresentable) {
+    super.onAttach(presenter: presenter)
+    view?.updateSomething()  // view 还是 nil
+}
+
+// ❌ BAD — onAttach 中调用 notify/notifyGlobal（Pipeline 不存在时无效）
+override func onAttach(presenter: ViewPresentable) {
+    super.onAttach(presenter: presenter)
+    notify(listener: SomeListener.self) { $0.doSomething() }
+}
+
+// ✅ GOOD — onAttach 中只做 P-Tree 组装
+override func onAttach(presenter: ViewPresentable) {
+    super.onAttach(presenter: presenter)
+    add(child: likePresenter)
+    add(child: sharePresenter)
+}
+```
+
+#### 3.3 `onAttachToRoot(rootPresenter:)` — 关联到 Root
+
+**触发时机：** 挂到 Root 时，递归所有子 Presenter。
+
+| ✅ 允许（应该做） | ❌ 禁止 |
+|---|---|
+| **注册 Effect**（最佳时机，Pipeline 已可用） | 操作 View UI（View 可能未绑定） |
+| 监听全局事件、注册 Notify listener | 假设 `view` 非空 |
+| 获取 Service 引用 | |
 
 ```swift
-// ❌ BAD
+// ✅ GOOD — 在 onAttachToRoot 注册 Effect
+override func onAttachToRoot(rootPresenter: RootViewPresentable) {
+    super.onAttachToRoot(rootPresenter: rootPresenter)
+    let effect = Effect { [weak self] in
+        let observer = NotificationCenter.default.addObserver(...)
+        return { observer.cancel() }  // onDetachFromRoot 时自动清理
+    }
+    effects.append(effect)
+}
+```
+
+#### 3.4 `onBindView(_ view: View)` — 绑定 View
+
+**触发时机：** `bindView(_:)` / `tryBindView(_:)` 时。
+
+| ✅ 允许（应该做） | ❌ 禁止 |
+|---|---|
+| **先调用 `super.onBindView(view)`** | **直接修改 View 属性值**（应让 `onUpdate` 处理，`bindView` 会自动触发首次 `onUpdate`） |
+| **设置 View 回调闭包** | 注册 Effect（应放 `onAttachToRoot`） |
+| 绑定子 Presenter 到子 View | 调用 `add(child:)`（应放 `onAttach`） |
+
+**Review 检查：**
+```swift
+// ❌ BAD — 忘记 super
 override func onBindView(_ view: MyView) {
     view.onTapped = { ... }
+}
+
+// ❌ BAD — 直接改 View 值（应该让 onUpdate 做）
+override func onBindView(_ view: MyView) {
+    super.onBindView(view)
+    view.title = self.title  // ❌ 跳过 onUpdate
+    view.onTapped = { [weak self] in self?.handle() }
 }
 
 // ✅ GOOD
 override func onBindView(_ view: MyView) {
     super.onBindView(view)
-    view.onTapped = { ... }
+    view.onTapped = { [weak self] in self?.handle() }
+}
+// onUpdate 会在 bindView 内部自动触发，负责同步 title
+```
+
+#### 3.5 `onUpdate(view: View, context: ViewUpdateContext)` — 状态同步到 View
+
+**触发时机：** 每次 `setState {}` 后由 Pipeline 调用。可多次。
+
+| ✅ 允许（应该做） | ❌ 禁止 |
+|---|---|
+| **将 Presenter 状态同步到 View**（唯一正确职责） | **修改 Presenter 状态**（死循环） |
+| | **执行业务逻辑**（网络请求、跳转等） |
+| | 修改 View 布局约束 |
+| | 耗时操作 |
+
+> **核心原则：** `onUpdate` 必须是幂等的、无副作用的纯映射函数。**遗漏状态同步是最常见的 bug**——View 展示了过时的数据。
+
+**Review 检查：**
+```swift
+// ❌ BAD — 遗漏状态
+override func onUpdate(view: MyViewProtocol, context: ViewUpdateContext) {
+    view.title = state.title
+    // 缺少 view.isLoading = state.isLoading
+}
+
+// ❌ BAD — onUpdate 中修改状态（死循环）
+override func onUpdate(view: MyViewProtocol, context: ViewUpdateContext) {
+    view.count = count
+    self.count += 1  // ❌ 触发新的 setState → onUpdate → 死循环
+}
+
+// ❌ BAD — onUpdate 中执行业务逻辑
+override func onUpdate(view: MyViewProtocol, context: ViewUpdateContext) {
+    view.title = state.title
+    getService(RouterService.self)?.navigate(...)  // ❌ 副作用
+}
+
+// ✅ GOOD
+override func onUpdate(view: MyViewProtocol, context: ViewUpdateContext) {
+    view.title = state.title
+    view.isLoading = state.isLoading
+    view.count = state.count
 }
 ```
 
-**`onBindView` 中设置的回调必须在 `onUnbindView` 中清理。**
+#### 3.6 `onUnbindView()` — 解绑 View
 
+**触发时机：** `unbindView()`、绑定新 View、`detachSuperPresenter()`、页面销毁。
+
+| ✅ 允许（应该做） | ❌ 禁止 |
+|---|---|
+| **先调用 `super.onUnbindView()`** | 假设 `view` 非空（弱引用可能已 nil） |
+| **清理 View 回调闭包**（设 nil） | 做业务逻辑清理（应放 `onDetach`） |
+| 清理 View 绑定的资源 | 移除 Effect（应放 `onDetachFromRoot`） |
+
+**Review 检查：**
 ```swift
 // ❌ BAD — 没有清理回调
 override func onBindView(_ view: MyView) {
     super.onBindView(view)
     view.onTapped = { [weak self] in self?.handle() }
 }
-// 缺少 onUnbindView
+// 缺少 onUnbindView 来清理
 
 // ✅ GOOD
 override func onUnbindView() {
@@ -127,6 +261,52 @@ override func onUnbindView() {
     view?.onTapped = nil
 }
 ```
+
+#### 3.7 `onDetach()` — 从 P-Tree 移除
+
+**触发时机：** `removeFromSuper()` / `remove(child:)`。
+
+| ✅ 允许（应该做） | ❌ 禁止 |
+|---|---|
+| 释放 P-Tree 维度资源 | 访问 `view`（已 unbind） |
+| 取消此范围内注册的东西 | 访问 `superPresenter`（之后被置 nil） |
+
+> **执行顺序：** `detachSuperPresenter()` 内部：先 `unbindView()` → 再 `onDetach()` → 最后 `detachRootPresenter()`。
+
+#### 3.8 `onDetachFromRoot()` — 脱离 Root
+
+**触发时机：** 从 Root 脱离时。先递归子，再自身。
+
+| ✅ 允许（应该做） | ❌ 禁止 |
+|---|---|
+| 清理全局 listener | — |
+| 释放 Service 引用 | — |
+
+> 基类已自动调用 `effect.onDetach()`，Effect 注册的副作用无需手动清理。
+
+#### 3.9 `prepareForReuse()` — Cell 复用重置
+
+仅 `ReusableViewPresenter`。**必须重置所有可变状态到初始值，不操作 View。**
+
+```swift
+// ❌ BAD — 没有重置全部状态
+override func prepareForReuse() {
+    comment = nil
+    // 忘记重置 isLiked、likeCount 等
+}
+
+// ✅ GOOD
+override func prepareForReuse() {
+    super.prepareForReuse()
+    comment = nil
+    isLiked = false
+    likeCount = 0
+    imageTask?.cancel()
+    imageTask = nil
+}
+```
+
+#### 通用检查
 
 **`add(child:)` 必须在 `onBindView` 之前调用。** 子 Presenter 需要先加入 P-Tree 才能接收生命周期。
 
@@ -155,7 +335,7 @@ override func onBindView(_ view: MyView) {
 
 ```swift
 // ❌ BAD
-service.fetch { self?.updateData($0) }  // 缺少 [weak self]
+service.fetch { self?.updateData($0) }  // 没有 [weak self]
 service.fetch { [self] in updateData($0) }  // 强引用
 
 // ✅ GOOD

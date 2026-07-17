@@ -23,6 +23,7 @@ final class MainRowItemPresenter: UITableViewItemPresenter<UITableViewCell> {
     }
 
     override func onDidSelect() {
+        deselectRow(animated: true)
         onTap?()
     }
 }

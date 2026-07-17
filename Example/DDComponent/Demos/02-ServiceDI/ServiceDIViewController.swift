@@ -1,7 +1,7 @@
 import UIKit
 import DDComponent
 
-final class ServiceDIViewController: PageViewController<ServiceDIView, ServiceDIRootPresenter, ServiceDIViewable> {
+final class ServiceDIViewController: PageViewController<ServiceDIView, ServiceDIRootPresenter> {
 
     override func viewDidLoad() {
         super.viewDidLoad()

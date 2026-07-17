@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 /// PageViewController for UICollectionView, like UICollectionViewController.
-open class UICollectionPageViewController<P, V, LayoutType>: PageViewController<V, P, V>, UIScrollViewDelegate
+open class UICollectionPageViewController<P, V, LayoutType>: PageViewController<V, P>, UIScrollViewDelegate
 where P: UICollectionViewRootPresenter<V>, V: UICollectionView, LayoutType: UICollectionViewLayout
 {
     

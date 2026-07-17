@@ -13,8 +13,8 @@ final class HelloRootPresenter: RootViewPresenter<HelloViewable> {
 }
 
 /// Minimal PageViewController subclass.
-/// Generic params: FrameView (UIView), Presenter (RootViewPresenter), View protocol.
-final class HelloViewController: PageViewController<HelloView, HelloRootPresenter, HelloViewable> {
+/// Generic params: FrameView (UIView), Presenter (RootViewPresenterProtocol).
+final class HelloViewController: PageViewController<HelloView, HelloRootPresenter> {
 
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-open class UITablePageViewController<P, V>: PageViewController<V, P, V>, UIScrollViewDelegate
+open class UITablePageViewController<P, V>: PageViewController<V, P>, UIScrollViewDelegate
 where P: UITableViewRootPresenter<V>, V: UITableView {
     
     open var tableViewStyle: UITableView.Style {

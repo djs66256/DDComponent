@@ -19,8 +19,7 @@ public protocol PageLifecycle {
     func viewDidDisappear(_ animated: Bool)
 }
 
-open class PageViewController<FrameView: UIView, Presenter, View>: UIViewController,  ServiceRegistrar
-    where Presenter: RootViewPresenter<View> {
+open class PageViewController<FrameView: UIView, Presenter: RootViewPresenterProtocol>: UIViewController,  ServiceRegistrar {
     
     @MainActor private var _presenter: Presenter!
     @MainActor public var presenter: Presenter {
@@ -30,7 +29,7 @@ open class PageViewController<FrameView: UIView, Presenter, View>: UIViewControl
         }
     }
     
-    @MainActor public var presenterView: View? {
+    @MainActor public var presenterView: Presenter.ViewType? {
         loadViewIfNeeded()
         return presenter.view
     }
@@ -58,7 +57,7 @@ open class PageViewController<FrameView: UIView, Presenter, View>: UIViewControl
     
     @MainActor open func bindView(_ view: FrameView) {
         if !presenter.tryBindWeakView(view) {
-            assert(false, "\(view.debugDescription) does not conform to presenter view type (\(View.self))")
+            assert(false, "\(view.debugDescription) does not conform to presenter view type (\(Presenter.ViewType.self))")
         }
     }
     
