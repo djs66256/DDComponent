@@ -24,7 +24,15 @@ Make a collection controller to several component. Make the controller smaller.
   s.ios.deployment_target = '13.0'
 
   s.source_files = 'DDComponent/Classes/**/*'
-  
+
+  s.subspec 'Macros' do |ss|
+    ss.source_files = 'DDComponentMacros/Sources/DDComponentMacrosClient/**/*.swift'
+    ss.dependency 'SwiftSyntax/Macros', '~> 600.0'
+    ss.pod_target_xcconfig = {
+      'OTHER_SWIFT_FLAGS' => '-load-plugin-executable DDComponentMacros#DDComponentMacros'
+    }
+  end
+
   s.resource_bundles = {
     'DDComponent' => ['DDComponent/Assets/*.png']
   }
