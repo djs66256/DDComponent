@@ -1,138 +1,121 @@
 # DDComponent
-Make a collection controller to several components. A `UICollectionView/UITableView` framework for building fast and flexible lists. Like `IGList`.
 
-[中文文档](./README-zh.md)
+[![Version](https://img.shields.io/cocoapods/v/DDComponent.svg?style=flat)](https://cocoapods.org/pods/DDComponent)
+[![License](https://img.shields.io/cocoapods/l/DDComponent.svg?style=flat)](https://cocoapods.org/pods/DDComponent)
+[![Platform](https://img.shields.io/cocoapods/p/DDComponent.svg?style=flat)](https://cocoapods.org/pods/DDComponent)
 
-# Requirements
+基于 MVP 模式的 iOS 页面拆分框架。将复杂页面拆分为独立、可复用、可插拔的 Presenter 组件。
 
-* Xcode 8.0+
-* iOS 8.0+
+## 为什么需要 DDComponent？
 
-# Installation
+| 问题 | DDComponent 的解法 |
+|---|---|
+| 多人修改同一文件导致冲突 | 每个功能拆分为独立的 Presenter，互不干扰 |
+| 功能边界模糊，无人对质量负责 | Presenter 是明确的逻辑边界，职责清晰 |
+| 同一功能不同 UI（如 Resso vs TTM） | P-Tree 与 V-Tree 分离，逻辑复用，UI 可替换 |
+| 功能需要动态插拔 | 通过 `install` DSL 按需装配 Presenter 和 Service |
 
-### CocoaPods
+## 核心概念
+
+### P-Tree 与 V-Tree
 
 ```
-pod 'DDComponent'
+P-Tree (Presenter 树)          V-Tree (View 树)
+┌─────────────────┐          ┌─────────────────┐
+│  RootPresenter  │ - - - - │    RootView     │
+│  ├ LikePresenter │ - - - - │   ├ LikeButton  │
+│  ├ SharePresenter│ - - - - │   ├ ShareButton │
+│  └ CommentPresenter│ - - - │   └ CommentList │
+└─────────────────┘          └─────────────────┘
 ```
 
-### Carthage
+- **P-Tree**（Presenter 树）：页面的功能逻辑组织结构
+- **V-Tree**（View 树）：UI 展示结构
+- 两者弱绑定：相同的 P-Tree 可以绑定到完全不同的 V-Tree
+
+### 状态驱动更新
+
+DDComponent 借鉴 React/SwiftUI 的思想，所有 UI 更新必须通过 `setState` 统一入口，由 UpdatePipeline 批量执行：
 
 ```
-github 'DDComponent'
+数据变更 → setState { ... } → Pipeline 调度 → onUpdate(view:context:) → UI 更新
 ```
 
-# Getting Started
+### 快速示例
 
-For easy using, the api is similar to `UICollectionView` and `UITableView`.
+```swift
+// 1. View 协议（不是 UIView）
+protocol LikeViewProtocol: AnyObject {
+    var isLiked: Bool { get set }
+    var likeCount: Int { get set }
+    var onLikeTapped: (() -> Void)? { get set }
+}
 
+// 2. Presenter（业务逻辑）
+class LikePresenter: ViewPresenter<LikeViewProtocol> {
+    var isLiked = false { didSet { setState {} } }
 
-```objc
-@interface YourComponent : DDCollectionViewSectionComponent
-@end
-
-@implementation
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        self.size = CGSizeMake(DDComponentAutomaticDimension, 44);
-        // config here. 
-        // Remember self.collectionView is nil until it is added to root component.
+    func toggleLike() {
+        getService(LikeService.self)?.toggleLike { [weak self] result in
+            self?.isLiked = result
+        }
     }
-    return self;
+
+    override func onBindView(_ view: LikeViewProtocol) {
+        view.onLikeTapped = { [weak self] in self?.toggleLike() }
+    }
+
+    override func onUpdate(view: LikeViewProtocol, context: ViewUpdateContext) {
+        view.isLiked = isLiked
+    }
 }
 
-- (void)prepareCollectionView {
-    [super prepareCollectionView];
-    // register your cell here.
-}
-
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-    return 1;
-}
-
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return 1;
-}
-
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return ... // Return your cell
-}
-
-@end
-```
-
-And the other api is also the same.
-
-```objc
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    // select item
-}
-- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-    // will display
+// 3. 装配
+class MyViewController: PageViewController<MyRootView, MyRootPresenter> {
+    @PageInstallerBuilder override var pageInstallers: PageInstaller {
+        ServiceInstaller(LikeService.self, { LikeServiceImpl() })
+    }
 }
 ```
 
-# Debug
+## 安装
 
-```
-po self.rootComponent
-<DDCollectionViewRootComponent: 0x6080000bb900>
-  [SubComponents]
-    <DDComponentPodDemo.StatusComponent: 0x60800009b440>
-      -[loading] <DDComponentPodDemo.StateComponent: 0x6080001651c0>
-      *[normal] <DDCollectionViewSectionGroupComponent: 0x60800009acc0>
-          [SubComponents]
-            <DDComponentPodDemo.TaobaoBannerComponent: 0x6080001235c0>
-            <DDComponentPodDemo.TaobaoEntriesComponent: 0x6080001524e0>
-            <DDComponentPodDemo.TaobaoGoodsComponent: 0x608000151eb0>
-            <DDComponentPodDemo.TaobaoGoodsComponent: 0x608000151510>
-              [Header] <DDComponentPodDemo.HeaderComponent: 0x608000151250>
-            <DDComponentPodDemo.TaobaoGoodsComponent: 0x608000152220>
-            <DDComponentPodDemo.TaobaoGoodsComponent: 0x608000152380>
-            <DDComponentPodDemo.TaobaoGoodsComponent: 0x6080001511a0>
-            <DDComponentPodDemo.TaobaoGoodsComponent: 0x608000151b40>
-              [Header] <DDComponentPodDemo.HeaderComponent: 0x608000151ca0>
-            <DDComponentPodDemo.TaobaoGoodsComponent: 0x608000152170>
-            <DDComponentPodDemo.TaobaoGoodsComponent: 0x6080001515c0>
-            <DDComponentPodDemo.TaobaoGoodsComponent: 0x608000151a90>
-              [Header] <DDComponentPodDemo.HeaderComponent: 0x608000151f60>
-            <DDComponentPodDemo.TaobaoGoodsComponent: 0x608000151930>
-            <DDComponentPodDemo.TaobaoGoodsComponent: 0x608000151670>
-            <DDComponentPodDemo.TaobaoGoodsComponent: 0x608000152640>
-      -[error] <DDComponentPodDemo.StateComponent: 0x608000165340>
-      -[noData] <DDComponentPodDemo.StateComponent: 0x608000165400>
+```ruby
+pod 'DDComponent'
+
+# 可选：@PresenterState 宏
+pod 'DDComponent/Macros'
 ```
 
-# Structure
+## 文档
 
-![](./Images/structure.png)
+| 你想... | 看这个 |
+|----------|--------|
+| 理解框架设计思想 | [架构设计](./docs/architecture.md) |
+| 创建页面/列表/功能 | [使用指南](./docs/usage-guide.md) |
+| 开发列表 Cell | [复用 Presenter](./docs/reusable-presenter.md) |
+| 使用 Hooks 风格 API | [use* API](./docs/use-methods.md) |
+| 简化状态声明 | [@PresenterState 宏](./docs/presenter-state-macro.md) |
+| Swift 6 适配 | [Swift 6 并发模式](./docs/swift6-patterns.md) |
+| 看示例代码 | [Demo 索引](./docs/demo-index.md) |
 
-1. View Component: displaying. for example, a list of cell or just an element。
-2. Container Component: combine the view components. For example, conbine some components as a list, or switch between different components(Loading, Error, Empty). And the root component is also a containter component.
+**文档索引**：[docs/README.md](./docs/README.md)
 
-![](./Images/example.png)
+## 测试
 
-An example how it 
+框架包含 122 个单元测试，覆盖所有核心能力。测试位于 `Example/Tests/`。
 
-![](./Images/structure2.png)
+```bash
+cd Example
+xcodebuild test -project DDComponent.xcodeproj -scheme DDComponent-Example -destination 'platform=iOS Simulator,name=iPhone 17'
+```
 
-We need to do is only the red part.
+## 最低要求
 
-# Attension
+- iOS 13.0+
+- Swift 5.7+
+- Xcode 14.0+
 
-Use `size`, `inset` first, then override the `delegate` api.
+## License
 
-# Some Question
-
-As use the system api, `indexPath` is the `UICollectionView`'s location. It is not the index of component's dataSource.
-
-# Revision
-
-**0.5.2** Optimize the `numberOf`. Add dataSource cache and collectionView cache.
-
-**0.5.1** Only support `UICollectionView`.
-
-**0.5.0** New DDComponent using Objective-C.
+DDComponent is available under the MIT license. See the LICENSE file for more info.

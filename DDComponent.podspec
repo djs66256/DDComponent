@@ -1,52 +1,42 @@
+#
+# Be sure to run `pod lib lint DDComponent.podspec' to ensure this is a
+# valid spec before submitting.
+#
+# Any lines starting with a # are optional, but their use is encouraged
+# To learn more about a Podspec see https://guides.cocoapods.org/syntax/podspec.html
+#
+
 Pod::Spec.new do |s|
+  s.name             = 'DDComponent'
+  s.version          = '0.6.0'
+  s.summary          = 'Make a collection controller to several component'
 
-  s.name         = "DDComponent"
-  s.version      = "0.5.5"
-  s.summary      = "Make a collection controller to several component"
-
-  s.description  = <<-DESC
+  s.description      = <<-DESC
 Make a collection controller to several component. Make the controller smaller.
-                   DESC
+                       DESC
 
-  s.homepage     = "https://github.com/djs66256/DDComponent"
-  # s.screenshots  = "www.example.com/screenshots_1.gif", "www.example.com/screenshots_2.gif"
+  s.homepage         = 'https://github.com/djs66256/DDComponent'
+  s.license          = 'MIT'
+  s.author           = { 'Daniel' => 'djs66256@163.com' }
+  s.source           = { :git => 'https://github.com/djs66256/DDComponent.git', :tag => s.version.to_s }
+  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.license      = "MIT"
-  # s.license      = { :type => "MIT", :file => "FILE_LICENSE" }
+  s.ios.deployment_target = '13.0'
 
-  s.author             = { "Daniel" => "djs66256@163.com" }
-  # Or just: s.author    = "Daniel"
-  # s.authors            = { "Daniel" => "djs66256@163.com" }
-  # s.social_media_url   = "http://twitter.com/Daniel"
+  s.source_files = 'DDComponent/Classes/**/*'
 
-  # s.platform     = :ios
-  s.platform     = :ios, "8.0"
+  s.subspec 'Macros' do |ss|
+    ss.source_files = 'DDComponentMacros/Sources/DDComponentMacrosClient/**/*.swift'
+    ss.dependency 'SwiftSyntax/Macros', '~> 600.0'
+    ss.pod_target_xcconfig = {
+      'OTHER_SWIFT_FLAGS' => '-load-plugin-executable DDComponentMacros#DDComponentMacros'
+    }
+  end
 
-  #  When using multiple platforms
-  s.ios.deployment_target = "8.0"
-  # s.osx.deployment_target = "10.7"
-  # s.watchos.deployment_target = "2.0"
-  # s.tvos.deployment_target = "9.0"
+  s.resource_bundles = {
+    'DDComponent' => ['DDComponent/Assets/*.png']
+  }
 
-  s.source       = { :git => "https://github.com/djs66256/DDComponent.git", :tag => "#{s.version}" }
-  s.source_files  = "Class/oc", "Class/oc/Collection/**/*.{h,m,mm,swift}"
-  s.exclude_files = "Class/Exclude"
-
-  # s.public_header_files = "Classes/**/*.h"
-
-  # s.resource  = "icon.png"
-  # s.resources = "Resources/*.png"
-
-  # s.preserve_paths = "FilesToSave", "MoreFilesToSave"
-
-  s.framework  = "UIKit"
-  # s.frameworks = "SomeFramework", "AnotherFramework"
-
-  # s.library   = "iconv"
-  # s.libraries = "iconv", "xml2"
-  # s.requires_arc = true
-
-  # s.xcconfig = { "HEADER_SEARCH_PATHS" => "$(SDKROOT)/usr/include/libxml2" }
-  # s.dependency "JSONKit", "~> 1.4"
-
+  # s.public_header_files = 'Pod/Classes/**/*.h'
+  # s.frameworks = 'UIKit', 'MapKit'
 end
