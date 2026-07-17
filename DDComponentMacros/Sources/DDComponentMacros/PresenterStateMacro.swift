@@ -42,6 +42,19 @@ public struct PresenterStateMacro: AccessorMacro, PeerMacro {
 
         let dollarName = "$\(name)"
 
+        // Check if the original binding has willSet/didSet — if so, don't add get/set
+        // (a property can't have both willSet/didSet and get/set)
+        if let accessorBlock = binding.accessorBlock,
+           let accessors = accessorBlock.accessors.as(AccessorDeclListSyntax.self) {
+            let hasObservers = accessors.contains { accessor in
+                let kind = accessor.accessorSpecifier.tokenKind
+                return kind == .keyword(.willSet) || kind == .keyword(.didSet)
+            }
+            if hasObservers {
+                return []
+            }
+        }
+
         let getter: AccessorDeclSyntax = """
         get { \(raw: dollarName) }
         """
@@ -112,9 +125,7 @@ public struct PresenterStateMacro: AccessorMacro, PeerMacro {
                 let initializerStr = binding.initializer.map { " = \($0.value.description)" } ?? ""
                 declarations.append(
                     DeclSyntax(stringLiteral: """
-                    \(modifierStr)var \(dollarName): \(typeStr)\(initializerStr) {
-                        \(accessorBlock.description)
-                    }
+                    \(modifierStr)var \(dollarName): \(typeStr)\(initializerStr) \(accessorBlock.description)
                     """)
                 )
             } else {

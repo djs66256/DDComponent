@@ -67,32 +67,21 @@ final class PresenterStateMacroTests: XCTestCase {
             }
             """,
             expandedSource: """
-            var count: Int {
+            var count: Int = 0 {
                 willSet {
                     print("will", newValue)
                 }
                 didSet {
                     print("did", oldValue)
-                }
-                get {
-                    $count
-                }
-
-                set {
-                    setState {
-                        $count = newValue
-                    }
                 }
             }
 
             var $count: Int = 0  {
-                {
                 willSet {
                     print("will", newValue)
                 }
                 didSet {
                     print("did", oldValue)
-                }
                 }
             }
 
