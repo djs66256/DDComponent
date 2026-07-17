@@ -12,6 +12,8 @@
 		083DBCBFBF3F81E9A4D1D2B8 /* DataGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61884C798D16AD1BC7DE9028 /* DataGenerator.swift */; };
 		0A47AB830E7F402AA8859E3A /* CyclePageConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED52AB3BE4FA0D31493D790 /* CyclePageConfig.swift */; };
 		0AB8E7E90E13334D53B696CA /* HeaderPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771B44C4FDAFD7DF3E473D1D /* HeaderPresenter.swift */; };
+		0C6DBFCA78694E0574E15F6B /* PresenterStateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30BC4C804CB627D52E4AE3F7 /* PresenterStateViewController.swift */; };
+		0F6FB57721720C14597BFA81 /* PresenterStateRootPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4064BADAA1084CFD7AB8B4CA /* PresenterStateRootPresenter.swift */; };
 		11D8571B51BA79792F03423D /* BodyPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362F0FA8245A7CC3C2FCF373 /* BodyPresenter.swift */; };
 		1379EFFA71C4E215C331D344 /* LikeButtonPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F3E1A8B46F060F89DE2865 /* LikeButtonPresenter.swift */; };
 		162674B518DBBFAB0C17729B /* AnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368A81BD43E7D3EC9CC4CB14 /* AnimationView.swift */; };
@@ -40,6 +42,7 @@
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
+		6490798D4C20F69080CCC6D5 /* PresenterStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ECE8088CA0AAF3859AB2ABE /* PresenterStateView.swift */; };
 		699CD2833AB6353A46373B82 /* CyclePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E494EBD92330EE0A65F006F /* CyclePageView.swift */; };
 		746D0F484C980C82E31C847A /* LikeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145750F2C90CE9DE6D1881D3 /* LikeService.swift */; };
 		8041DE6791D6CE9F68A1E7BF /* FeedCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81EF9564E03D5CF558FC5435 /* FeedCardCell.swift */; };
@@ -110,6 +113,7 @@
 		173F10D2C1545FD0442ADA7C /* NotifyView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NotifyView.swift; path = "Demos/03-NotifySystem/NotifyView.swift"; sourceTree = "<group>"; };
 		18CAEE445F285B9DD3659487 /* UseMethodsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UseMethodsView.swift; sourceTree = "<group>"; };
 		22B18B72C932CA4896B558FA /* HelloViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HelloViewController.swift; path = "Demos/01-HelloDDComponent/HelloViewController.swift"; sourceTree = "<group>"; };
+		30BC4C804CB627D52E4AE3F7 /* PresenterStateViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PresenterStateViewController.swift; path = "Demos/11-PresenterState/PresenterStateViewController.swift"; sourceTree = "<group>"; };
 		362F0FA8245A7CC3C2FCF373 /* BodyPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BodyPresenter.swift; path = "Demos/04-PTreeComposition/BodyPresenter.swift"; sourceTree = "<group>"; };
 		368A81BD43E7D3EC9CC4CB14 /* AnimationView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AnimationView.swift; path = "Demos/07-AnimationContext/AnimationView.swift"; sourceTree = "<group>"; };
 		3778D28593336C572B818A2C /* CounterService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CounterService.swift; path = "Demos/02-ServiceDI/CounterService.swift"; sourceTree = "<group>"; };
@@ -117,7 +121,9 @@
 		38F3E1A8B46F060F89DE2865 /* LikeButtonPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LikeButtonPresenter.swift; path = "Demos/10-FeedExample/LikeButtonPresenter.swift"; sourceTree = "<group>"; };
 		392DA577741B8FD6B116481A /* ViewBindingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewBindingTests.swift; sourceTree = "<group>"; };
 		3B25B91BD898F3352A4B1B2B /* CyclePageViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CyclePageViewController.swift; path = CyclePageExample/CyclePageViewController.swift; sourceTree = "<group>"; };
+		3ECE8088CA0AAF3859AB2ABE /* PresenterStateView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PresenterStateView.swift; path = "Demos/11-PresenterState/PresenterStateView.swift"; sourceTree = "<group>"; };
 		3F7379851CD3099F92B2948A /* UseMethodsRootPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UseMethodsRootPresenter.swift; sourceTree = "<group>"; };
+		4064BADAA1084CFD7AB8B4CA /* PresenterStateRootPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PresenterStateRootPresenter.swift; path = "Demos/11-PresenterState/PresenterStateRootPresenter.swift"; sourceTree = "<group>"; };
 		4449B6D480CC90107F0F4085 /* AnimationViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AnimationViewController.swift; path = "Demos/07-AnimationContext/AnimationViewController.swift"; sourceTree = "<group>"; };
 		46D32A6399C4140BDFADF4E9 /* LikeButton.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LikeButton.swift; path = "Demos/10-FeedExample/LikeButton.swift"; sourceTree = "<group>"; };
 		477111495691322E9367037F /* ChildPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ChildPresenter.swift; path = "Demos/03-NotifySystem/ChildPresenter.swift"; sourceTree = "<group>"; };
@@ -224,6 +230,7 @@
 				9F532C943F5722547B7E71AB /* 09-AutoBind */,
 				53C749E1CB88ABB954733F65 /* 10-FeedExample */,
 				C8432E8A5172E4E0714B9451 /* 11-UseMethods */,
+				9ACFB69DFFD50107E199D288 /* 11-PresenterState */,
 			);
 			name = Demos;
 			sourceTree = "<group>";
@@ -371,6 +378,16 @@
 			name = "06-HeaderFooter";
 			sourceTree = "<group>";
 		};
+		9ACFB69DFFD50107E199D288 /* 11-PresenterState */ = {
+			isa = PBXGroup;
+			children = (
+				3ECE8088CA0AAF3859AB2ABE /* PresenterStateView.swift */,
+				4064BADAA1084CFD7AB8B4CA /* PresenterStateRootPresenter.swift */,
+				30BC4C804CB627D52E4AE3F7 /* PresenterStateViewController.swift */,
+			);
+			name = "11-PresenterState";
+			sourceTree = "<group>";
+		};
 		9F532C943F5722547B7E71AB /* 09-AutoBind */ = {
 			isa = PBXGroup;
 			children = (
@@ -463,6 +480,7 @@
 				A00000000000000000000001 /* DDComponent */,
 				A00000000000000000000002 /* SnapKit */,
 				A00000000000000000000003 /* Then */,
+				34047EFF607B04C110D4F1FB /* DDComponentMacrosClient */,
 			);
 			productName = DDComponent;
 			productReference = 607FACD01AFB9204008FA782 /* DDComponent_Example.app */;
@@ -619,6 +637,9 @@
 				9526FF30F065DF00F8FD3CD6 /* UseMethodsRootPresenter.swift in Sources */,
 				8193AB103E849ECFBFBD4B5E /* UseMethodsView.swift in Sources */,
 				CCEAF4B1AFEBB19120CBFE9B /* UseMethodsViewController.swift in Sources */,
+				6490798D4C20F69080CCC6D5 /* PresenterStateView.swift in Sources */,
+				0F6FB57721720C14597BFA81 /* PresenterStateRootPresenter.swift in Sources */,
+				0C6DBFCA78694E0574E15F6B /* PresenterStateViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -919,6 +940,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		34047EFF607B04C110D4F1FB /* DDComponentMacrosClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A00000000000000000000010 /* XCLocalSwiftPackageReference ".." */;
+			productName = DDComponentMacrosClient;
+		};
 		A00000000000000000000001 /* DDComponent */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A00000000000000000000010 /* XCLocalSwiftPackageReference ".." */;

@@ -82,7 +82,7 @@ public struct PresenterStateMacro: AccessorMacro, PeerMacro {
         // Extract the type annotation
         let typeStr: String
         if let typeAnnotation = binding.typeAnnotation {
-            typeStr = typeAnnotation.type.description.trimmingCharacters(in: .whitespaces)
+            typeStr = typeAnnotation.type.description
         } else {
             throw PresenterStateError.requiresExplicitType
         }
@@ -95,7 +95,7 @@ public struct PresenterStateMacro: AccessorMacro, PeerMacro {
                        name == "internal" || name == "public" || name == "open" ||
                        name == "package"
             }
-            .map { $0.description.trimmingCharacters(in: .whitespaces) }
+            .map { $0.description }
 
         let modifierStr = modifiers.isEmpty ? "" : modifiers.joined(separator: " ") + " "
 
@@ -136,7 +136,7 @@ public struct PresenterStateMacro: AccessorMacro, PeerMacro {
         // Generate setPropertyName convenience method
         declarations.append(
             DeclSyntax(stringLiteral: """
-            \(modifierStr)func \(methodName)(_ newValue: \(typeStr), context: (inout ViewUpdateContext) -> Void = { _ in }, completion: (() -> Void)? = nil) {
+            \(modifierStr)func \(methodName)(_ newValue: \(typeStr), context: @escaping (inout ViewUpdateContext) -> Void = { _ in }, completion: (() -> Void)? = nil) {
                 setState(updater: { \(dollarName) = newValue }, context: context, completion: completion)
             }
             """)

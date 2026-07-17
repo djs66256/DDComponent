@@ -38,7 +38,7 @@ final class PresenterStateMacroTests: XCTestCase {
 
             var $count: Int = 0
 
-            func setCount(_ newValue: Int, context: (inout ViewUpdateContext) -> Void = { _ in
+            func setCount(_ newValue: Int, context: @escaping (inout ViewUpdateContext) -> Void = { _ in
                 }, completion: (() -> Void)? = nil) {
                 setState(updater: {
                         $count = newValue
@@ -94,7 +94,7 @@ final class PresenterStateMacroTests: XCTestCase {
                 }
             }
 
-            func setCount(_ newValue: Int, context: (inout ViewUpdateContext) -> Void = { _ in
+            func setCount(_ newValue: Int, context: @escaping (inout ViewUpdateContext) -> Void = { _ in
                 }, completion: (() -> Void)? = nil) {
                 setState(updater: {
                         $count = newValue
@@ -129,7 +129,7 @@ final class PresenterStateMacroTests: XCTestCase {
 
             private var $count: Int = 0
 
-            private func setCount(_ newValue: Int, context: (inout ViewUpdateContext) -> Void = { _ in
+            private func setCount(_ newValue: Int, context: @escaping (inout ViewUpdateContext) -> Void = { _ in
                 }, completion: (() -> Void)? = nil) {
                 setState(updater: {
                         $count = newValue
@@ -164,7 +164,7 @@ final class PresenterStateMacroTests: XCTestCase {
 
             var $name: String
 
-            func setName(_ newValue: String, context: (inout ViewUpdateContext) -> Void = { _ in
+            func setName(_ newValue: String, context: @escaping (inout ViewUpdateContext) -> Void = { _ in
                 }, completion: (() -> Void)? = nil) {
                 setState(updater: {
                         $name = newValue
@@ -199,7 +199,7 @@ final class PresenterStateMacroTests: XCTestCase {
 
             var $title: String? = nil
 
-            func setTitle(_ newValue: String?, context: (inout ViewUpdateContext) -> Void = { _ in
+            func setTitle(_ newValue: String?, context: @escaping (inout ViewUpdateContext) -> Void = { _ in
                 }, completion: (() -> Void)? = nil) {
                 setState(updater: {
                         $title = newValue
@@ -236,7 +236,7 @@ final class PresenterStateMacroTests: XCTestCase {
 
             var $count: Int = 0
 
-            func setCount(_ newValue: Int, context: (inout ViewUpdateContext) -> Void = { _ in
+            func setCount(_ newValue: Int, context: @escaping (inout ViewUpdateContext) -> Void = { _ in
                 }, completion: (() -> Void)? = nil) {
                 setState(updater: {
                         $count = newValue
@@ -255,7 +255,7 @@ final class PresenterStateMacroTests: XCTestCase {
 
             var $name: String = ""
 
-            func setName(_ newValue: String, context: (inout ViewUpdateContext) -> Void = { _ in
+            func setName(_ newValue: String, context: @escaping (inout ViewUpdateContext) -> Void = { _ in
                 }, completion: (() -> Void)? = nil) {
                 setState(updater: {
                         $name = newValue

@@ -12,7 +12,11 @@ let package = Package(
         .library(
             name: "DDComponent",
             targets: ["DDComponent"]
-        )
+        ),
+        .library(
+            name: "DDComponentMacrosClient",
+            targets: ["DDComponentMacrosClient"]
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/swiftlang/swift-syntax.git", from: "600.0.0"),

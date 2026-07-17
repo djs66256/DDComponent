@@ -1,5 +1,6 @@
 import UIKit
 import DDComponent
+import DDComponentMacrosClient
 
 /// Demonstrates @PresenterState macro: eliminates `didSet { setState {} }` boilerplate.
 ///
