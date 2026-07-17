@@ -4,7 +4,7 @@
 
 适用于不需要重用的 UI 场景，比如详情页、信息流单条、复用视图内部。
 
-> 📖 Demo: [01-HelloDDComponent](../Example/DDComponent/Demos/01-HelloDDComponent/) — ViewPresenter 基础
+> 📖 Demo: [01-HelloDDComponent](../../Example/DDComponent/Demos/01-HelloDDComponent/) — ViewPresenter 基础
 
 ### 1. 创建 ViewController
 
@@ -50,7 +50,7 @@ class MyRootPresenter: RootViewPresenter<MyRootPresenterView> {
 }
 ```
 
-> 📖 Demo: [04-PTreeComposition](../Example/DDComponent/Demos/04-PTreeComposition/) — P-Tree 组合
+> 📖 Demo: [04-PTreeComposition](../../Example/DDComponent/Demos/04-PTreeComposition/) — P-Tree 组合
 
 ### 3. 创建 ViewPresenter
 
@@ -99,7 +99,7 @@ class LikePresenter: ViewPresenter<LikeViewProtocol> {
 
 ## 列表视图
 
-> 📖 Demo: [05-ListDiffUpdate](../Example/DDComponent/Demos/05-ListDiffUpdate/) — Diff 增量更新
+> 📖 Demo: [05-ListDiffUpdate](../../Example/DDComponent/Demos/05-ListDiffUpdate/) — Diff 增量更新
 
 ### 不复用 Presenter（固定列表）
 
@@ -153,7 +153,7 @@ class CommentListViewController: UITablePageViewController<CommentItemPresenter>
 }
 ```
 
-> 📖 Demo: [10-FeedExample](../Example/DDComponent/Demos/10-FeedExample/) — 综合 Collection + Diff + 子 Presenter + Service + Notify
+> 📖 Demo: [10-FeedExample](../../Example/DDComponent/Demos/10-FeedExample/) — 综合 Collection + Diff + 子 Presenter + Service + Notify
 
 ## Service 系统
 
@@ -172,7 +172,7 @@ getService(LikeService.self)?.toggleLike(...)
 
 查找链：当前 Presenter → 父 Presenter → ... → RootPresenter → 全局降级
 
-> 📖 Demo: [02-ServiceDI](../Example/DDComponent/Demos/02-ServiceDI/) — 完整 Service 系统
+> 📖 Demo: [02-ServiceDI](../../Example/DDComponent/Demos/02-ServiceDI/) — 完整 Service 系统
 
 ## Notify 广播系统
 
@@ -200,7 +200,7 @@ extension MyPresenter: LikeListener {
 | `.parents` | 子通知父链 |
 | `.reusable` | 列表 Cell 内通信 |
 
-> 📖 Demo: [03-NotifySystem](../Example/DDComponent/Demos/03-NotifySystem/) — 完整 Notify 系统
+> 📖 Demo: [03-NotifySystem](../../Example/DDComponent/Demos/03-NotifySystem/) — 完整 Notify 系统
 
 ## Presenter 装配方式
 

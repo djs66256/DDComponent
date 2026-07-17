@@ -4,23 +4,25 @@
 [![License](https://img.shields.io/cocoapods/l/DDComponent.svg?style=flat)](https://cocoapods.org/pods/DDComponent)
 [![Platform](https://img.shields.io/cocoapods/p/DDComponent.svg?style=flat)](https://cocoapods.org/pods/DDComponent)
 
-基于 MVP 模式的 iOS 页面拆分框架。将复杂页面拆分为独立、可复用、可插拔的 Presenter 组件。
+[中文](./README-zh.md)
 
-## 为什么需要 DDComponent？
+An MVP-based iOS page decomposition framework. Break down complex pages into independent, reusable, pluggable Presenter components.
 
-| 问题 | DDComponent 的解法 |
+## Why DDComponent?
+
+| Problem | DDComponent's Solution |
 |---|---|
-| 多人修改同一文件导致冲突 | 每个功能拆分为独立的 Presenter，互不干扰 |
-| 功能边界模糊，无人对质量负责 | Presenter 是明确的逻辑边界，职责清晰 |
-| 同一功能不同 UI（如 Resso vs TTM） | P-Tree 与 V-Tree 分离，逻辑复用，UI 可替换 |
-| 功能需要动态插拔 | 通过 `install` DSL 按需装配 Presenter 和 Service |
+| Multiple developers modifying the same file causes conflicts | Each feature is split into independent Presenters, no interference |
+| Feature boundaries are fuzzy, no one owns quality | Presenters serve as clear logic boundaries with well-defined responsibilities |
+| Same feature needs different UIs (e.g. Resso vs TTM) | P-Tree and V-Tree are separated — logic is reused, UI is swappable |
+| Features need dynamic pluggability | Use the `install` DSL to assemble Presenters and Services on demand |
 
-## 核心概念
+## Core Concepts
 
-### P-Tree 与 V-Tree
+### P-Tree and V-Tree
 
 ```
-P-Tree (Presenter 树)          V-Tree (View 树)
+P-Tree (Presenter Tree)        V-Tree (View Tree)
 ┌─────────────────┐          ┌─────────────────┐
 │  RootPresenter  │ - - - - │    RootView     │
 │  ├ LikePresenter │ - - - - │   ├ LikeButton  │
@@ -29,29 +31,29 @@ P-Tree (Presenter 树)          V-Tree (View 树)
 └─────────────────┘          └─────────────────┘
 ```
 
-- **P-Tree**（Presenter 树）：页面的功能逻辑组织结构
-- **V-Tree**（View 树）：UI 展示结构
-- 两者弱绑定：相同的 P-Tree 可以绑定到完全不同的 V-Tree
+- **P-Tree** (Presenter Tree): The functional logic structure of the page
+- **V-Tree** (View Tree): The UI presentation structure
+- The two are loosely bound: the same P-Tree can bind to entirely different V-Trees
 
-### 状态驱动更新
+### State-Driven Updates
 
-DDComponent 借鉴 React/SwiftUI 的思想，所有 UI 更新必须通过 `setState` 统一入口，由 UpdatePipeline 批量执行：
+DDComponent draws inspiration from React/SwiftUI — all UI updates must go through a single `setState` entry point, batched and executed by the UpdatePipeline:
 
 ```
-数据变更 → setState { ... } → Pipeline 调度 → onUpdate(view:context:) → UI 更新
+Data change → setState { ... } → Pipeline scheduling → onUpdate(view:context:) → UI update
 ```
 
-### 快速示例
+### Quick Example
 
 ```swift
-// 1. View 协议（不是 UIView）
+// 1. View protocol (not UIView)
 protocol LikeViewProtocol: AnyObject {
     var isLiked: Bool { get set }
     var likeCount: Int { get set }
     var onLikeTapped: (() -> Void)? { get set }
 }
 
-// 2. Presenter（业务逻辑）
+// 2. Presenter (business logic)
 class LikePresenter: ViewPresenter<LikeViewProtocol> {
     var isLiked = false { didSet { setState {} } }
 
@@ -70,7 +72,7 @@ class LikePresenter: ViewPresenter<LikeViewProtocol> {
     }
 }
 
-// 3. 装配
+// 3. Assembly
 class MyViewController: PageViewController<MyRootView, MyRootPresenter> {
     @PageInstallerBuilder override var pageInstallers: PageInstaller {
         ServiceInstaller(LikeService.self, { LikeServiceImpl() })
@@ -78,59 +80,58 @@ class MyViewController: PageViewController<MyRootView, MyRootPresenter> {
 }
 ```
 
-## 安装
+## Installation
 
 ```ruby
 pod 'DDComponent'
 
-# 可选：@PresenterState 宏
+# Optional: @PresenterState macro
 pod 'DDComponent/Macros'
 ```
 
-### Claude Code 插件
+### Claude Code Plugin
 
-本项目附带 [Claude Code](https://claude.com/claude-code) 插件，提供 DDComponent 专用的开发技能和代码审查 Agent：
+This project ships with a [Claude Code](https://claude.com/claude-code) plugin that provides DDComponent-specific development skills and a code review Agent:
 
-| 插件内容 | 说明 |
+| Plugin Feature | Description |
 |---|---|
-| `ddcomponent` 技能 | 引导 Claude Code 按 Presenter 树架构、生命周期规范、Service/Notify 通信模式构建页面 |
-| `code-reviewer` Agent | 审查 DDComponent 代码的类型正确性、状态设计、生命周期使用和逻辑一致性 |
+| `ddcomponent` skill | Guides Claude Code to build pages following the Presenter tree architecture, lifecycle conventions, and Service/Notify communication patterns |
+| `code-reviewer` Agent | Reviews DDComponent code for type correctness, state design, lifecycle usage, and logic consistency |
 
-在 Claude Code 中运行：
+Run in Claude Code:
 
 ```bash
-# 添加 GitHub marketplace
+# Add GitHub marketplace
 /plugin marketplace add djs66256/DDComponent
 
-# 安装插件
+# Install the plugin
 /plugin install ddcomponent@ddcomponent
 ```
-```
 
-## 文档
+## Documentation
 
-| 你想... | 看这个 |
-|----------|--------|
-| 理解框架设计思想 | [架构设计](./docs/architecture.md) |
-| 创建页面/列表/功能 | [使用指南](./docs/usage-guide.md) |
-| 开发列表 Cell | [复用 Presenter](./docs/reusable-presenter.md) |
-| 使用 Hooks 风格 API | [use* API](./docs/use-methods.md) |
-| 简化状态声明 | [@PresenterState 宏](./docs/presenter-state-macro.md) |
-| Swift 6 适配 | [Swift 6 并发模式](./docs/swift6-patterns.md) |
-| 看示例代码 | [Demo 索引](./docs/demo-index.md) |
+| You want to... | Read this |
+|----------------|-----------|
+| Understand the framework design philosophy | [Architecture](./docs/en/architecture.md) |
+| Build pages / lists / features | [Usage Guide](./docs/en/usage-guide.md) |
+| Develop list cells | [Reusable Presenter](./docs/en/reusable-presenter.md) |
+| Use the Hooks-style API | [use* API](./docs/en/use-methods.md) |
+| Simplify state declarations | [@PresenterState Macro](./docs/en/presenter-state-macro.md) |
+| Adapt for Swift 6 | [Swift 6 Concurrency Patterns](./docs/en/swift6-patterns.md) |
+| Browse example code | [Demo Index](./docs/en/demo-index.md) |
 
-**文档索引**：[docs/README.md](./docs/README.md)
+**Documentation index**: [docs/en/README.md](./docs/en/README.md)
 
-## 测试
+## Testing
 
-框架包含 122 个单元测试，覆盖所有核心能力。测试位于 `Example/Tests/`。
+The framework includes 122 unit tests covering all core capabilities. Tests are located in `Example/Tests/`.
 
 ```bash
 cd Example
 xcodebuild test -project DDComponent.xcodeproj -scheme DDComponent-Example -destination 'platform=iOS Simulator,name=iPhone 17'
 ```
 
-## 最低要求
+## Requirements
 
 - iOS 13.0+
 - Swift 5.7+

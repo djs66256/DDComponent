@@ -4,9 +4,9 @@
 
 列表的复用是客户端列表的基本能力，DDComponent 提供了完整的复用 Presenter 体系，让 Presenter 像 Cell 一样可以被复用。
 
-> 📖 Demo: [05-ListDiffUpdate](../Example/DDComponent/Demos/05-ListDiffUpdate/) — Diff 增量更新
-> 📖 Demo: [06-HeaderFooter](../Example/DDComponent/Demos/06-HeaderFooter/) — Section Header/Footer
-> 📖 Demo: [10-FeedExample](../Example/DDComponent/Demos/10-FeedExample/) — 综合示例
+> 📖 Demo: [05-ListDiffUpdate](../../Example/DDComponent/Demos/05-ListDiffUpdate/) — Diff 增量更新
+> 📖 Demo: [06-HeaderFooter](../../Example/DDComponent/Demos/06-HeaderFooter/) — Section Header/Footer
+> 📖 Demo: [10-FeedExample](../../Example/DDComponent/Demos/10-FeedExample/) — 综合示例
 
 ## 不复用 Presenter vs 复用 Presenter
 
@@ -228,7 +228,7 @@ isolated.register(service: LikeService.self) { LikeServiceImpl() }
 view.addSubview(isolated.view)
 ```
 
-> 📖 Demo: [08-IsolatedPresenter](../Example/DDComponent/Demos/08-IsolatedPresenter/)
+> 📖 Demo: [08-IsolatedPresenter](../../Example/DDComponent/Demos/08-IsolatedPresenter/)
 
 ## 关键规则
 

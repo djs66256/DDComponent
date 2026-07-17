@@ -1,5 +1,7 @@
 # DDComponent 文档
 
+[English](../en/README.md)
+
 DDComponent 是一个基于 MVP 模式的 iOS 页面拆分框架。将复杂页面拆分为独立、可复用、可插拔的 Presenter 组件。
 
 ## 快速开始
@@ -50,7 +52,7 @@ class MyVC: PageViewController<MyView, MyRootPresenter> {
 |------|------|--------|
 | 1 | [架构设计](./architecture.md) | P-Tree/V-Tree、生命周期、setState、UpdatePipeline |
 | 2 | [使用指南](./usage-guide.md) | 固定视图、列表视图、Service/Notify 使用 |
-| 3 | Demo [01](../Example/DDComponent/Demos/01-HelloDDComponent/) | 最简示例 |
+| 3 | Demo [01](../../Example/DDComponent/Demos/01-HelloDDComponent/) | 最简示例 |
 
 ### 进阶（掌握页面搭建）
 
@@ -59,7 +61,7 @@ class MyVC: PageViewController<MyView, MyRootPresenter> {
 | 4 | [复用 Presenter](./reusable-presenter.md) | 列表 Cell 复用、Diff 引擎、layoutInfo |
 | 5 | [@PresenterState 宏](./presenter-state-macro.md) | 简化状态声明 |
 | 6 | [use* API](./use-methods.md) | 声明式状态与副作用管理 |
-| 7 | Demos [04](../Example/DDComponent/Demos/04-PTreeComposition/) → [10](../Example/DDComponent/Demos/10-FeedExample/) | 完整示例 |
+| 7 | Demos [04](../../Example/DDComponent/Demos/04-PTreeComposition/) → [10](../../Example/DDComponent/Demos/10-FeedExample/) | 完整示例 |
 
 ### 高级（深入细节）
 
