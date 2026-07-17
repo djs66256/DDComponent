@@ -404,3 +404,237 @@ setState { ... } context: {
     $0.animator = MySpringAnimator()
 }
 ```
+
+## 示例 8：use* API 声明式状态管理
+
+`use*` 方法是 React Hooks 风格的声明式 API，将状态、副作用和视图更新器集中声明在初始化阶段。所有 `use*` 方法必须在 `init()` 或属性初始化器中调用。
+
+### 8.1 useState 基本用法
+
+```swift
+import DDComponent
+import Combine
+
+class UseDemoPresenter: ViewPresenter<UseDemoViewProtocol> {
+
+    // Equatable: 使用 == 判等，相同值不触发更新
+    lazy var counter: State<Int> = useState(0)
+
+    // AnyObject: 使用 === 判等
+    lazy var selectedObject = useState(NSObject())
+
+    // 无约束: 总是触发更新（如 Date 不是 Equatable）
+    lazy var timestamp = useState(Date())
+
+    // Optional: 类型从属性声明推断
+    lazy var optionalCounter: State<Int?> = useState(nil)
+    lazy var optionalName: State<String?> = useState(nil)
+
+    required init() {
+        super.init()
+        // 触发 lazy 初始化
+        _ = counter; _ = selectedObject; _ = timestamp
+        _ = optionalCounter; _ = optionalName
+    }
+
+    override func onUpdate(view: UseDemoViewProtocol, context: ViewUpdateContext) {
+        view.countLabel.text = "\(counter.value)"
+        view.optionalLabel.text = optionalCounter.value.map { "\($0)" } ?? "nil"
+    }
+}
+```
+
+### 8.2 useState 带 updater / keyPath
+
+```swift
+// updater: 每次状态变化时执行自定义闭包，直接操作 View
+lazy var counterWithUpdater = useState(0, updater: { value, view, _ in
+    view.counterLabel.text = "count: \(value)"
+})
+
+// updateTo: 直接将值写入 View 的 keyPath（需要 View: AnyObject）
+lazy var title = useState("Hello", updateTo: \.titleLabel.text)
+
+// 可选类型 + updater
+lazy var optionalWithUpdater = useState(nil, updater: { value, view, _ in
+    view.optionalLabel.text = value ?? "nil"
+})
+
+// 可选类型 + keyPath
+lazy var optionalWithKeyPath = useState(nil, updateTo: \.optionalLabel.text)
+```
+
+### 8.3 useState 订阅 Publisher
+
+```swift
+// 直接传入 Publisher
+lazy var pubValue = useState("(waiting)", publisher: myPublisher)
+
+// 从 Service 获取 Publisher（懒加载，attach to root 时解析）
+lazy var svcPubValue = useState("(waiting)",
+    service: MyService.self,
+    publisher: { $0.tickPublisher() })
+
+// 带 updater 的 Publisher
+lazy var pubWithUpdater = useState("(waiting)",
+    updater: { value, view, _ in view.label.text = value },
+    publisher: myPublisher)
+```
+
+### 8.4 useState 订阅 AsyncSequence
+
+```swift
+// 直接传入 AsyncSequence
+let tickStream = AsyncStream<Int> { continuation in
+    Task {
+        for i in 0... { continuation.yield(i); try? await Task.sleep(nanoseconds: 1_000_000_000) }
+    }
+}
+lazy var seqValue = useState(0, sequence: tickStream)
+
+// 从 Service 获取 AsyncSequence
+lazy var svcSeqValue = useState(0,
+    service: MyService.self,
+    sequence: { $0.tickSequence() })
+```
+
+### 8.5 useState 观察 ObservableObject
+
+```swift
+class CounterViewModel: ObservableObject {
+    @Published var count: Int = 0
+    @Published var label: String = "zero"
+
+    func increment() { count += 1; label = "\(count)" }
+}
+
+// 基本观察：objectWillChange 时自动触发 setState → onUpdate
+lazy var viewModel = useState(CounterViewModel())
+
+// 可选 ObservableObject
+lazy var optionalVM: State<CounterViewModel?> = useState(nil)
+
+// 替换对象：自动取消旧订阅，绑定新订阅
+viewModel.value = CounterViewModel()   // old cancelled, new subscribed
+optionalVM.value = nil                  // 取消订阅
+
+// 带 updater
+lazy var vmWithUpdater = useState(CounterViewModel(),
+    updater: { value, view, _ in view.label.text = value.label })
+
+// 带 keyPath
+lazy var vmWithKeyPath = useState(CounterViewModel(),
+    updateTo: \.headerViewModel)
+
+// 在 onUpdate 中读取最新值
+override func onUpdate(view: MyView, context: ViewUpdateContext) {
+    view.countLabel.text = "\(viewModel.value.count)"
+    view.nameLabel.text = viewModel.value.label
+}
+```
+
+### 8.6 useEffect 管理副作用
+
+```swift
+// 副作用在 attach to root 时启动，detach from root 时自动调清理闭包
+lazy var timerEffect = useEffect { [weak self] in
+    let timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+        MainActor.assumeIsolated { self?.timestamp.value = Date() }
+    }
+    return { timer.invalidate() }  // detach 时自动调用
+}
+
+// 无清理的副作用
+lazy var logEffect = useEffect { print("[Demo] attached to root") }
+```
+
+### 8.7 useUpdate 依赖驱动更新
+
+```swift
+// 单依赖：只有当 counter 变化时才执行
+lazy var counterUpdate = useUpdate(dependences: counter) { view, context in
+    view.countLabel.text = "\(counter.value)"
+}
+
+// 多依赖：任一依赖变化时执行
+lazy var combinedUpdate = useUpdate(dependences: title, counter) { view, context in
+    view.titleLabel.text = title.value
+    view.countLabel.text = "\(counter.value)"
+}
+```
+
+### 8.8 useService 懒加载 Service
+
+```swift
+// Service 在 attach to root 时才解析，避免 init 时 Service 未注册
+lazy var svcEffect = useService(MyService.self) { service in
+    service.startMonitoring()
+    return { service.stopMonitoring() }
+}
+```
+
+### 8.9 完整示例：Presenter 使用所有 use* 变体
+
+```swift
+final class UseDemoRootPresenter: RootViewPresenter<UseDemoViewProtocol> {
+
+    // 1. 基本 useState
+    lazy var counter: State<Int> = useState(0)
+    lazy var optionalCounter: State<Int?> = useState(nil)
+
+    // 2. ObservableObject
+    lazy var viewModel = useState(CounterViewModel())
+    lazy var optionalVM: State<CounterViewModel?> = useState(nil)
+
+    // 3. Publisher
+    lazy var pubValue = useState("(waiting)",
+        service: MyService.self,
+        publisher: { $0.tickPublisher() })
+
+    // 4. AsyncSequence
+    lazy var seqValue = useState(0,
+        service: MyService.self,
+        sequence: { $0.tickSequence() })
+
+    // 5. useEffect
+    lazy var timerEffect = useEffect { [weak self] in
+        let timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            MainActor.assumeIsolated { self?.timestamp.value = Date() }
+        }
+        return { timer.invalidate() }
+    }
+
+    // 6. useService
+    lazy var svcEffect = useService(MyService.self) { _ in
+        print("service ready")
+        return { print("service cleanup") }
+    }
+
+    required init() {
+        super.init()
+        // 触发所有 lazy 初始化
+        _ = counter; _ = optionalCounter; _ = viewModel; _ = optionalVM
+        _ = pubValue; _ = seqValue; _ = timerEffect; _ = svcEffect
+    }
+
+    override func onUpdate(view: UseDemoViewProtocol, context: ViewUpdateContext) {
+        view.countLabel.text = "\(counter.value)"
+        view.vmLabel.text = viewModel.value.label
+        view.pubLabel.text = pubValue.value
+        view.seqLabel.text = "\(seqValue.value)"
+    }
+}
+```
+
+### 8.10 注意事项
+
+1. **Swift 6 必须使用 `lazy var` + 显式类型**：`useState` 重载多，编译器无法推断类型
+2. **Optional 类型用 `useState(nil)`**：类型从 `State<Int?>` 声明推断，不需要显式泛型参数
+3. **Timer 闭包用 `MainActor.assumeIsolated`**：Timer 回调是非 MainActor 隔离的 Sendable 闭包
+4. **ObservableObject 替换**：`state.value = newObject` 自动取消旧订阅、绑定新订阅
+5. **useEffect 清理闭包**：return 的闭包在 `onDetachFromRoot` 时自动调用
+6. **所有返回值必须存储**：`State`、`Effect`、`Updater` 必须有实例属性持有，否则立即释放
+7. **不要在生命周期方法中调用 use\***：`use*` 只能在 `init()` 或属性初始化器中调用
+8. **useUpdate 依赖必须完整**：updater 中读取的所有 State 都应声明在 `dependences` 中
+
+完整演示代码见 `Example/DDComponent/Demos/11-UseMethods/` 目录。```

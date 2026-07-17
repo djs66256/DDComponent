@@ -381,6 +381,192 @@ getService(RouterService.self)?.navigate(to: .profile)
 | 埋点上报 | ❌ | ✅ |
 | 全局事件（主题切换、登录状态） | ✅ | ❌ |
 
+## 四-A、use* API：声明式状态与副作用管理
+
+`use*` 方法是框架提供的 React Hooks 风格 API，将状态、副作用和视图更新器集中声明在初始化阶段，替代分散在多个生命周期方法中的传统写法。
+
+### 为什么用 use* 而不是传统方式
+
+**传统方式的问题：**
+- 状态散落在 `onBindView`、`onUpdate`、`onAttach` 等不同方法中
+- 订阅创建和清理在不同位置，容易遗漏导致内存泄漏
+- 依赖关系隐式，调试困难
+
+**use* 方式：**
+- 所有状态和副作用在 `init()` 或属性初始化器中声明
+- 生命周期自动管理：订阅在 attach 时启动，detach 时自动清理
+- 显式依赖，清晰可读
+
+### use* 方法总览
+
+| 方法 | 用途 | 返回类型 |
+|---|---|---|
+| `useState(_:)` | 创建响应式状态容器 | `State<T>` |
+| `useState(_:updater:)` | 状态 + 自定义更新闭包 | `State<T>` |
+| `useState(_:updateTo:)` | 状态 + 直接写入 View keyPath | `State<T>` |
+| `useState(_:publisher:)` | 从 Combine Publisher 订阅 | `State<T>` |
+| `useState(_:sequence:)` | 从 AsyncSequence 订阅 | `State<T>` |
+| `useState(_:service:publisher:)` | 从 Service 获取 Publisher | `State<T>` |
+| `useState(_:service:sequence:)` | 从 Service 获取 AsyncSequence | `State<T>` |
+| `useState(ObservableObject)` | 观察 ObservableObject 的变化 | `State<O>` |
+| `useEffect(_:)` | 注册与生命周期绑定的副作用 | `Effect` |
+| `useUpdate(dependences:_:)` | 依赖驱动的视图更新器 | `Updater` |
+| `useService(_:_:)` | 解析 Service 并传给副作用 | `Effect` |
+
+### useState 的三种判等策略
+
+`useState` 通过泛型约束自动选择判等策略：
+
+| 泛型约束 | 判等方式 | 适用场景 |
+|---|---|---|
+| `T: Equatable` | `==` | Int、String、Struct 等值类型 |
+| `T: AnyObject` | `===` | 引用类型（class） |
+| 无约束 | 总是触发 | 非 Equatable 的值类型 |
+
+### useState 基本用法
+
+```swift
+class MyPresenter: ViewPresenter<MyViewProtocol> {
+
+    // 1. Equatable 值类型 — 使用 == 判等
+    lazy var counter: State<Int> = useState(0)
+    lazy var name = useState("Hello")
+
+    // 2. AnyObject 引用类型 — 使用 === 判等
+    lazy var selectedObject = useState(NSObject())
+
+    // 3. 无约束（如 Date 不是 Equatable）— 总是触发
+    lazy var timestamp = useState(Date())
+
+    // 4. Optional 类型 — 类型从属性声明推断
+    lazy var optionalCounter: State<Int?> = useState(nil)
+    lazy var optionalName: State<String?> = useState(nil)
+
+    // 在 onUpdate 中读取状态
+    override func onUpdate(view: MyViewProtocol, context: ViewUpdateContext) {
+        view.countLabel.text = "\(counter.value)"
+        view.nameLabel.text = name.value
+    }
+}
+```
+
+### useState 带 updater / keyPath
+
+```swift
+// updater: 每次状态变化时执行自定义闭包
+lazy var counterWithUpdater = useState(0, updater: { value, view, _ in
+    view.counterLabel.text = "count: \(value)"
+})
+
+// updateTo: 直接将值写入 View 的 keyPath（需要 View: AnyObject）
+lazy var title = useState("", updateTo: \.titleLabel.text)
+```
+
+### useState 订阅 Publisher
+
+```swift
+// 直接传入 Publisher
+lazy var pubValue = useState("(waiting)", publisher: myPublisher)
+
+// 从 Service 获取 Publisher（懒加载，attach 时才解析）
+lazy var svcPubValue = useState("(waiting)",
+    service: MyService.self,
+    publisher: { $0.tickPublisher() })
+
+// 带 updater 的 Publisher
+lazy var pubWithUpdater = useState("(waiting)",
+    updater: { value, view, _ in view.label.text = value },
+    publisher: myPublisher)
+```
+
+### useState 订阅 AsyncSequence
+
+```swift
+// 直接传入 AsyncSequence
+lazy var seqValue = useState(0, sequence: myAsyncStream)
+
+// 从 Service 获取 AsyncSequence
+lazy var svcSeqValue = useState(0,
+    service: MyService.self,
+    sequence: { $0.tickSequence() })
+```
+
+### useState 观察 ObservableObject
+
+```swift
+// 观察 ObservableObject，objectWillChange 时自动触发 setState → onUpdate
+lazy var viewModel = useState(CounterViewModel())
+
+// 可选 ObservableObject
+lazy var optionalVM: State<CounterViewModel?> = useState(nil)
+
+// 替换对象时自动取消旧订阅、绑定新订阅
+viewModel.value = CounterViewModel()  // old cancelled, new subscribed
+
+// 带 updater
+lazy var vmWithUpdater = useState(CounterViewModel(),
+    updater: { value, view, _ in view.label.text = value.label })
+
+// 带 keyPath
+lazy var vmWithKeyPath = useState(CounterViewModel(),
+    updateTo: \.headerViewModel)
+```
+
+### useEffect 管理副作用
+
+```swift
+// 副作用在 attach to root 时启动，detach from root 时自动清理
+lazy var timerEffect = useEffect { [weak self] in
+    let timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+        MainActor.assumeIsolated { self?.timestamp.value = Date() }
+    }
+    return { timer.invalidate() }  // 清理闭包
+}
+
+// 无清理的副作用
+lazy var logEffect = useEffect { print("[MyPresenter] attached") }
+```
+
+### useUpdate 依赖驱动更新
+
+```swift
+// 只有当依赖的 State 变化时才执行 updater
+lazy var titleUpdate = useUpdate(dependences: title) { view, context in
+    view.titleLabel.text = title.value
+}
+
+// 多个依赖
+lazy var combinedUpdate = useUpdate(dependences: title, counter) { view, context in
+    view.titleLabel.text = title.value
+    view.countLabel.text = "\(counter.value)"
+}
+```
+
+### useService 懒加载 Service
+
+```swift
+// Service 在 attach to root 时才解析，避免 init 时 Service 还未注册
+lazy var svcEffect = useService(MyService.self) { service in
+    service.doSomething()
+    return { service.cleanup() }
+}
+```
+
+### 关键规则
+
+1. **必须在 `init()` 或属性初始化器中调用**，不要在 `onBindView` 等生命周期方法中调用
+2. **返回的 `State`、`Effect`、`Updater` 必须存储为实例属性**（`let` 或 `lazy var`）
+3. **Swift 6 下使用 `lazy var` + 显式类型标注**，因为 `useState` 重载多，Swift 无法推断类型
+4. **Optional 类型用 `useState(nil)`**，类型从属性声明推断，不需要显式泛型参数
+5. **ObservableObject 替换**：`state.value = newObject` 自动取消旧订阅、绑定新订阅
+6. **Timer 闭包中访问 `@MainActor` 属性**：使用 `MainActor.assumeIsolated { ... }`
+7. **`useState` 内部自动调用 `setState`**，不需要手动调用
+8. **`useEffect` 的清理闭包在 `onDetachFromRoot` 时自动调用**，无需手动管理
+
+### 完整示例
+
+参考 `Example/DDComponent/Demos/11-UseMethods/` 目录下的完整示例，涵盖了所有 12 种 use* 变体的用法。
+
 ## 五、关键规则（必须遵守）
 
 ### ✅ DO

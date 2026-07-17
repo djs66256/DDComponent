@@ -75,6 +75,30 @@ init() → onAttach(presenter:) → onAttachToRoot() → onBindView(_:) → onUp
 
 All UI updates go through `setState(updater:context:completion:)`. The `ViewUpdatePipeline` (owned by RootPresenter) batches and schedules updates. `ViewUpdateContext` controls animation, layout invalidation, and data-source reload behavior.
 
+### use* API (React Hooks-like pattern)
+
+`ViewPresenter+Use.swift` provides `use*` methods that centralize state, side effects, and view updaters at initialization time, avoiding scattered state across lifecycle methods:
+
+- **`useState(_:)`** — Create a reactive `State<T>` container. Setting `state.value` triggers `setState` → `onUpdate`. Supports multiple variants:
+  - Basic: `useState(0)`, `useState(nil)` for optionals
+  - Equality flavors: `T: Equatable` (uses `==`), `T: AnyObject` (uses `===`), unconstrained (always triggers)
+  - With updater: `useState(0) { value, view, _ in view.label.text = "\(value)" }`
+  - With keyPath: `useState("", updateTo: \.titleLabel.text)` (requires `View: AnyObject`)
+  - With Publisher: `useState("", publisher: myPublisher)`
+  - With AsyncSequence: `useState(0, sequence: myStream)`
+  - With Service + Publisher/Sequence: `useState("", service: S.self, publisher: { $0.pub() })`
+  - With ObservableObject: `useState(MyViewModel())` — observes `objectWillChange`, auto-cancels on replace
+- **`useEffect(_:)`** — Register side effects tied to presenter lifecycle. Action runs on attach to root, cleanup runs on detach.
+- **`useUpdate(dependences:_:)`** — Register dependency-driven view updaters. Only runs when dependent states change.
+- **`useService(_:_:)`** — Convenience wrapper that resolves a service and passes it to an effect.
+
+**Key rules:**
+- Must be called in `init()` or as property initializer (NOT in lifecycle callbacks)
+- Store returned `State`, `Effect`, or `Updater` as instance properties
+- With Swift 6, use `lazy var` with explicit type annotation for property initialization
+- Optional values use `useState(nil)` — type inferred from property declaration
+- ObservableObject: `state.value = newObject` auto-cancels old subscription and binds new one
+
 ### Communication
 
 - **Service** (`Service.swift`): Page-scoped DI. Register via `ServiceInstaller` or `register(service:lazy:_:)`. Lookup chain: current → parent → ... → RootPresenter → global downgrade.

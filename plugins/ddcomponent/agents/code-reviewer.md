@@ -437,6 +437,147 @@ section.footer = footer
 
 **Header/Footer Presenter 必须继承 `UICollectionViewFlowItemPresenter<View>`**，不能用 `CollectionItemPresenter<View>`（后者不兼容 `.header`/`.footer` 的类型约束）。
 
+### 5-A. use* API Rules（use* 声明式 API 规则）
+
+`use*` 方法（`useState`, `useEffect`, `useUpdate`, `useService`）提供 React Hooks 风格的状态和副作用管理。Review 时需检查以下规则：
+
+#### 调用时机
+
+**`use*` 方法必须在 `init()` 或属性初始化器中调用，不能在生命周期方法中调用。**
+
+```swift
+// ❌ BAD — 在 onBindView 中调用 useState
+override func onBindView(_ view: MyView) {
+    super.onBindView(view)
+    let counter = useState(0)  // ❌ 太晚了！应该在 init 中
+}
+
+// ✅ GOOD — 属性初始化器
+lazy var counter = useState(0)
+
+// ✅ GOOD — init 中
+override init() {
+    super.init()
+    counter = useState(0)
+}
+```
+
+#### 返回值必须存储
+
+**`use*` 返回的 `State`、`Effect`、`Updater` 必须存储为实例属性，否则会被立即释放。**
+
+```swift
+// ❌ BAD — 返回值未存储
+init() {
+    super.init()
+    useState(0)  // ❌ State 被立即释放，订阅丢失
+}
+
+// ✅ GOOD
+lazy var counter = useState(0)
+```
+
+#### Swift 6 初始化顺序
+
+**Swift 6 不允许在 `super.init()` 之前访问 `self`。使用 `lazy var` 延迟初始化，类型必须显式标注。**
+
+```swift
+// ❌ BAD — Swift 6 编译错误：self 在 super.init() 之前不可用
+let counter = useState(0)  // 编译器错误
+
+// ✅ GOOD — lazy var + 显式类型
+lazy var counter: State<Int> = useState(0)
+lazy var optionalCounter: State<Int?> = useState(nil)
+```
+
+#### Optional 类型的类型推断
+
+**`useState(nil)` 时，类型从属性声明推断，不需要显式泛型参数。**
+
+```swift
+// ❌ BAD — 多余的泛型参数
+lazy var counter: State<Int?> = useState<Int?>(nil)
+
+// ✅ GOOD — 类型自动推断
+lazy var counter: State<Int?> = useState(nil)
+```
+
+#### ObservableObject 替换
+
+**`state.value = newObject` 自动取消旧订阅、绑定新订阅。不要手动管理 AnyCancellable。**
+
+```swift
+// ✅ GOOD — 直接替换，框架自动处理
+lazy var viewModel = useState(CounterViewModel())
+viewModel.value = CounterViewModel()  // 旧订阅取消，新订阅绑定
+
+// ✅ GOOD — 设为 nil 取消订阅
+lazy var optionalVM: State<CounterViewModel?> = useState(nil)
+optionalVM.value = nil  // 取消订阅
+```
+
+#### Timer / 异步闭包中访问 @MainActor 属性
+
+**非 MainActor 隔离的闭包（如 Timer 回调）中访问 `@MainActor` 属性，必须用 `MainActor.assumeIsolated`。**
+
+```swift
+// ❌ BAD — Sendable 闭包中访问 MainActor 属性
+lazy var timerEffect = useEffect { [weak self] in
+    let timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+        self?.timestamp.value = Date()  // ❌ 编译错误
+    }
+    return { timer.invalidate() }
+}
+
+// ✅ GOOD — 使用 MainActor.assumeIsolated
+lazy var timerEffect = useEffect { [weak self] in
+    let timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+        MainActor.assumeIsolated { self?.timestamp.value = Date() }
+    }
+    return { timer.invalidate() }
+}
+```
+
+#### useState 不会在 onUpdate 中自动同步
+
+**`useState` 只触发 `setState`，不会自动把值写到 View。你需要在 `onUpdate` 中读取 `state.value` 或使用 `updater`/`keyPath` 参数。**
+
+```swift
+// ❌ BAD — 状态创建了但 onUpdate 中没有读取
+lazy var counter = useState(0)
+override func onUpdate(view: MyView, context: ViewUpdateContext) {
+    // 忘记同步 counter.value 到 View
+}
+
+// ✅ GOOD — 在 onUpdate 中同步
+override func onUpdate(view: MyView, context: ViewUpdateContext) {
+    view.countLabel.text = "\(counter.value)"
+}
+
+// ✅ GOOD — 使用 updater 自动同步
+lazy var counter = useState(0, updater: { value, view, _ in
+    view.countLabel.text = "\(value)"
+})
+```
+
+#### useUpdate 依赖检查
+
+**`useUpdate(dependences:)` 只在依赖的 State 变化时才执行。确保声明的依赖覆盖所有在 updater 中读取的 State。**
+
+```swift
+// ❌ BAD — 依赖遗漏
+lazy var updater = useUpdate(dependences: title) { view, context in
+    view.titleLabel.text = title.value
+    view.countLabel.text = "\(counter.value)"  // counter 变化时不会触发！
+}
+
+// ✅ GOOD — 声明所有依赖
+lazy var updater = useUpdate(dependences: title, counter) { view, context in
+    view.titleLabel.text = title.value
+    view.countLabel.text = "\(counter.value)"
+}
+```
+
 ### 6. Logical Cohesion（逻辑内聚性）
 
 **检查 Presenter 是否职责单一：**

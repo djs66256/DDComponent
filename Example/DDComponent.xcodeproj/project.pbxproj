@@ -113,7 +113,7 @@
 		173F10D2C1545FD0442ADA7C /* NotifyView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NotifyView.swift; path = "Demos/03-NotifySystem/NotifyView.swift"; sourceTree = "<group>"; };
 		18CAEE445F285B9DD3659487 /* UseMethodsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UseMethodsView.swift; sourceTree = "<group>"; };
 		22B18B72C932CA4896B558FA /* HelloViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HelloViewController.swift; path = "Demos/01-HelloDDComponent/HelloViewController.swift"; sourceTree = "<group>"; };
-		30BC4C804CB627D52E4AE3F7 /* PresenterStateViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PresenterStateViewController.swift; path = "Demos/11-PresenterState/PresenterStateViewController.swift"; sourceTree = "<group>"; };
+		30BC4C804CB627D52E4AE3F7 /* PresenterStateViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PresenterStateViewController.swift; path = "Demos/12-PresenterState/PresenterStateViewController.swift"; sourceTree = "<group>"; };
 		362F0FA8245A7CC3C2FCF373 /* BodyPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BodyPresenter.swift; path = "Demos/04-PTreeComposition/BodyPresenter.swift"; sourceTree = "<group>"; };
 		368A81BD43E7D3EC9CC4CB14 /* AnimationView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AnimationView.swift; path = "Demos/07-AnimationContext/AnimationView.swift"; sourceTree = "<group>"; };
 		3778D28593336C572B818A2C /* CounterService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CounterService.swift; path = "Demos/02-ServiceDI/CounterService.swift"; sourceTree = "<group>"; };
@@ -121,9 +121,9 @@
 		38F3E1A8B46F060F89DE2865 /* LikeButtonPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LikeButtonPresenter.swift; path = "Demos/10-FeedExample/LikeButtonPresenter.swift"; sourceTree = "<group>"; };
 		392DA577741B8FD6B116481A /* ViewBindingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewBindingTests.swift; sourceTree = "<group>"; };
 		3B25B91BD898F3352A4B1B2B /* CyclePageViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CyclePageViewController.swift; path = CyclePageExample/CyclePageViewController.swift; sourceTree = "<group>"; };
-		3ECE8088CA0AAF3859AB2ABE /* PresenterStateView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PresenterStateView.swift; path = "Demos/11-PresenterState/PresenterStateView.swift"; sourceTree = "<group>"; };
+		3ECE8088CA0AAF3859AB2ABE /* PresenterStateView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PresenterStateView.swift; path = "Demos/12-PresenterState/PresenterStateView.swift"; sourceTree = "<group>"; };
 		3F7379851CD3099F92B2948A /* UseMethodsRootPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UseMethodsRootPresenter.swift; sourceTree = "<group>"; };
-		4064BADAA1084CFD7AB8B4CA /* PresenterStateRootPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PresenterStateRootPresenter.swift; path = "Demos/11-PresenterState/PresenterStateRootPresenter.swift"; sourceTree = "<group>"; };
+		4064BADAA1084CFD7AB8B4CA /* PresenterStateRootPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PresenterStateRootPresenter.swift; path = "Demos/12-PresenterState/PresenterStateRootPresenter.swift"; sourceTree = "<group>"; };
 		4449B6D480CC90107F0F4085 /* AnimationViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AnimationViewController.swift; path = "Demos/07-AnimationContext/AnimationViewController.swift"; sourceTree = "<group>"; };
 		46D32A6399C4140BDFADF4E9 /* LikeButton.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LikeButton.swift; path = "Demos/10-FeedExample/LikeButton.swift"; sourceTree = "<group>"; };
 		477111495691322E9367037F /* ChildPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ChildPresenter.swift; path = "Demos/03-NotifySystem/ChildPresenter.swift"; sourceTree = "<group>"; };
@@ -230,7 +230,7 @@
 				9F532C943F5722547B7E71AB /* 09-AutoBind */,
 				53C749E1CB88ABB954733F65 /* 10-FeedExample */,
 				C8432E8A5172E4E0714B9451 /* 11-UseMethods */,
-				9ACFB69DFFD50107E199D288 /* 11-PresenterState */,
+				9ACFB69DFFD50107E199D288 /* 12-PresenterState */,
 			);
 			name = Demos;
 			sourceTree = "<group>";
@@ -378,14 +378,14 @@
 			name = "06-HeaderFooter";
 			sourceTree = "<group>";
 		};
-		9ACFB69DFFD50107E199D288 /* 11-PresenterState */ = {
+		9ACFB69DFFD50107E199D288 /* 12-PresenterState */ = {
 			isa = PBXGroup;
 			children = (
 				3ECE8088CA0AAF3859AB2ABE /* PresenterStateView.swift */,
 				4064BADAA1084CFD7AB8B4CA /* PresenterStateRootPresenter.swift */,
 				30BC4C804CB627D52E4AE3F7 /* PresenterStateViewController.swift */,
 			);
-			name = "11-PresenterState";
+			name = "12-PresenterState";
 			sourceTree = "<group>";
 		};
 		9F532C943F5722547B7E71AB /* 09-AutoBind */ = {

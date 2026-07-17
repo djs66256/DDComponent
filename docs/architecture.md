@@ -248,6 +248,87 @@ Pipeline 策略：
 | `invalidateContentSize` | 标记内容尺寸变更（列表场景触发布局更新） |
 | `forceDisableAnimation` | 强制禁用所有动画 |
 
+### use* API：声明式状态管理
+
+DDComponent 提供了一套 React Hooks 风格的 `use*` API（定义在 `ViewPresenter+Use.swift`），将状态、副作用和视图更新器声明在初始化阶段，替代分散在多个生命周期方法中的传统写法。
+
+#### 设计动机
+
+传统方式中，状态修改（`setState`）和状态读取（`onUpdate`）是分离的，需要手动管理订阅的创建和清理。`use*` 将状态、订阅和副作用集中声明，让生命周期自动管理清理：
+
+```
+传统方式：                           use* 方式：
+                                     
+init()                               init() / lazy var
+  └── 初始化属性                        └── useState() — 声明状态
+                                       └── useEffect() — 声明副作用
+onBindView()                          └── useUpdate() — 声明视图绑定
+  └── 设置回调、启动订阅                   
+                                     (自动管理)
+onAttachToRoot()                     onAttachToRoot → Effect 启动
+  └── 启动 Timer、注册监听               onDetachFromRoot → Effect 清理
+                                     
+onUnbindView()                       
+  └── 清理回调、取消订阅                 
+                                     不需要手动管理生命周期
+onDetachFromRoot()                   
+  └── 停止 Timer、注销监听              
+```
+
+#### 核心 API
+
+| 方法 | 返回类型 | 用途 |
+|---|---|---|
+| `useState(_:)` | `State<T>` | 创建响应式状态容器。设置 `value` → `setState` → `onUpdate` |
+| `useEffect(_:)` | `Effect` | 注册生命周期绑定的副作用（attach 启动，detach 清理） |
+| `useUpdate(dependences:_:)` | `Updater` | 依赖驱动的视图更新器，只在依赖的 State 变化时执行 |
+| `useService(_:_:)` | `Effect` | 解析 Service 并传给副作用 |
+
+#### useState 变体
+
+`useState` 是核心 API，有多种重载覆盖不同场景：
+
+| 变体 | 示例 | 说明 |
+|---|---|---|
+| 基本值类型 | `useState(0)` | Equatable 用 `==` 判等 |
+| 引用类型 | `useState(NSObject())` | AnyObject 用 `===` 判等 |
+| 无约束 | `useState(Date())` | 总是触发更新 |
+| Optional | `useState(nil)` | 类型从属性声明推断 |
+| + updater | `useState(0) { v, view, _ in ... }` | 每次变化时执行自定义闭包 |
+| + keyPath | `useState("", updateTo: \.label.text)` | 直接写入 View 的 keyPath |
+| + Publisher | `useState("", publisher: pub)` | 从 Combine Publisher 订阅 |
+| + AsyncSequence | `useState(0, sequence: stream)` | 从 AsyncSequence 订阅 |
+| + Service | `useState("", service: S.self, publisher: { $0.pub() })` | 懒加载 Service 获取 Publisher/Sequence |
+| ObservableObject | `useState(MyViewModel())` | 观察 `objectWillChange`，替换时自动重绑定 |
+
+#### 生命周期自动化
+
+`use*` 方法利用框架现有的生命周期机制自动管理资源：
+
+```
+useState(ObservableObject) → 订阅 objectWillChange
+  └── state.value = newObj → willSet 取消旧订阅
+  └── didSet 绑定新订阅
+  └── state.dispose() → 取消所有订阅
+
+useEffect → 注册到 self.effects
+  └── onAttachToRoot → effect.onAttach() 执行 action
+  └── onDetachFromRoot → effect.onDetach() 执行 cleanup
+  └── effect.cancel() → 从 effects 中移除
+
+useUpdate → 注册到 self.updaters
+  └── 每次 onUpdate 时检查依赖的 State 是否变化
+  └── 变化时执行 updater 闭包
+```
+
+#### 关键约束
+
+1. **必须在 `init()` 或属性初始化器中调用** — 不能在 `onBindView` 等生命周期方法中调用
+2. **Swift 6 下使用 `lazy var` + 显式类型** — 因为 `useState` 重载多，编译器无法推断类型
+3. **返回值必须存储** — `State`、`Effect`、`Updater` 必须由实例属性持有
+4. **ObservableObject 替换自动重绑定** — `state.value = newObject` 取消旧订阅、绑定新订阅
+5. **Timer 闭包用 `MainActor.assumeIsolated`** — 非 MainActor 的 Sendable 闭包中访问 `@MainActor` 属性
+
 ## RootPresenter
 
 `RootViewPresenter` 是 P-Tree 的根节点，有且只能有一个。它提供全局能力：
