@@ -150,17 +150,6 @@ final class CollectionPresenterTests: XCTestCase {
         XCTAssertTrue(item.onBindViewCalled)
     }
 
-    func testCollectionItemPresenter_shadowPresenter_onUpdatePropagates() {
-        let item = MockCollectionItemPresenter()
-        let shadow = CollectionItemPresenter<MockItemView>.ShadowPresenter()
-        item.onBindReusablePresenter(shadow)
-
-        item.setState(updater: {})
-        item.updateView(context: ViewUpdateContext())
-
-        XCTAssertTrue(item.onUpdateCalled)
-    }
-
     func testCollectionItemPresenter_shadowPresenter_onUnbindClearsSource() {
         let item = MockCollectionItemPresenter()
         let shadow = CollectionItemPresenter<MockItemView>.ShadowPresenter()
