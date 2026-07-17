@@ -5,8 +5,7 @@ import CompilerPluginSupport
 let package = Package(
     name: "DDComponent",
     platforms: [
-        .iOS(.v13),
-        .macOS(.v10_15),
+        .iOS(.v13)
     ],
     products: [
         .library(

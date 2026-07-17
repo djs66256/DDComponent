@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'DDComponent'
-  s.version          = '0.6.0'
+  s.version          = '2.0.0'
   s.summary          = 'Make a collection controller to several component'
 
   s.description      = <<-DESC
