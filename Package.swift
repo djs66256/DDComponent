@@ -20,7 +20,7 @@ let package = Package(
     targets: [
         .target(
             name: "DDComponent",
-            dependencies: ["DDComponentMacrosClient"],
+            dependencies: [],
             path: "DDComponent/Classes"
         ),
         .macro(

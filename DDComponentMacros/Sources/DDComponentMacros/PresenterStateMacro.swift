@@ -6,6 +6,7 @@ import SwiftSyntaxMacros
 enum PresenterStateError: Error, CustomStringConvertible {
     case onlyOnStoredProperty
     case onlyOnVar
+    case requiresExplicitType
 
     var description: String {
         switch self {
@@ -13,6 +14,8 @@ enum PresenterStateError: Error, CustomStringConvertible {
             return "@PresenterState can only be applied to stored properties"
         case .onlyOnVar:
             return "@PresenterState can only be applied to var properties (not let)"
+        case .requiresExplicitType:
+            return "@PresenterState requires an explicit type annotation"
         }
     }
 }
@@ -41,19 +44,6 @@ public struct PresenterStateMacro: AccessorMacro, PeerMacro {
         }
 
         let dollarName = "$\(name)"
-
-        // Check if the original binding has willSet/didSet — if so, don't add get/set
-        // (a property can't have both willSet/didSet and get/set)
-        if let accessorBlock = binding.accessorBlock,
-           let accessors = accessorBlock.accessors.as(AccessorDeclListSyntax.self) {
-            let hasObservers = accessors.contains { accessor in
-                let kind = accessor.accessorSpecifier.tokenKind
-                return kind == .keyword(.willSet) || kind == .keyword(.didSet)
-            }
-            if hasObservers {
-                return []
-            }
-        }
 
         let getter: AccessorDeclSyntax = """
         get { \(raw: dollarName) }
@@ -94,9 +84,7 @@ public struct PresenterStateMacro: AccessorMacro, PeerMacro {
         if let typeAnnotation = binding.typeAnnotation {
             typeStr = typeAnnotation.type.description.trimmingCharacters(in: .whitespaces)
         } else {
-            // Without type annotation, we can't explicitly type the method parameter
-            // Use the inferred type from the initializer
-            typeStr = "<#Type#>"
+            throw PresenterStateError.requiresExplicitType
         }
 
         // Extract access modifiers from the original declaration
