@@ -48,6 +48,8 @@ final class MainViewController: UITablePageDefaultViewController {
         DemoEntry(title: "08  IsolatedViewPresenter", vc: { IsolatedViewController() }),
         DemoEntry(title: "09  AutoBind & Shadow", vc: { AutoBindViewController() }),
         DemoEntry(title: "10  Feed Example", vc: { FeedViewController() }),
+        DemoEntry(title: "11  Use Methods", vc: { UseMethodsViewController() }),
+        DemoEntry(title: "12  @PresenterState", vc: { PresenterStateViewController() }),
         DemoEntry(title: "CyclePageView", vc: { CyclePageViewController() }),
     ]
 

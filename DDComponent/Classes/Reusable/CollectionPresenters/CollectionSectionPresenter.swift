@@ -10,7 +10,7 @@ import UIKit
 
 enum CollectionElementKind { }
 // Use the same name for UITableView & UICollectionView
-extension CollectionElementKind {
+@MainActor extension CollectionElementKind {
     public static let sectionHeader = UICollectionView.elementKindSectionHeader
     public static let sectionFooter = UICollectionView.elementKindSectionFooter
     

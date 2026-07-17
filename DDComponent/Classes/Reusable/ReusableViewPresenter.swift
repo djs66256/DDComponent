@@ -65,6 +65,7 @@ open class ReusableViewPresenterHolder<P, V>: ViewPresenter<()>, ReusableViewPre
         unbindAllReusablePresenters()
     }
     
+    @discardableResult
     public func tryBindReusablePresenter(_ presenter: ViewPresentable) -> Bool {
         if let p: P = presenter as? P {
             if reusedPresenters.contains(where: { $0 == presenter }) {

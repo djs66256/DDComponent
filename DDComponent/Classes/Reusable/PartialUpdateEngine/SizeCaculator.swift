@@ -46,6 +46,7 @@ public extension SizeCaculatable {
     }
 }
 
+@MainActor
 public class SizeCaculator {
     public enum LayoutType: Int {
         case autoLayout, sizeThatFits, intrinsicContentSize
@@ -204,10 +205,10 @@ private extension UIView {
     struct CalculatorHelperConstraints {
         let view: UIView
         
-        private static var equalToWidthKey = 0
-        private static var equalToHeightKey = 0
-        private static var lessThanWidthKey = 0
-        private static var lessThanHeightKey = 0
+        nonisolated(unsafe) private static var equalToWidthKey = 0
+        nonisolated(unsafe) private static var equalToHeightKey = 0
+        nonisolated(unsafe) private static var lessThanWidthKey = 0
+        nonisolated(unsafe) private static var lessThanHeightKey = 0
         private static let defaultConstraintConstant = 1000.0
         func equalToWidth(createIfNeeded: Bool) -> NSLayoutConstraint? {
             if createIfNeeded {

@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 enum Engine {
-    class Updater: BaseViewUpdatePipeline {
+    class Updater: BaseViewUpdatePipeline, @unchecked Sendable {
         
         weak var root: CollectionPresentable?
         weak var invalidation: UpdatePipelineInvalidateContentSizeProtocol?

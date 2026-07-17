@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 /// Config flow layout for item
-public struct UITableViewCellLayoutInfo {
+@MainActor public struct UITableViewCellLayoutInfo {
     public enum LayoutType {
         case autoLayout, sizeThatFits
     }

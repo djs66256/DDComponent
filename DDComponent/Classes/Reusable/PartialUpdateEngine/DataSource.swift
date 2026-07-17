@@ -14,7 +14,7 @@ protocol EngineViewPresenterReadable {
 }
 
 extension Engine {
-    class DataSource {
+    class DataSource: @unchecked Sendable {
         struct Root: EngineViewPresenterReadable {
             let _presenter: CollectionPresentable
             var presenter: ViewPresentable { _presenter }

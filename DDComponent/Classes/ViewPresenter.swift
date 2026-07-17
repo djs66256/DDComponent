@@ -96,7 +96,7 @@ extension ViewPresentable {
     }
 }
 
-fileprivate var defaultContext = ViewUpdateContext()
+nonisolated(unsafe) fileprivate var defaultContext = ViewUpdateContext()
 
 @MainActor public func performBatchUpdate(_ updater: () -> Void,
                                           context: (inout ViewUpdateContext) -> Void) {
@@ -193,13 +193,13 @@ open class ViewPresenter<View>: ViewPresentable {
         }
     }
 
-    public class Updater {
+    nonisolated public class Updater {
         var updater: @MainActor (View, ViewUpdateContext) -> Void
         var dispose: (@MainActor () -> Void)?
 
-        init(
-            updater: @escaping (View, ViewUpdateContext) -> Void,
-            dispose: (() -> Void)? = nil
+        @MainActor init(
+            updater: @escaping @MainActor (View, ViewUpdateContext) -> Void,
+            dispose: (@MainActor () -> Void)? = nil
         ) {
             self.updater = updater
             self.dispose = dispose
@@ -216,7 +216,7 @@ open class ViewPresenter<View>: ViewPresentable {
 
         deinit {
             if let dispose {
-                performOnMainActorAsync {
+                DispatchQueue.main.async {
                     dispose()
                 }
             }
@@ -228,11 +228,11 @@ open class ViewPresenter<View>: ViewPresentable {
     }
     var updaters = [Updater]()
 
-    public class Effect {
+    nonisolated public class Effect {
         private var action: @MainActor () -> (@MainActor () -> Void)?
         private var cancelAction: (@MainActor () -> Void)?
-        var dispose: (() -> Void)?
-        init(action: @escaping @MainActor () -> (@MainActor () -> Void)?) {
+        var dispose: (@MainActor () -> Void)?
+        @MainActor init(action: @escaping @MainActor () -> (@MainActor () -> Void)?) {
             self.action = action
         }
 
@@ -255,7 +255,7 @@ open class ViewPresenter<View>: ViewPresentable {
         deinit {
             let cancelAction = cancelAction
             let dispose = dispose
-            performOnMainActorAsync {
+            DispatchQueue.main.async {
                 cancelAction?()
                 dispose?()
             }
@@ -613,7 +613,7 @@ open class ViewPresenter<View>: ViewPresentable {
         superPresenter?.notify(listener: listener, scope: .parents, from: from, closure)
     }
     
-    @MainActor(unsafe) open func getService<T>(_ type: T.Type) -> T? {
+    @preconcurrency @MainActor open func getService<T>(_ type: T.Type) -> T? {
         superPresenter?.getService(type)
     }
     
@@ -674,7 +674,7 @@ public func != <P1:ViewPresenter<V1>, P2:ViewPresenter<V2>, V1, V2> (lhs: P1, rh
     !(lhs == rhs)
 }
 
-@MainActor(unsafe) @preconcurrency
+@preconcurrency @MainActor
 func performOnMainActorSync(_ closure: @MainActor @escaping ()->Void) {
     if Thread.isMainThread {
         return closure()

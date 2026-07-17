@@ -26,7 +26,7 @@ public final class PageServiceManager: ServiceRegistrar {
         self.notifier = notifier
     }
     
-    @MainActor(unsafe) public func getService<T>(_ service: T.Type) -> T? {
+    @preconcurrency @MainActor public func getService<T>(_ service: T.Type) -> T? {
         if let s = get(type: service) {
             return s
         }

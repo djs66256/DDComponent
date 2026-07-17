@@ -22,7 +22,7 @@ extension ViewPresentable {
 }
 
 @MainActor
-class PartialCompositeTrasaction: CompositeTransaction {
+final class PartialCompositeTrasaction: CompositeTransaction, @unchecked Sendable {
     
     private struct PresenterStore: Hashable {
         var presenter: CollectionItemPresentable

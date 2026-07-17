@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 
+@MainActor
 public protocol ViewUpdateTransaction {
     func updateView()
     func layoutViewIfNeeded()

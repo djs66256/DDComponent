@@ -44,6 +44,7 @@
 		746D0F484C980C82E31C847A /* LikeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145750F2C90CE9DE6D1881D3 /* LikeService.swift */; };
 		8041DE6791D6CE9F68A1E7BF /* FeedCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81EF9564E03D5CF558FC5435 /* FeedCardCell.swift */; };
 		80EFC3826218AC9E172EF911 /* AutoBindViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13487829FFEF31098AD7791A /* AutoBindViewController.swift */; };
+		8193AB103E849ECFBFBD4B5E /* UseMethodsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CAEE445F285B9DD3659487 /* UseMethodsView.swift */; };
 		81EDE8BA9D6EE3C797F2508B /* IsolatedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55392DBB5ADB3E654F1E7B4C /* IsolatedViewController.swift */; };
 		8531C458515AC8E31434BE0A /* PTreeRootPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F13DC36F1A57019011A7043 /* PTreeRootPresenter.swift */; };
 		8ACCE01F695F93A1676064A7 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1095357E182D769717DA86C /* ListViewController.swift */; };
@@ -52,6 +53,7 @@
 		8E47BD459B127DE2ACDCC664 /* ShadowPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7698DF6EC8C880CF9F41E026 /* ShadowPresenter.swift */; };
 		8F123B198FA06D25B200B3FB /* BounceAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0CE797674CE37A1B3A3C3B /* BounceAnimator.swift */; };
 		9233E4DCD828477D978FEAF7 /* HelloView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53301754223AB31E1303415F /* HelloView.swift */; };
+		9526FF30F065DF00F8FD3CD6 /* UseMethodsRootPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A65E47505A1592559A6CA5B7 /* UseMethodsRootPresenter.swift */; };
 		96FC0EECB54439306BE9E227 /* IsolatedRootPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00999ED1014F61B684592223 /* IsolatedRootPresenter.swift */; };
 		9B72B59BF7EBC48213875A17 /* ServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7B04733AABAB217F137D10 /* ServiceTests.swift */; };
 		9E50DCB314F9068673F85AF7 /* NotifyLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529087DF65917B9BF65106C2 /* NotifyLogger.swift */; };
@@ -60,6 +62,7 @@
 		AB2ACA029277664BC8ECF62F /* CyclePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B25B91BD898F3352A4B1B2B /* CyclePageViewController.swift */; };
 		AEC88DFABC4522FBBA87E50D /* ChildPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 477111495691322E9367037F /* ChildPresenter.swift */; };
 		BA19E23A5DA432A7B94DF6D7 /* CardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2302FF5FCA4C3607C2049E0 /* CardCell.swift */; };
+		CCEAF4B1AFEBB19120CBFE9B /* UseMethodsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E4AC4CA05E507BDA2A6E253 /* UseMethodsViewController.swift */; };
 		CF89446B9D0A089DEE1FE30F /* CardItemPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C615B051B976D50BB60DE5BB /* CardItemPresenter.swift */; };
 		D3E758209C7C04EA31A1B320 /* HeaderFooterRootPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8111466DBADB03A2B894074 /* HeaderFooterRootPresenter.swift */; };
 		D40E94563FD5022D9AD9C79E /* PTreeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E83CF10A3C8D38DABE74664 /* PTreeView.swift */; };
@@ -95,6 +98,7 @@
 		00999ED1014F61B684592223 /* IsolatedRootPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = IsolatedRootPresenter.swift; path = "Demos/08-IsolatedPresenter/IsolatedRootPresenter.swift"; sourceTree = "<group>"; };
 		033E1FE49BF242D80AC42F90 /* AutoBindRootPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AutoBindRootPresenter.swift; path = "Demos/09-AutoBind/AutoBindRootPresenter.swift"; sourceTree = "<group>"; };
 		03C62C00A1900CDFE15BED6D /* StateUpdateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateUpdateTests.swift; sourceTree = "<group>"; };
+		03D34B242BE598BA07B27957 /* UseMethodsViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UseMethodsViewController.swift; sourceTree = "<group>"; };
 		067A85C110C71E1484E67635 /* FeedRootPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FeedRootPresenter.swift; path = "Demos/10-FeedExample/FeedRootPresenter.swift"; sourceTree = "<group>"; };
 		0D0D231B88BE3486EB40CD52 /* IsolatedView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = IsolatedView.swift; path = "Demos/08-IsolatedPresenter/IsolatedView.swift"; sourceTree = "<group>"; };
 		0F1FF9032CF0460A16137766 /* SectionFooterView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SectionFooterView.swift; path = "Demos/06-HeaderFooter/SectionFooterView.swift"; sourceTree = "<group>"; };
@@ -104,6 +108,7 @@
 		1628B21F6B9480BC97D47EDD /* CollectionPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionPresenterTests.swift; sourceTree = "<group>"; };
 		170B7EA3C2E3A4F5EDB63588 /* ServiceDIRootPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ServiceDIRootPresenter.swift; path = "Demos/02-ServiceDI/ServiceDIRootPresenter.swift"; sourceTree = "<group>"; };
 		173F10D2C1545FD0442ADA7C /* NotifyView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NotifyView.swift; path = "Demos/03-NotifySystem/NotifyView.swift"; sourceTree = "<group>"; };
+		18CAEE445F285B9DD3659487 /* UseMethodsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UseMethodsView.swift; sourceTree = "<group>"; };
 		22B18B72C932CA4896B558FA /* HelloViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HelloViewController.swift; path = "Demos/01-HelloDDComponent/HelloViewController.swift"; sourceTree = "<group>"; };
 		362F0FA8245A7CC3C2FCF373 /* BodyPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BodyPresenter.swift; path = "Demos/04-PTreeComposition/BodyPresenter.swift"; sourceTree = "<group>"; };
 		368A81BD43E7D3EC9CC4CB14 /* AnimationView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AnimationView.swift; path = "Demos/07-AnimationContext/AnimationView.swift"; sourceTree = "<group>"; };
@@ -112,6 +117,7 @@
 		38F3E1A8B46F060F89DE2865 /* LikeButtonPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LikeButtonPresenter.swift; path = "Demos/10-FeedExample/LikeButtonPresenter.swift"; sourceTree = "<group>"; };
 		392DA577741B8FD6B116481A /* ViewBindingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewBindingTests.swift; sourceTree = "<group>"; };
 		3B25B91BD898F3352A4B1B2B /* CyclePageViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CyclePageViewController.swift; path = CyclePageExample/CyclePageViewController.swift; sourceTree = "<group>"; };
+		3F7379851CD3099F92B2948A /* UseMethodsRootPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UseMethodsRootPresenter.swift; sourceTree = "<group>"; };
 		4449B6D480CC90107F0F4085 /* AnimationViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AnimationViewController.swift; path = "Demos/07-AnimationContext/AnimationViewController.swift"; sourceTree = "<group>"; };
 		46D32A6399C4140BDFADF4E9 /* LikeButton.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LikeButton.swift; path = "Demos/10-FeedExample/LikeButton.swift"; sourceTree = "<group>"; };
 		477111495691322E9367037F /* ChildPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ChildPresenter.swift; path = "Demos/03-NotifySystem/ChildPresenter.swift"; sourceTree = "<group>"; };
@@ -136,6 +142,7 @@
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
 		61884C798D16AD1BC7DE9028 /* DataGenerator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DataGenerator.swift; path = "Demos/05-ListDiffUpdate/DataGenerator.swift"; sourceTree = "<group>"; };
 		6E494EBD92330EE0A65F006F /* CyclePageView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CyclePageView.swift; path = CyclePageExample/CyclePageView.swift; sourceTree = "<group>"; };
+		6E4AC4CA05E507BDA2A6E253 /* UseMethodsViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UseMethodsViewController.swift; sourceTree = "<group>"; };
 		70F7F2E65BE31145A6E2A428 /* ServiceDIViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ServiceDIViewController.swift; path = "Demos/02-ServiceDI/ServiceDIViewController.swift"; sourceTree = "<group>"; };
 		7698DF6EC8C880CF9F41E026 /* ShadowPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ShadowPresenter.swift; path = "Demos/09-AutoBind/ShadowPresenter.swift"; sourceTree = "<group>"; };
 		771B44C4FDAFD7DF3E473D1D /* HeaderPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HeaderPresenter.swift; path = "Demos/04-PTreeComposition/HeaderPresenter.swift"; sourceTree = "<group>"; };
@@ -154,7 +161,9 @@
 		9ED52AB3BE4FA0D31493D790 /* CyclePageConfig.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CyclePageConfig.swift; path = CyclePageExample/CyclePageConfig.swift; sourceTree = "<group>"; };
 		A2302FF5FCA4C3607C2049E0 /* CardCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CardCell.swift; path = "Demos/05-ListDiffUpdate/CardCell.swift"; sourceTree = "<group>"; };
 		A41D595470299F31DC038DB0 /* PageServiceManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageServiceManagerTests.swift; sourceTree = "<group>"; };
+		A65E47505A1592559A6CA5B7 /* UseMethodsRootPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UseMethodsRootPresenter.swift; sourceTree = "<group>"; };
 		BB17B01D8F192600FA43E5DA /* CyclePageRootPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CyclePageRootPresenter.swift; path = CyclePageExample/CyclePageRootPresenter.swift; sourceTree = "<group>"; };
+		BC474B959EDCA16BE4FA271A /* UseMethodsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UseMethodsView.swift; sourceTree = "<group>"; };
 		C615B051B976D50BB60DE5BB /* CardItemPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CardItemPresenter.swift; path = "Demos/05-ListDiffUpdate/CardItemPresenter.swift"; sourceTree = "<group>"; };
 		C782EFD2344F783F8AB8CBDA /* AnimationRootPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AnimationRootPresenter.swift; path = "Demos/07-AnimationContext/AnimationRootPresenter.swift"; sourceTree = "<group>"; };
 		C7BFF24576741F0E969C5E19 /* FeedViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FeedViewController.swift; path = "Demos/10-FeedExample/FeedViewController.swift"; sourceTree = "<group>"; };
@@ -214,22 +223,9 @@
 				63DF28599DECB12177DA6164 /* 08-IsolatedPresenter */,
 				9F532C943F5722547B7E71AB /* 09-AutoBind */,
 				53C749E1CB88ABB954733F65 /* 10-FeedExample */,
+				C8432E8A5172E4E0714B9451 /* 11-UseMethods */,
 			);
 			name = Demos;
-			sourceTree = "<group>";
-		};
-		2BE683F728BF9FF20066301C /* ViewA */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = ViewA;
-			sourceTree = "<group>";
-		};
-		2BE683F828BF9FF90066301C /* ViewB */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = ViewB;
 			sourceTree = "<group>";
 		};
 		2EB653C68583C43EDED78D72 /* 03-NotifySystem */ = {
@@ -352,27 +348,6 @@
 			name = "08-IsolatedPresenter";
 			sourceTree = "<group>";
 		};
-		65B27C6D2AFDCFEF00CF7669 /* WithSubPresenters */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = WithSubPresenters;
-			sourceTree = "<group>";
-		};
-		65B27C6F2AFDD02700CF7669 /* WithSubPresenters */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = WithSubPresenters;
-			sourceTree = "<group>";
-		};
-		65B27C802AFDDB3900CF7669 /* WithSubPresenters */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = WithSubPresenters;
-			sourceTree = "<group>";
-		};
 		6F92D2FF044BE06557DC61DC /* CyclePageExample */ = {
 			isa = PBXGroup;
 			children = (
@@ -418,6 +393,20 @@
 				DD66C831142E02F54FF996A2 /* PTreeViewController.swift */,
 			);
 			name = "04-PTreeComposition";
+			sourceTree = "<group>";
+		};
+		C8432E8A5172E4E0714B9451 /* 11-UseMethods */ = {
+			isa = PBXGroup;
+			children = (
+				3F7379851CD3099F92B2948A /* UseMethodsRootPresenter.swift */,
+				BC474B959EDCA16BE4FA271A /* UseMethodsView.swift */,
+				03D34B242BE598BA07B27957 /* UseMethodsViewController.swift */,
+				A65E47505A1592559A6CA5B7 /* UseMethodsRootPresenter.swift */,
+				18CAEE445F285B9DD3659487 /* UseMethodsView.swift */,
+				6E4AC4CA05E507BDA2A6E253 /* UseMethodsViewController.swift */,
+			);
+			name = "11-UseMethods";
+			path = "Demos/11-UseMethods";
 			sourceTree = "<group>";
 		};
 		C9969804AB3C3540A0427891 /* 05-ListDiffUpdate */ = {
@@ -627,6 +616,9 @@
 				00ED46D169F4683BBE4C099A /* CyclePageRootPresenter.swift in Sources */,
 				699CD2833AB6353A46373B82 /* CyclePageView.swift in Sources */,
 				AB2ACA029277664BC8ECF62F /* CyclePageViewController.swift in Sources */,
+				9526FF30F065DF00F8FD3CD6 /* UseMethodsRootPresenter.swift in Sources */,
+				8193AB103E849ECFBFBD4B5E /* UseMethodsView.swift in Sources */,
+				CCEAF4B1AFEBB19120CBFE9B /* UseMethodsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -794,6 +786,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = minimal;
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 5.0;
 			};
@@ -813,6 +806,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_STRICT_CONCURRENCY = minimal;
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 5.0;
 			};
@@ -837,6 +831,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_STRICT_CONCURRENCY = minimal;
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DDComponent_Example.app/DDComponent_Example";
@@ -858,6 +853,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_STRICT_CONCURRENCY = minimal;
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DDComponent_Example.app/DDComponent_Example";

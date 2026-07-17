@@ -10,9 +10,9 @@ import UIKit
 
 extension Engine {
     
-    class PartialTrasactionPipeline: ListViewUpdatePipeline {
+    class PartialTrasactionPipeline: ListViewUpdatePipeline, @unchecked Sendable {
         @MainActor weak var superPipeline: ViewUpdatePipeline?
-        private lazy var globalPipeline = GlobalViewUpdatePipeline.shared
+        @MainActor private lazy var globalPipeline = GlobalViewUpdatePipeline.shared
         
         @MainActor var dataSource: DataSource
         @MainActor var root: CollectionPresentable?
@@ -252,15 +252,16 @@ extension Engine {
                     }
                     
                     let result = self.doDiff(oldData: oldData, newData: newData)
-                    
+
                     DispatchQueue.main.async { [weak self] in
-                        guard let self, self.withLock({ self.dirtyVersion == originDirtyVersion }) else {
+                        guard let self else { return }
+                        guard self.withLock({ self.dirtyVersion == originDirtyVersion }) else {
                             Logger.log("<PartialCompositeTrasaction> cancel update view: reload data with differ")
                             completion(false)
                             return
                         }
                         guard !self.isDestroyed else { return }
-                        
+
                         self.doReloadDataSourceApplyDiff(with: result, synchronize: synchronize)
                         completion(true)
                     }

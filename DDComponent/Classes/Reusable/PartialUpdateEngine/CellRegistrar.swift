@@ -156,7 +156,7 @@ extension Engine {
 fileprivate extension UIView {
     private static var key = 0
     
-    private class AutoUnbind {
+    private class AutoUnbind: @unchecked Sendable {
         
         let presenter: ReusablePresentable
         
@@ -166,6 +166,7 @@ fileprivate extension UIView {
         
         deinit {
             let presenter = presenter
+            // if main thread, do it, else sync to main thread
             performOnMainActorSync {
                 if let superPresenter = presenter.superPresenter as? ReusableViewPresenterHoldable {
                     superPresenter.tryUnbindReusablePresenter(presenter)

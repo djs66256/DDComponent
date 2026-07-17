@@ -14,7 +14,7 @@ public protocol RootViewPresenterServiceDowngrade {
 
 public struct RootViewPresenterConfig {
     /// `getService()` downgrade to global services.
-    public static var serviceDowngrade: RootViewPresenterServiceDowngrade? = nil
+    nonisolated(unsafe) public static var serviceDowngrade: RootViewPresenterServiceDowngrade? = nil
 }
 
 public protocol RootViewPresentable: ViewPresentable, NotifyRegistrar {
@@ -44,7 +44,7 @@ open class RootViewPresenter<View>: IdentifierViewGroupPresenter<View>, RootView
     
     private var _viewUpdatePipeline: ViewUpdatePipeline?
     
-    @MainActor(unsafe) public lazy var serviceManager = PageServiceManager(provider: nil,
+    @preconcurrency @MainActor public lazy var serviceManager = PageServiceManager(provider: nil,
                                                                            notifier: PageServiceManager.Notifier(self))
     public var notifyManager: PageNotifyManager = PageNotifyManager()
     public override var viewUpdatePipeline: ViewUpdatePipeline? { _viewUpdatePipeline }

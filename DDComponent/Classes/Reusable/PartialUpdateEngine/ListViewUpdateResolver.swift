@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-protocol ListUpdateProtocol {
+@MainActor protocol ListUpdateProtocol {
     typealias IndexDiffResult = Engine.Differ.IndexDiffResult
     typealias IndexPathDiffResult = Engine.Differ.IndexPathDiffResult
     func invalidateLayout()
@@ -21,7 +21,7 @@ protocol ListUpdateProtocol {
 }
 
 extension Engine {
-    struct UICollectionViewUpdateResolver: ListUpdateProtocol {
+    @MainActor struct UICollectionViewUpdateResolver: ListUpdateProtocol {
         
         let collectionView: UICollectionView
         
@@ -82,7 +82,7 @@ extension Engine {
         
     }
     
-    struct UITableViewUpdateResolver: ListUpdateProtocol {
+    @MainActor struct UITableViewUpdateResolver: ListUpdateProtocol {
         
         let tableView: UITableView
         
