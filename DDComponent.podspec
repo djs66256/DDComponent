@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'DDComponent'
-  s.version          = '2.0.0'
+  s.version          = '0.6.0'
   s.summary          = 'Make a collection controller to several component'
 
   s.description      = <<-DESC
@@ -27,7 +27,7 @@ Make a collection controller to several component. Make the controller smaller.
 
   s.subspec 'Macros' do |ss|
     ss.source_files = 'DDComponentMacros/Sources/DDComponentMacrosClient/**/*.swift'
-    ss.dependency 'SwiftSyntax/Macros', '~> 509.0'
+    ss.dependency 'SwiftSyntax/Macros', '~> 600.0'
     ss.pod_target_xcconfig = {
       'OTHER_SWIFT_FLAGS' => '-load-plugin-executable DDComponentMacros#DDComponentMacros'
     }
