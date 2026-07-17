@@ -87,6 +87,26 @@ pod 'DDComponent'
 pod 'DDComponent/Macros'
 ```
 
+### Claude Code 插件
+
+本项目附带 [Claude Code](https://claude.com/claude-code) 插件，提供 DDComponent 专用的开发技能和代码审查 Agent：
+
+| 插件内容 | 说明 |
+|---|---|
+| `ddcomponent` 技能 | 引导 Claude Code 按 Presenter 树架构、生命周期规范、Service/Notify 通信模式构建页面 |
+| `code-reviewer` Agent | 审查 DDComponent 代码的类型正确性、状态设计、生命周期使用和逻辑一致性 |
+
+在 Claude Code 中运行：
+
+```bash
+# 添加 GitHub marketplace
+/plugin marketplace add djs66256/DDComponent
+
+# 安装插件
+/plugin install ddcomponent@ddcomponent
+```
+```
+
 ## 文档
 
 | 你想... | 看这个 |
