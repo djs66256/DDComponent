@@ -38,7 +38,7 @@ class TracePresenter: ViewPresenter<TraceService> {
 }
 ```
 
-**泛型约束检查：** `PageViewController<FrameView, Presenter, View>` 的第三个泛型参数必须与 Presenter 的 View 类型一致。
+**泛型约束检查：** `PageViewController<FrameView, Presenter>` 的 Presenter 必须实现 `RootViewPresenterProtocol`，View 类型通过 `Presenter.ViewType` 推导。
 
 ### 2. State Design（状态设计）
 

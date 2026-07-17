@@ -58,7 +58,7 @@ Tests use `@testable import DDComponent` and run on the `DDComponent-Example` sc
 | `ViewPresenter<View>` | `ViewPresenter.swift` | Base class; generic over view type |
 | `RootViewPresentable` | `RootViewPresenter.swift` | Root protocol, extends `ViewPresentable` |
 | `RootViewPresenter<View>` | `RootViewPresenter.swift` | Root node; owns pipeline, services, notifications |
-| `PageViewController<F, P, V>` | `PageViewController.swift` | UIKit bridge; forwards lifecycle via notify |
+| `PageViewController<F, P>` | `PageViewController.swift` | UIKit bridge; forwards lifecycle via notify |
 | `IdentifierViewGroupPresenter<View>` | `ViewGroupPresenter.swift` | Children accessed by key (`typeBox`/`typeUnbox`) |
 | `ReusableViewPresenter<View>` | `Reusable/ReusableViewPresenter.swift` | For list cell reuse; requires `init()` and `prepareForReuse()` |
 | `CollectionPresenter<View>` | `Reusable/CollectionPresenters/CollectionPresenter.swift` | Manages `sections` array |

@@ -11,7 +11,7 @@
 ViewController 需要继承 `PageViewController`，否则需要自行实现 Presenter 初始绑定操作。`PageViewController.makePresenter()` 已创建 RootPresenter，在 `presenterDidLoad` 或 `pageInstallers` 中注册 Service 和子 Presenter，否则可能时机不正确。
 
 ```swift
-class MyViewController: PageViewController<MyRootView, MyRootPresenter, MyRootPresenterView> {
+class MyViewController: PageViewController<MyRootView, MyRootPresenter> {
 
     override func makeView() -> MyRootView {
         MyRootView()

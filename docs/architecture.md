@@ -281,7 +281,7 @@ RootViewPresenter
 3. **生命周期转发**：将 `viewWillAppear` 等事件通过 Notify 广播给所有 Presenter
 
 ```swift
-open class PageViewController<FrameView, Presenter, View>: UIViewController {
+open class PageViewController<FrameView: UIView, Presenter: RootViewPresenterProtocol>: UIViewController {
     open func makePresenter() -> Presenter
     open func makeView() -> FrameView
     open func presenterDidLoad()    // 装配 Presenter 和 Service 的时机

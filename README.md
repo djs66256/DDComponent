@@ -120,7 +120,7 @@ class LikePresenter: ViewPresenter<LikeViewProtocol> {
 }
 
 // 3. 装配页面
-class MyViewController: PageViewController<MyRootView, MyRootPresenter, MyRootPresenterView> {
+class MyViewController: PageViewController<MyRootView, MyRootPresenter> {
     override var pageInstallers: PageInstaller {
         ServiceInstaller(LikeService.self, { LikeServiceImpl() })
         PresenterInstaller { LikePresenter() }

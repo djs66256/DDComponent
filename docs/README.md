@@ -165,7 +165,7 @@ class SuperPresenter: ViewPresenter<SuperViewProtocol> {
 }
 
 // 5. 创建 ViewController
-class MyViewController: PageViewController<MyRootView, MyRootPresenter, MyRootPresenterView> {
+class MyViewController: PageViewController<MyRootView, MyRootPresenter> {
     override var pageInstallers: PageInstaller {
         ServiceInstaller(LikeService.self, { LikeServiceImpl() })
         PresenterInstaller(lazyLoad: true, { LikePresenter() })
