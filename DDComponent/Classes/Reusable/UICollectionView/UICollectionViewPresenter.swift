@@ -43,7 +43,7 @@ open class UICollectionViewPresenter<V: UICollectionView>: CollectionPresenter<V
     public var proxy: UICollectionViewDelegateProxy?
     
     public override var viewUpdatePipeline: ViewUpdatePipeline? {
-        proxy?.updatePipline
+        proxy?.updatePipeline
     }
     
     open func bindView(_ view: V, layoutProxy: UICollectionViewDelegateProxy.Type) {
@@ -71,7 +71,7 @@ open class UICollectionViewPresenter<V: UICollectionView>: CollectionPresenter<V
         if let scrollDelegate {
             self.proxy?.scrollDelegate = scrollDelegate
         }
-        self.proxy?.updatePipline.superPipeline = superPresenter?.viewUpdatePipeline
+        self.proxy?.updatePipeline.superPipeline = superPresenter?.viewUpdatePipeline
         setState {} context: {
             $0.reloadData()
             $0.forceDisableAnimation = true
@@ -80,7 +80,7 @@ open class UICollectionViewPresenter<V: UICollectionView>: CollectionPresenter<V
     
     public override func unbindView() {
         super.unbindView()
-        proxy?.updatePipline.superPipeline = nil
+        proxy?.updatePipeline.superPipeline = nil
         proxy?.reset()
         proxy = nil
     }

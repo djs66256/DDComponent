@@ -31,7 +31,7 @@ import UIKit
 }
 
 @MainActor
-public protocol UITableViewItemSizeCaculatable: ViewPresentable {
+public protocol UITableViewItemSizeCalculatable: ViewPresentable {
     var layoutInfo: UITableViewCellLayoutInfo { get }
     
     /// Calculate height manually
@@ -83,7 +83,7 @@ public protocol UITableViewItemPresentable: CollectionItemPresentable {
     // TODO: Preview
 }
 
-open class UITableViewItemPresenter<V: UITableViewCell>: CollectionItemPresenter<V>, UITableViewItemPresentable, UITableViewItemSizeCaculatable {
+open class UITableViewItemPresenter<V: UITableViewCell>: CollectionItemPresenter<V>, UITableViewItemPresentable, UITableViewItemSizeCalculatable {
     public var layoutInfo = UITableViewCellLayoutInfo()
     open func calculateHeight(containerSize: CGSize) -> CGFloat { 0 }
     

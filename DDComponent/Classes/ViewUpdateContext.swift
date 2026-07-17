@@ -24,13 +24,13 @@ public struct ViewUpdateContext {
     /// If true, update view immediately when `setState`. It will call `onUpdate(view:context:)` immediately.
     public var updateViewImmediately: Bool = false
     
-    /// If true, will call `invalidateConstraints()` after update view synchronizely.
+    /// If true, will call `invalidateConstraints()` after update view synchronously.
     public var invalidateConstraints: Bool = false
     
-    /// If true, will call `invalidateLayout()` after update view synchronizely.
+    /// If true, will call `invalidateLayout()` after update view synchronously.
     public var invalidateLayout: Bool = false
     
-    /// If true, will call `layoutIfNeeded()` after update view synchronizely.
+    /// If true, will call `layoutIfNeeded()` after update view synchronously.
     public var layoutImmediately: Bool = false
     
     /// If true, will update view within an animation block, like `UIView.animate(..., { updateView() })`
@@ -51,7 +51,7 @@ public struct ViewUpdateContext {
     public var invalidateContentSize: Bool = false
     
     /// It used when collection view in another collection cell, child cell size changed needs notify
-    /// super collection cell to recaculate layout.
+    /// super collection cell to recalculate layout.
     public var invalidateSuperPresenterContentSize: Bool = false
     
     /// Extra infos, can set any info you need to recoginise each different update actions.

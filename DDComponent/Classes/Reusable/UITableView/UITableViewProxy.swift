@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 extension UITableViewCellLayoutInfo.LayoutType {
-    var sizeCaculatorLayoutType: SizeCaculator.LayoutType {
+    var sizeCalculatorLayoutType: SizeCalculator.LayoutType {
         if self == .autoLayout {
             return .autoLayout
         }
@@ -26,12 +26,12 @@ public class UITableViewDelegateProxy: NSObject, UpdatePipelineInvalidateContent
     weak var scrollDelegate: UIScrollViewDelegate?
     let updater: ListViewUpdatePipeline
     var registrar: Engine.UITableViewCellRegistrar
-    var sizeCalculator = SizeCaculator()
+    var sizeCalculator = SizeCalculator()
     var sizeCache = SizeCache()
 
     private var editingItem: UITableViewItemPresentable?
 
-    var updatePipline: ViewUpdatePipeline {
+    var updatePipeline: ViewUpdatePipeline {
         updater
     }
     
@@ -93,7 +93,7 @@ public class UITableViewDelegateProxy: NSObject, UpdatePipelineInvalidateContent
             return _viewUpdatePipeline
         }
     }
-    lazy var caculatorRootPresenter = CalculatorRootViewPresenter()
+    lazy var calculatorRootPresenter = CalculatorRootViewPresenter()
     
     let visiblePresenters: NSMapTable<UIView, AnyObject> = .weakToStrongObjects()
     
@@ -531,28 +531,28 @@ extension UITableViewDelegateProxy: UITableViewDelegate, UITableViewDataSource {
         if info.calculateSizeAutomatically {
             var size: CGSize = CGSize(width: containerSize.width, height: 0)
             let viewClass = presenter.itemClass
-            var layoutType = info.layoutType.sizeCaculatorLayoutType
-            
+            var layoutType = info.layoutType.sizeCalculatorLayoutType
+
             if let holder = presenter as? CollectionItemReusablePresenterHoldable {
                 let presenterClass = holder.presenterClass
                 let cellPresenter = sizeCalculator.dequeuePresenter(for: presenterClass)
                 // If reused presenter is not automatical, just return it.
-                if let caculator = cellPresenter as? UITableViewItemSizeCaculatable {
-                    if !caculator.layoutInfo.calculateSizeAutomatically {
-                        caculatorRootPresenter.bindReusablePresenter(cellPresenter)
+                if let calculator = cellPresenter as? UITableViewItemSizeCalculatable {
+                    if !calculator.layoutInfo.calculateSizeAutomatically {
+                        calculatorRootPresenter.bindReusablePresenter(cellPresenter)
                         holder.dryRunUpdateReusablePresenter(cellPresenter)
-                        size.height = caculator.calculateHeight(containerSize: containerSize)
-                        caculatorRootPresenter.unbindReusablePresenter()
+                        size.height = calculator.calculateHeight(containerSize: containerSize)
+                        calculatorRootPresenter.unbindReusablePresenter()
                         return size
                     }
                     else {
-                        layoutType = caculator.layoutInfo.layoutType.sizeCaculatorLayoutType
+                        layoutType = calculator.layoutInfo.layoutType.sizeCalculatorLayoutType
                     }
                 }
-                
+
                 let cell = sizeCalculator.dequeueView(for: viewClass)
-                
-                caculatorRootPresenter.bindReusablePresenter(cellPresenter)
+
+                calculatorRootPresenter.bindReusablePresenter(cellPresenter)
                 if holder.dryRunUpdateReusablePresenter(cellPresenter) {
                     if cellPresenter.tryBindView(cell) {
                         cellPresenter.updateViewIfNeeded()
@@ -566,7 +566,7 @@ extension UITableViewDelegateProxy: UITableViewDelegate, UITableViewDataSource {
                         assert(false, "Reuse cell presenter \(cellPresenter) can not bind cell \(cell)")
                     }
                 }
-                caculatorRootPresenter.unbindReusablePresenter()
+                calculatorRootPresenter.unbindReusablePresenter()
             }
             
             return size

@@ -32,7 +32,7 @@ where View: UICollectionReusableView, P: ReusablePresentable, P: ReusableViewPre
     open func onDidEndDisplaying() {}
 }
 
-open class UICollectionViewReusableFlowItemPresenter<View>: ReusableViewPresenter<View>, UICollectionItemSizeCaculatable {
+open class UICollectionViewReusableFlowItemPresenter<View>: ReusableViewPresenter<View>, UICollectionItemSizeCalculatable {
     public var layoutInfo = UICollectionItemFlowLayoutInfo()
     
     open func calculateSize(containerSize: CGSize) -> CGSize {

@@ -52,7 +52,7 @@ where P: ReusablePresentable, P: ReusableViewPresenter<V>, V: UITableViewCell {
     
 }
 
-open class UITableViewItemReusablePresenter<View>: ReusableViewPresenter<View>, UITableViewItemSizeCaculatable {
+open class UITableViewItemReusablePresenter<View>: ReusableViewPresenter<View>, UITableViewItemSizeCalculatable {
     public var layoutInfo = UITableViewCellLayoutInfo()
     
     open func calculateHeight(containerSize: CGSize) -> CGFloat { 0 }

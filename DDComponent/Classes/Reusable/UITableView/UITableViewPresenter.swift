@@ -26,7 +26,7 @@ open class UITableViewPresenter<V: UITableView>: CollectionPresenter<V>, UITable
     public var proxy: UITableViewDelegateProxy?
     
     public override var viewUpdatePipeline: ViewUpdatePipeline? {
-        proxy?.updatePipline
+        proxy?.updatePipeline
     }
     
     open override func bindView(_ view: V) {
@@ -47,7 +47,7 @@ open class UITableViewPresenter<V: UITableView>: CollectionPresenter<V>, UITable
         if let scrollDelegate {
             proxy?.scrollDelegate = scrollDelegate
         }
-        self.proxy?.updatePipline.superPipeline = superPresenter?.viewUpdatePipeline
+        self.proxy?.updatePipeline.superPipeline = superPresenter?.viewUpdatePipeline
         setState {} context: {
             $0.reloadData()
             $0.forceDisableAnimation = true
@@ -56,7 +56,7 @@ open class UITableViewPresenter<V: UITableView>: CollectionPresenter<V>, UITable
     
     public override func unbindView() {
         super.unbindView()
-        self.proxy?.updatePipline.superPipeline = nil
+        self.proxy?.updatePipeline.superPipeline = nil
         proxy?.reset()
         proxy = nil
     }

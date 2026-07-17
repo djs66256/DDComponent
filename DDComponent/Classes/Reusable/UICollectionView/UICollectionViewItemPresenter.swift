@@ -56,7 +56,7 @@ public struct UICollectionItemFlowLayoutInfo: UICollectionViewLayoutInfo {
 }
 
 @MainActor
-public protocol UICollectionItemSizeCaculatable: ViewPresentable {
+public protocol UICollectionItemSizeCalculatable: ViewPresentable {
     var layoutInfo: UICollectionItemFlowLayoutInfo { get }
     
     /// Calculate size manually

@@ -8,8 +8,6 @@
 
 ## 为什么需要 DDComponent？
 
-随着业务复杂度增长，一个页面往往包含多个方向的业务逻辑：
-
 | 问题 | DDComponent 的解法 |
 |---|---|
 | 多人修改同一文件导致冲突 | 每个功能拆分为独立的 Presenter，互不干扰 |
@@ -37,75 +35,29 @@ P-Tree (Presenter 树)          V-Tree (View 树)
 
 ### 状态驱动更新
 
-DDComponent 借鉴 React/SwiftUI 的设计思想，将 View 视为**状态机**。所有 UI 更新必须通过 `setState` 统一入口，由 UpdatePipeline 在合适的时机批量执行，避免多处直接修改 View 导致的数据不一致：
+DDComponent 借鉴 React/SwiftUI 的思想，所有 UI 更新必须通过 `setState` 统一入口，由 UpdatePipeline 批量执行：
 
 ```
 数据变更 → setState { ... } → Pipeline 调度 → onUpdate(view:context:) → UI 更新
 ```
 
-```swift
-class MyPresenter: ViewPresenter<MyViewProtocol> {
-    var count = 0
-    var title = ""
-
-    // 属性变更自动触发更新
-    var isVisible: Bool {
-        didSet { setState {} }
-    }
-
-    func loadData() {
-        api.fetch { [weak self] result in
-            self?.setState {
-                self?.count = result.count
-                self?.title = result.title
-            } context: {
-                $0.animated = true  // 带动画更新
-            }
-        }
-    }
-
-    override func onUpdate(view: MyViewProtocol, context: ViewUpdateContext) {
-        view.count = count
-        view.title = title
-        view.isVisible = isVisible
-    }
-}
-```
-
-**为什么必须用 setState？**
-- **统一更新时机**：所有变更由 Pipeline 全局调度，避免数据不对齐
-- **批量合并**：多个 `setState` 在一次 RunLoop 中合并为一次 UI 更新
-- **列表增量更新**：自动 Diff 数据源，执行 `performBatchUpdates` 而非全量 reload
-- **状态安全**：配合 `@StateChecker` 编译期保证状态只在 `setState` 内修改
-
 ### 快速示例
 
 ```swift
-// 1. 定义 View 协议（数据消费的终点，不是 UIView）
+// 1. View 协议（不是 UIView）
 protocol LikeViewProtocol: AnyObject {
     var isLiked: Bool { get set }
     var likeCount: Int { get set }
     var onLikeTapped: (() -> Void)? { get set }
 }
 
-// 2. 实现 Presenter（业务逻辑 + 状态驱动更新）
+// 2. Presenter（业务逻辑）
 class LikePresenter: ViewPresenter<LikeViewProtocol> {
-    struct LikeInfo {
-        var isLiked = false
-        var likeCount = 0
-    }
-
-    private var _likeInfo = LikeInfo()
-    var likeInfo: LikeInfo {
-        get { _likeInfo }
-        set { setState { _likeInfo = newValue } }
-    }
+    var isLiked = false { didSet { setState {} } }
 
     func toggleLike() {
-        guard let service = getService(LikeService.self) else { return }
-        service.toggleLike { [weak self] result in
-            self?.likeInfo = result  // 通过 setState 触发 UI 更新
-            self?.notify(listener: LikeListener.self) { $0.onLikeChanged(result) }
+        getService(LikeService.self)?.toggleLike { [weak self] result in
+            self?.isLiked = result
         }
     }
 
@@ -114,16 +66,14 @@ class LikePresenter: ViewPresenter<LikeViewProtocol> {
     }
 
     override func onUpdate(view: LikeViewProtocol, context: ViewUpdateContext) {
-        view.isLiked = likeInfo.isLiked
-        view.likeCount = likeInfo.likeCount
+        view.isLiked = isLiked
     }
 }
 
-// 3. 装配页面
+// 3. 装配
 class MyViewController: PageViewController<MyRootView, MyRootPresenter> {
-    override var pageInstallers: PageInstaller {
+    @PageInstallerBuilder override var pageInstallers: PageInstaller {
         ServiceInstaller(LikeService.self, { LikeServiceImpl() })
-        PresenterInstaller { LikePresenter() }
     }
 }
 ```
@@ -132,40 +82,33 @@ class MyViewController: PageViewController<MyRootView, MyRootPresenter> {
 
 ```ruby
 pod 'DDComponent'
+
+# 可选：@PresenterState 宏
+pod 'DDComponent/Macros'
 ```
 
 ## 文档
 
-| 文档 | 内容 |
-|---|---|
-| [架构设计](./docs/architecture.md) | P-Tree/V-Tree、生命周期、状态驱动更新、Service/Notify |
-| [使用指南](./docs/usage-guide.md) | 固定视图、列表视图、Service 与 Notify、装配方式 |
-| [复用 Presenter](./docs/reusable-presenter.md) | 列表 Cell 复用、CollectionPresenter 体系、增量更新引擎 |
+| 你想... | 看这个 |
+|----------|--------|
+| 理解框架设计思想 | [架构设计](./docs/architecture.md) |
+| 创建页面/列表/功能 | [使用指南](./docs/usage-guide.md) |
+| 开发列表 Cell | [复用 Presenter](./docs/reusable-presenter.md) |
+| 使用 Hooks 风格 API | [use* API](./docs/use-methods.md) |
+| 简化状态声明 | [@PresenterState 宏](./docs/presenter-state-macro.md) |
+| Swift 6 适配 | [Swift 6 并发模式](./docs/swift6-patterns.md) |
+| 看示例代码 | [Demo 索引](./docs/demo-index.md) |
+
+**文档索引**：[docs/README.md](./docs/README.md)
 
 ## 测试
 
-框架包含 122 个单元测试，覆盖所有核心能力。测试位于 `Example/Tests/` 目录下。
+框架包含 122 个单元测试，覆盖所有核心能力。测试位于 `Example/Tests/`。
 
 ```bash
-# 运行全部测试
 cd Example
 xcodebuild test -project DDComponent.xcodeproj -scheme DDComponent-Example -destination 'platform=iOS Simulator,name=iPhone 17'
 ```
-
-| 测试套件 | 覆盖能力 |
-|---|---|
-| PresenterTreeTests | P-Tree 生命周期：add/remove child、attach/detach |
-| ViewBindingTests | View 绑定：bind/unbind/weak/auto-bind |
-| StateUpdateTests | setState：onUpdate、Pipeline、ViewUpdateContext |
-| NotifyTests | Notify 通信：所有作用域、sender 排除 |
-| ServiceTests | Service DI：register/get、lookup chain、downgrade |
-| ReusablePresenterTests | 复用 Presenter：bind/unbind holder、prepareForReuse |
-| CollectionPresenterTests | Collection 层级：section/items/supplementaries |
-| DifferTests | Diff 算法：增/删/移/复杂场景 |
-| PageNotifyManagerTests | NotifyManager：listener 管理、弱引用 |
-| PageServiceManagerTests | ServiceManager：eager/lazy、fallthrough |
-| IsolatedViewPresenterTests | 独立 Presenter：绑定、Pipeline 切换 |
-| ViewUpdateContextTests | ViewUpdateContext：flag merge、bindView |
 
 ## 最低要求
 

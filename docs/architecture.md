@@ -52,21 +52,18 @@ class SuperPresenter: ViewPresenter<SuperViewProtocol> {
 
     override func onAttach(presenter: ViewPresentable) {
         super.onAttach(presenter: presenter)
-        // 必须加入 children 才能形成 P-Tree
         add(child: likePresenter)
         add(child: sharePresenter)
     }
 
     override func onBindView(_ view: SuperViewProtocol) {
         super.onBindView(view)
-        // 绑定对应的 V-Tree 节点
         likePresenter.bindView(view.likeButton)
         sharePresenter.bindView(view.shareButton)
     }
 
     override func onUnbindView() {
         super.onUnbindView()
-        // 解绑时也要清理
         likePresenter.unbindView()
         sharePresenter.unbindView()
     }
@@ -82,93 +79,138 @@ class SuperPresenter: ViewPresenter<SuperViewProtocol> {
 
 ## Presenter 生命周期
 
-所有 Presenter 都有统一的生命周期，分为两个维度：
-
-### 结构生命周期（P-Tree 维度）
-
-涉及 Presenter 在 P-Tree 中的挂载和卸载：
-
-| 方法 | 触发时机 | 用途 |
-|---|---|---|
-| `onAttach(presenter:)` | 被 `add(child:)` 加入父 Presenter | 注册子 Presenter，初始化内部结构 |
-| `onDetach()` | 通过 `removeFromSuper()` 或 `remove(child:)` 从 P-Tree 移除 | 清理资源 |
-
-### 根节点生命周期
-
-涉及 Presenter 与 RootPresenter 的关联：
-
-| 方法 | 触发时机 | 用途 |
-|---|---|---|
-| `onAttachToRoot(rootPresenter:)` | 关联到 RootPresenter | 注册 Effect（副作用），监听全局事件 |
-| `onDetachFromRoot()` | 从 RootPresenter 脱离 | 清理 Effect |
-
-### View 绑定生命周期
-
-涉及 Presenter 与 View 的绑定和解绑：
-
-| 方法 | 触发时机 | 用途 |
-|---|---|---|
-| `onBindView(_:)` | 调用 `bindView(_:)` 绑定 View | 设置 View 的回调，传递初始数据 |
-| `onUnbindView()` | 解绑 View 或页面销毁 | 清理 View 回调，防止循环引用 |
-
-解绑会发生在：
-1. 手动调用 `unbindView()`
-2. 绑定新的 View（先解绑旧的）
-3. 页面销毁时
-
-### 视图更新生命周期
-
-涉及数据变更到 UI 更新的过程：
-
-| 方法 | 触发时机 | 用途 |
-|---|---|---|
-| `onUpdate(view:context:)` | `setState {}` 触发 | 将状态同步到 View |
-
-`onUpdate` 会在合适的时机更新视图，该时机会随着 `ViewUpdateContext` 配置与所处场景不同而不同，包括但不限于：
-1. 立即更新
-2. 在下一个 RunLoop 更新
-3. 列表增量更新、异步计算后的时机
-
-### 完整生命周期流转图
+所有 Presenter 都有统一的生命周期：
 
 ```
-     init()
-       │
-       ▼
-  onAttach(presenter:)  ← 被 add(child:) 加入 P-Tree
-       │
-       ▼
-  onAttachToRoot()      ← 关联到 RootPresenter
-       │
-       ▼
-  onBindView(_:)        ← bindView(_:) 绑定 View
-       │
-       ▼
-  ┌─ onUpdate(view:context:) ─┐  ← setState {} 触发，可多次执行
-  │    (状态变更 → UI 更新)     │
-  └────────────────────────────┘
-       │
-       ▼
-  onUnbindView()        ← unbindView() 或页面销毁时
-       │
-       ▼
-  onDetach()            ← removeFromSuper() 时先调用
-       │
-       ▼
-  onDetachFromRoot()    ← 然后脱离 RootPresenter
-       │
-       ▼
-     deinit
+init() → onAttach → onAttachToRoot → onBindView → onUpdate (×N) → onUnbindView → onDetach → onDetachFromRoot → deinit
 ```
-
-### 生命周期递归传递
 
 生命周期方法会**自动递归传递**到所有子 Presenter：
-
 - `attachRootPresenter` → 递归所有 children
 - `detachRootPresenter` → 递归所有 children
 - `bindView` → 自动触发 `autoBindChildrenPresenterViews`
 - `unbindView` → 递归所有 children
+
+### 生命周期方法职责详解
+
+以下是每个生命周期方法的详细职责边界。
+
+#### 1. `init()` — 创建
+
+**触发时机：** Presenter 初始化。
+
+| ✅ 应该做 | ❌ 不应该做 |
+|---|---|
+| 初始化自身属性、设置默认值 | 访问 `view`（尚未绑定） |
+| RootPresenter 中通过 `typeBox()` 注册子 Presenter | 访问 `superPresenter` / `rootPresenter`（尚未挂载） |
+| | 调用 `getService()` / `notify()`（Pipeline 不存在） |
+
+#### 2. `onAttach(presenter:)` / `onAttach()` — 挂载到 P-Tree
+
+**触发时机：** 被 `add(child:)` 加入父 Presenter。RootPresenter 使用无参版本 `onAttach()`。
+
+| ✅ 应该做 | ❌ 不应该做 |
+|---|---|
+| **`add(child:)` 注册子 Presenter**（组建 P-Tree 的核心时机） | 访问 `view`（View 可能尚未绑定） |
+| 初始化内部结构、创建子节点 | 依赖 `rootPresenter` 非空（父节点可能还没挂到 Root） |
+| | 做需要 Pipeline 的操作 |
+
+> **源码执行顺序：** `attachSuperPresenter()` 内部先调 `onAttach` → 再挂 Root → 最后 auto-bind View。所以 `onAttach` 被调用时，Root 和 View 都还没就位。
+
+#### 3. `onAttachToRoot(rootPresenter:)` — 关联到 RootPresenter
+
+**触发时机：** 自身或祖先挂到 RootPresenter 上时，递归所有子 Presenter。
+
+| ✅ 应该做 | ❌ 不应该做 |
+|---|---|
+| **注册 Effect（副作用）** — Pipeline 已可用，这是注册 Effect 的最佳时机 | 操作 View 的 UI（View 可能未绑定） |
+| 监听全局事件、注册全局 Notify listener | 假设 `view` 非空 |
+| 启动页面级别的定时器、监听 | |
+| 获取 Service 引用并缓存 | |
+
+> **Effect 机制：** `onAttachToRoot` 时启动 effect 的 `action()`，`onDetachFromRoot` 时自动调用返回的 cancel 函数。
+
+#### 4. `onBindView(_ view: View)` — 绑定 View
+
+**触发时机：** `bindView(_:)` / `bindWeakView(_:)` / `tryBindView(_:)` 时。
+
+| ✅ 应该做 | ❌ 不应该做 |
+|---|---|
+| **先调用 `super.onBindView(view)`** | 直接修改 View 的属性值（`bindView` 会自动触发首次 `onUpdate`） |
+| **设置 View 的回调闭包**（`view.onButtonTapped = { ... }`） | 注册 Effect（应放在 `onAttachToRoot`） |
+| 绑定子 Presenter 到对应的子 View | 调用 `add(child:)`（应在 `onAttach` 中完成） |
+
+> **注意：** `bindView()` 内部会自动触发一次 `setState {} context: { $0.bindView() }` 来执行首次 `onUpdate`，初始数据不需要手动赋值给 View。
+
+#### 5. `onUpdate(view: View, context: ViewUpdateContext)` — 状态同步到 View
+
+**触发时机：** 每次 `setState {}` 后由 Pipeline 调用。可被多次调用。
+
+| ✅ 应该做 | ❌ 不应该做 |
+|---|---|
+| **将 Presenter 状态同步到 View**（唯一正确的职责） | **修改 Presenter 的状态**（造成死循环） |
+| 读取 `context` flags 做条件判断（极少需要） | **执行业务逻辑**（网络请求、页面跳转等） |
+| | 修改 View 的布局约束（应通过 `context.invalidateLayout` 处理） |
+| | 做耗时操作（高频滚动时频繁调用） |
+
+> **核心原则：** `onUpdate` 是幂等的、无副作用的纯映射函数。**遗漏状态同步会导致 View 展示不一致的 bug**。
+
+#### 6. `onUnbindView()` — 解绑 View
+
+**触发时机：** `unbindView()`、绑定新 View（先解绑旧 View）、`detachSuperPresenter()`（自动解绑）、页面销毁。
+
+| ✅ 应该做 | ❌ 不应该做 |
+|---|---|
+| **先调用 `super.onUnbindView()`** | 假设 `view` 非空（弱引用场景下可能已是 nil） |
+| **清理 View 的回调闭包**（设 `nil` 防循环引用） | 做业务逻辑清理（应在 `onDetach` 中做） |
+| 清理与 View 实例绑定的资源（定时器等） | 移除 Effect（应在 `onDetachFromRoot` 中清理） |
+
+> **注意：** `unbindView()` 会自动递归解绑所有子 Presenter。
+
+#### 7. `onDetach()` — 从 P-Tree 移除
+
+**触发时机：** `removeFromSuper()` / `remove(child:)` / `detachAllPresentersRecursive()`。
+
+| ✅ 应该做 | ❌ 不应该做 |
+|---|---|
+| 释放 P-Tree 维度的资源（移除子 Presenter） | 访问 `view`（此时已 unbind） |
+| 取消在此 Presenter 范围内注册的东西 | 访问 `superPresenter`（之后会被置 nil） |
+
+> **执行顺序：** `detachSuperPresenter()` 内部：先 `unbindView()` → 再 `onDetach()` → 最后 `detachRootPresenter()`。
+
+#### 8. `onDetachFromRoot()` — 脱离 RootPresenter
+
+**触发时机：** 自身或祖先从 RootPresenter 脱离时。先递归子 Presenter，再调用自身。
+
+| ✅ 应该做 | ❌ 不应该做 |
+|---|---|
+| 清理全局 listener 注册 | 假设 `rootPresenter` 非空（调用时还未置 nil，但之后会） |
+| 释放通过 Service 获取的引用 | |
+
+> **Effect 自动清理：** 基类 `onDetachFromRoot()` 已调用 `effect.onDetach()`，在 `onAttachToRoot` 中用 Effect 注册的副作用无需手动清理。
+
+#### 9. `prepareForReuse()` — 列表 Cell 复用前重置
+
+**触发时机：** 列表 Cell 被复用时。仅 `ReusableViewPresenter` 有此方法。
+
+| ✅ 应该做 | ❌ 不应该做 |
+|---|---|
+| **重置 Presenter 的所有状态**（清空数据、取消请求、重置标记） | 操作 View（此时 View 可能还是旧的） |
+| 恢复到初始状态 | 调用 `setState`（重置后由外部配置数据时再触发） |
+
+### 职责速查表
+
+| 方法 | 核心职责 | 一句话 |
+|------|---------|--------|
+| `init()` | 初始化自身属性 | 设置默认值，不依赖外部 |
+| `onAttach` | 组装 P-Tree | `add(child:)`，创建子 Presenter |
+| `onAttachToRoot` | 注册全局依赖 | 注册 Effect、监听全局事件 |
+| `onBindView` | 连接 View | 设回调闭包，绑子 View，**不**直接改 View 值 |
+| `onUpdate` | 同步数据 | **仅**把状态写到 View，纯映射，无副作用 |
+| `onUnbindView` | 断开 View | 清回调闭包，防止循环引用 |
+| `onDetach` | 清理 P-Tree | 移除子 Presenter，清理内部引用 |
+| `onDetachFromRoot` | 注销全局依赖 | 框架自动清理 Effect |
+| `prepareForReuse` | 重置状态 | 清空数据，恢复到初始值 |
 
 ## 状态驱动的视图更新
 
@@ -182,6 +224,7 @@ class SuperPresenter: ViewPresenter<SuperViewProtocol> {
 - **批量更新**：多个 `setState` 可以合并为一次 UI 更新
 - **列表场景优化**：自动处理增量更新（Diff）、动画
 - **状态校验**：配合 `@StateChecker` 确保状态只在 `setState` 内部修改
+- **宏简化**：配合 `@PresenterState` 宏消除 `didSet { setState {} }` 样板代码
 
 ### 基本用法
 
@@ -214,9 +257,7 @@ class MyPresenter: ViewPresenter<MyViewProtocol> {
 
 ### UpdatePipeline：统一的更新调度
 
-所有状态变更更新都会交给 Pipeline 来执行。只有 RootPresenter 才有唯一的 Pipeline，这样的好处是能够**全局统一地管理界面更新流程**，特别是在列表场景下，会有不同的更新方式。
-
-虽然形式上不禁止直接修改 View，但这样会带来一些问题，比如父容器无法感知修改。建议所有更新视图都通过 `setState` 方式进行。
+所有状态变更交给 Pipeline 执行。只有 RootPresenter 才有唯一的 Pipeline，能够**全局统一地管理界面更新流程**：
 
 ```
 setState {}
@@ -233,7 +274,7 @@ updateView(context:)             ← 检查 needsUpdate，调用 onUpdate
 
 Pipeline 策略：
 - **固定视图**：`GlobalViewUpdatePipeline` — 全局一次性更新
-- **列表视图**：`PartialTrasactionPipeline` — 支持增量 Diff 更新
+- **列表视图**：`PartialTransactionPipeline` — 支持增量 Diff 更新
 
 ### ViewUpdateContext 配置项
 
@@ -252,82 +293,16 @@ Pipeline 策略：
 
 DDComponent 提供了一套 React Hooks 风格的 `use*` API（定义在 `ViewPresenter+Use.swift`），将状态、副作用和视图更新器声明在初始化阶段，替代分散在多个生命周期方法中的传统写法。
 
-#### 设计动机
-
-传统方式中，状态修改（`setState`）和状态读取（`onUpdate`）是分离的，需要手动管理订阅的创建和清理。`use*` 将状态、订阅和副作用集中声明，让生命周期自动管理清理：
-
-```
-传统方式：                           use* 方式：
-                                     
-init()                               init() / lazy var
-  └── 初始化属性                        └── useState() — 声明状态
-                                       └── useEffect() — 声明副作用
-onBindView()                          └── useUpdate() — 声明视图绑定
-  └── 设置回调、启动订阅                   
-                                     (自动管理)
-onAttachToRoot()                     onAttachToRoot → Effect 启动
-  └── 启动 Timer、注册监听               onDetachFromRoot → Effect 清理
-                                     
-onUnbindView()                       
-  └── 清理回调、取消订阅                 
-                                     不需要手动管理生命周期
-onDetachFromRoot()                   
-  └── 停止 Timer、注销监听              
-```
-
-#### 核心 API
+**核心 API：**
 
 | 方法 | 返回类型 | 用途 |
 |---|---|---|
-| `useState(_:)` | `State<T>` | 创建响应式状态容器。设置 `value` → `setState` → `onUpdate` |
-| `useEffect(_:)` | `Effect` | 注册生命周期绑定的副作用（attach 启动，detach 清理） |
-| `useUpdate(dependences:_:)` | `Updater` | 依赖驱动的视图更新器，只在依赖的 State 变化时执行 |
+| `useState(_:)` | `State<T>` | 创建响应式状态容器 |
+| `useEffect(_:)` | `Effect` | 注册生命周期绑定的副作用 |
+| `useUpdate(dependences:_:)` | `Updater` | 依赖驱动的视图更新器 |
 | `useService(_:_:)` | `Effect` | 解析 Service 并传给副作用 |
 
-#### useState 变体
-
-`useState` 是核心 API，有多种重载覆盖不同场景：
-
-| 变体 | 示例 | 说明 |
-|---|---|---|
-| 基本值类型 | `useState(0)` | Equatable 用 `==` 判等 |
-| 引用类型 | `useState(NSObject())` | AnyObject 用 `===` 判等 |
-| 无约束 | `useState(Date())` | 总是触发更新 |
-| Optional | `useState(nil)` | 类型从属性声明推断 |
-| + updater | `useState(0) { v, view, _ in ... }` | 每次变化时执行自定义闭包 |
-| + keyPath | `useState("", updateTo: \.label.text)` | 直接写入 View 的 keyPath |
-| + Publisher | `useState("", publisher: pub)` | 从 Combine Publisher 订阅 |
-| + AsyncSequence | `useState(0, sequence: stream)` | 从 AsyncSequence 订阅 |
-| + Service | `useState("", service: S.self, publisher: { $0.pub() })` | 懒加载 Service 获取 Publisher/Sequence |
-| ObservableObject | `useState(MyViewModel())` | 观察 `objectWillChange`，替换时自动重绑定 |
-
-#### 生命周期自动化
-
-`use*` 方法利用框架现有的生命周期机制自动管理资源：
-
-```
-useState(ObservableObject) → 订阅 objectWillChange
-  └── state.value = newObj → willSet 取消旧订阅
-  └── didSet 绑定新订阅
-  └── state.dispose() → 取消所有订阅
-
-useEffect → 注册到 self.effects
-  └── onAttachToRoot → effect.onAttach() 执行 action
-  └── onDetachFromRoot → effect.onDetach() 执行 cleanup
-  └── effect.cancel() → 从 effects 中移除
-
-useUpdate → 注册到 self.updaters
-  └── 每次 onUpdate 时检查依赖的 State 是否变化
-  └── 变化时执行 updater 闭包
-```
-
-#### 关键约束
-
-1. **必须在 `init()` 或属性初始化器中调用** — 不能在 `onBindView` 等生命周期方法中调用
-2. **Swift 6 下使用 `lazy var` + 显式类型** — 因为 `useState` 重载多，编译器无法推断类型
-3. **返回值必须存储** — `State`、`Effect`、`Updater` 必须由实例属性持有
-4. **ObservableObject 替换自动重绑定** — `state.value = newObject` 取消旧订阅、绑定新订阅
-5. **Timer 闭包用 `MainActor.assumeIsolated`** — 非 MainActor 的 Sendable 闭包中访问 `@MainActor` 属性
+> 详细用法、代码示例和 8 条关键规则见 [use* API 文档](./use-methods.md)。
 
 ## RootPresenter
 
@@ -384,33 +359,79 @@ class MyPresenter: ViewPresenter<MyView>, PageLifecycle {
 }
 ```
 
+## 特殊 Presenter 类型
+
+### ManagedViewPresenter
+
+`ManagedViewPresenter<View>` 是 `ViewPresenter<View>` 的子类，自带独立的 `ServiceManager`。当某个 Presenter 需要自己的 Service 作用域（不依赖父 Presenter 的 Service 查找链）时使用：
+
+```swift
+class SelfContainedPresenter: ManagedViewPresenter<MyViewProtocol> {
+    override func onAttach(presenter: ViewPresentable) {
+        super.onAttach(presenter: presenter)
+        // 注册仅在此 Presenter 及其子树中可见的 Service
+        register(service: LocalCacheService.self) { LocalCacheImpl() }
+    }
+}
+```
+
+### IsolatedViewPresenter
+
+`IsolatedViewPresenter` 允许在非 DDComponent 页面（传统 UIViewController）中嵌入一个独立的 Presenter 组件。它自带独立的 ServiceManager、NotifyManager 和 UpdatePipeline，不依赖外部的 RootPresenter：
+
+```swift
+// 在传统 UIViewController 中
+let isolated = IsolatedViewPresenter(MyLikeButton(), LikePresenter())
+isolated.register(service: LikeService.self) { LikeServiceImpl() }
+view.addSubview(isolated.view)
+
+// 手动转发生命周期
+override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    isolated.notifyGlobal(listener: PageLifecycle.self) {
+        $0.viewDidAppear(animated)
+    }
+}
+```
+
+### Shadow Presenter（CollectionItemPresenter 内部）
+
+Shadow Presenter 是 `CollectionItemPresenter` 的**内部实现细节**，用于解决列表 Cell 复用场景下的生命周期管理：
+
+```
+Cell 显示时:
+  CollectionItemPresenter
+    └── ShadowPresenter
+          ├── bindView(cell)     → 触发 onBindView
+          └── onUpdate(cell)     → 触发 onUpdate
+
+Cell 回收时:
+  CollectionItemPresenter
+    └── ShadowPresenter
+          └── unbindView()       → 触发 onUnbindView
+          └── prepareForReuse()  → 重置状态
+```
+
+开发者通常不需要直接操作 Shadow Presenter，框架自动处理绑定/解绑。
+
 ## 内部通信机制
 
 ### 设计背景
 
-页面拆分后，各个模块的通信问题会非常麻烦。传统做法是直接通过引用调用，但拆分后 Presenter 之间不应该互相持有引用，这会导致新的耦合。所以 DDComponent 提供了两种解耦的通信方式：
+页面拆分后，各个模块的通信问题会非常麻烦。传统做法是直接通过引用调用，但拆分后 Presenter 之间不应该互相持有引用，这会导致新的耦合。DDComponent 提供了两种解耦的通信方式：
 
 ### Service：页面级能力桥接
 
-有很多能力属于提供一定功能，而非业务自身的逻辑，比如埋点、页面跳转等。这些功能又无法定义为全局能力，因为需要页面相关信息进行填补。
-
-Service 提供**页面级别**的组件化服务功能，该能力只会在单一页面内部生效：
+Service 提供**页面级别**的组件化服务功能，用于可替换的外部能力（网络请求、路由跳转、埋点上报、数据持久化）：
 
 ```swift
-// 注册（2 种方式）
-// 方式一：在 presenterDidLoad 中手动注册
-override func presenterDidLoad() {
-    super.presenterDidLoad()
-    register(service: LikeService.self) { LikeServiceImpl() }
-}
-
-// 方式二：在 pageInstallers 中声明式注册
+// 注册
 @PageInstallerBuilder override var pageInstallers: PageInstaller {
     ServiceInstaller(LikeService.self, { LikeServiceImpl() })
     ServiceInstaller(DataLoader.self, { MockDataLoaderImpl() })
 }
 
-// 获取（在任意 Presenter 中）
+// 获取
 getService(LikeService.self)?.toggleLike(...)
 ```
 
@@ -418,17 +439,15 @@ Service 查找链：当前 Presenter → superPresenter → ... → RootPresente
 
 ### Notify：广播通信
 
-页面拆分后，各个模块的通信问题会非常麻烦，所以通过广播的形式去简化消息传递。基于协议的多播通信，按作用域分为：
+基于协议的多播通信，用于 Presenter 间通信。按作用域分为：
 
 | 作用域 | 方法 | 范围 |
 |---|---|---|
-| `.global` | `notifyGlobal()` | 从 Root 广播到所有 P-Tree 中的 Presenter，也会发送到手动注册的接收方 |
-| `.children` | `notifyChildren()` | 向下广播到所有子模块（递归实现） |
+| `.global` | `notifyGlobal()` | 从 Root 广播到所有 P-Tree 中的 Presenter |
+| `.children` | `notifyChildren()` | 向下广播到所有子模块 |
 | `.childrenAndSelf` | — | 向下广播，包括自身 |
 | `.parents` | `notifyParents()` | 向上广播到父链 |
-| `.reusable` | `notifyReusable()` | 广播到最近的复用容器范围内 |
-
-**发送方**需要判断消息接收主体应该包括哪些——是全局还是子模块。在 reusable view 场景下，往往只想要通知自己模块下的所有 Presenter 进行更新操作，此时通过向下广播就非常适合。
+| `.reusable` | `notifyReusable()` | 广播到最近的复用容器范围 |
 
 ```swift
 // 定义监听协议
@@ -443,11 +462,19 @@ notify(listener: LikeListener.self) {
 
 // 接收广播（实现对应协议即可）
 extension MyPresenter: LikeListener {
-    func onLikeChanged(isLiked: Bool, count: Int) {
-        // 处理通知
-    }
+    func onLikeChanged(isLiked: Bool, count: Int) { ... }
 }
 ```
+
+### 通信方式选择
+
+| 场景 | 用 Notify | 用 Service |
+|---|---|---|
+| 父 ↔ 子 Presenter 通信 | ✅ | ❌ |
+| 网络请求 | ❌ | ✅ |
+| 页面跳转 | ❌ | ✅ |
+| 埋点上报 | ❌ | ✅ |
+| 全局事件（主题切换、登录状态） | ✅ | ❌ |
 
 ## 类关系总览
 
@@ -460,17 +487,31 @@ extension MyPresenter: LikeListener {
                     │  - Notify / Service  │
                     └──────────┬───────────┘
                                │
-              ┌────────────────┼────────────────┐
-              │                │                │
-    ┌─────────▼─────────┐ ┌───▼──────────┐ ┌───▼────────────────┐
-    │ ViewPresenter<V>  │ │ RootView-    │ │ ReusableView-      │
-    │ (基类)            │ │ Presenter<V> │ │ Presenter<V>       │
-    │                   │ │ (根节点)     │ │ (列表复用)         │
-    └───┬───────────────┘ └──┬───────────┘ └──┬─────────────────┘
-        │                    │                 │
- ┌──────▼──────────┐  ┌──────▼──────────┐  ┌──▼──────────────────┐
- │ IdentifierView- │  │ PageViewController│ │ CollectionPresenter │
- │ GroupPresenter  │  │ (UIKit 桥接)    │  │ (UICollectionView)  │
- │ (标识符存取)    │  └─────────────────┘  │ UITableView...      │
- └─────────────────┘                        └─────────────────────┘
+         ┌─────────────────────┼─────────────────────┐
+         │                     │                     │
+   ┌─────▼──────────┐  ┌──────▼──────────┐  ┌───────▼──────────────┐
+   │ ViewPresenter  │  │ RootView-       │  │ ReusableView-        │
+   │ <V> (基类)     │  │ Presenter<V>    │  │ Presenter<V>         │
+   └──┬──┬──────────┘  │ (根节点)        │  │ (列表复用)           │
+      │  │              └────────────────┘  └──┬───────────────────┘
+      │  │                                      │
+ ┌────▼┐ │ ┌──────────────────────┐  ┌──────────▼──────────────┐
+ │IdVG │ │ │ PageViewController   │  │ CollectionPresenter<V>  │
+ │Pres.│ │ │ (UIKit 桥接)         │  │ (Collection/TableView)  │
+ └─────┘ │ └──────────────────────┘  └─────────────────────────┘
+         │
+  ┌──────▼───────────┐  ┌──────────────────┐
+  │ ManagedView-     │  │ IsolatedView-    │
+  │ Presenter<V>     │  │ Presenter        │
+  │ (自带 Service)   │  │ (独立组件)       │
+  └──────────────────┘  └──────────────────┘
 ```
+
+## 相关文档
+
+- [使用指南](./usage-guide.md) — 固定视图、列表视图、装配方式
+- [复用 Presenter](./reusable-presenter.md) — 列表 Cell 复用、增量更新引擎
+- [use* API](./use-methods.md) — 声明式状态管理详细用法
+- [Swift 6 并发模式](./swift6-patterns.md) — lazy var、MainActor、Sendable
+- [@PresenterState 宏](./presenter-state-macro.md) — 简化状态声明
+- [Demo 索引](./demo-index.md) — 所有示例 Demo 列表

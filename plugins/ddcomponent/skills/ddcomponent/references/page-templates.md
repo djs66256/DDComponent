@@ -1,17 +1,15 @@
-# 页面创建完整模板
-
-## 固定视图页面
+# 固定视图页面
 
 适用于详情页、固定布局页面。这是最常用的模式。
 
-### 步骤
+## 步骤
 
 1. 定义 View 协议（页面需要展示什么）
 2. 创建各功能 Presenter（每个功能一个）
 3. 创建 RootPresenter（组装所有 Presenter）
 4. 创建 PageViewController（UIKit 桥接，注册 Service）
 
-### 完整代码模板
+## 完整代码模板
 
 ```swift
 // ===== Step 1: 定义 View 协议 =====
@@ -29,7 +27,6 @@ class MyPageRootPresenter: RootViewPresenter<MyPageViewProtocol> {
 
     required init() {
         super.init()
-        // 注册子 Presenter
         typeBox(LikePresenter())
         typeBox(SharePresenter())
         typeBox(CommentListPresenter())
@@ -37,12 +34,10 @@ class MyPageRootPresenter: RootViewPresenter<MyPageViewProtocol> {
 
     override func onAttach() {
         super.onAttach()
-        // P-Tree 挂载后的初始化
     }
 
     override func onBindView(_ view: MyPageViewProtocol) {
         super.onBindView(view)
-        // 绑定子 Presenter 到对应的 View
         (typeUnbox() as LikePresenter?)?.bindView(view.likeButton)
         (typeUnbox() as SharePresenter?)?.bindView(view.shareButton)
         (typeUnbox() as CommentListPresenter?)?.bindView(view.commentList)
@@ -50,20 +45,14 @@ class MyPageRootPresenter: RootViewPresenter<MyPageViewProtocol> {
 
     override func onUnbindView() {
         super.onUnbindView()
-        // 解绑是可选的（框架会自动处理），但显式解绑更清晰
     }
 }
 
 // ===== Step 4: 创建 ViewController =====
 class MyPageViewController: PageViewController<MyPageRootView, MyPageRootPresenter> {
 
-    override func makeView() -> MyPageRootView {
-        MyPageRootView()
-    }
-
-    override func makePresenter() -> MyPageRootPresenter {
-        MyPageRootPresenter()
-    }
+    override func makeView() -> MyPageRootView { MyPageRootView() }
+    override func makePresenter() -> MyPageRootPresenter { MyPageRootPresenter() }
 
     @PageInstallerBuilder override var pageInstallers: PageInstaller {
         ServiceInstaller(DataLoader.self, { DataLoaderImpl() })
@@ -74,81 +63,6 @@ class MyPageViewController: PageViewController<MyPageRootView, MyPageRootPresent
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.loadData()
-    }
-}
-```
-
-## 列表页面（TableView / CollectionView）
-
-适用于需要 Cell 复用的长列表。
-
-### 决策：Cell 是否需要 MVP 拆分？
-
-- Cell 很简单 → 不需要复用 Presenter，直接用普通 ViewPresenter
-- Cell 内部还需要 MVP 拆分 → 需要复用 Presenter（继承 `ReusableViewPresenter`）
-
-### 复用 Presenter 的完整模板
-
-```swift
-// ===== Item Presenter（可复用） =====
-class CommentItemPresenter: ReusableViewPresenter<CommentCellProtocol> {
-    required init() { super.init() }
-
-    var comment: Comment? {
-        didSet { setState {} }
-    }
-
-    override func prepareForReuse() {
-        comment = nil
-    }
-
-    override func onBindView(_ view: CommentCellProtocol) {
-        view.onAvatarTapped = { [weak self] in self?.openProfile() }
-    }
-
-    override func onUpdate(view: CommentCellProtocol, context: ViewUpdateContext) {
-        view.author = comment?.author
-        view.content = comment?.text
-    }
-
-    private func openProfile() {
-        getService(RouterService.self)?.openProfile(comment?.authorId)
-    }
-}
-
-// ===== Section Presenter =====
-class CommentSectionPresenter: CollectionSectionPresenter {
-    var comments: [Comment] = [] {
-        didSet {
-            setItems(comments.map { CommentItemPresenter().apply { $0.comment = $0 } })
-        }
-    }
-}
-
-// ===== Root Presenter =====
-class CommentListRootPresenter: CollectionRootPresenter<CommentListViewProtocol> {
-    let section = CommentSectionPresenter()
-
-    override func onAttach() {
-        super.onAttach()
-        add(child: section)
-        sections = [section]
-    }
-
-    func loadComments() {
-        getService(DataLoader.self)?.fetch { [weak self] comments in
-            self?.section.comments = comments
-        }
-    }
-}
-
-// ===== ViewController =====
-class CommentListViewController: UITablePageViewController<CommentItemPresenter> {
-    override func makePresenter() -> CommentListRootPresenter { CommentListRootPresenter() }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        presenter.loadComments()
     }
 }
 ```
@@ -173,3 +87,31 @@ class LegacyViewController: UIViewController {
     }
 }
 ```
+
+## 文件结构建议
+
+```
+Feature/
+├── Models/
+│   └── Comment.swift
+├── Presenters/
+│   ├── CommentListRootPresenter.swift
+│   ├── CommentSectionPresenter.swift
+│   └── CommentItemPresenter.swift
+├── Views/
+│   ├── CommentCell.swift
+│   └── CommentListView.swift
+├── Protocols/
+│   └── CommentViewProtocols.swift
+├── Services/
+│   ├── CommentDataService.swift
+│   └── CommentLikeService.swift
+└── CommentListViewController.swift
+```
+
+## 命名规范
+
+- `XxxPresenter.swift` — 业务逻辑，继承 `ViewPresenter<XxxProtocol>`
+- `XxxViewController.swift` — 页面入口，继承 `PageViewController<...>` 或 `UITablePageViewController<...>`
+- `XxxService.swift` — 服务协议 + 默认实现
+- View 协议放在 Presenter 文件顶部，或单独放 `Protocols/` 目录

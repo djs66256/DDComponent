@@ -53,7 +53,7 @@ open class BaseViewUpdatePipeline: ViewUpdatePipeline {
     open func markDirty(presenter: ViewPresentable, context: ViewUpdateContext, _ completion: (() -> Void)?) {
         guard !isDestroyed else { return }
         
-        // Binding view should not update asynchronize, just call update immediately.
+        // Binding view should not update asynchronously, just call update immediately.
         if context.isBindingView {
             presenter.updateView(context: context)
         }
@@ -65,7 +65,7 @@ open class BaseViewUpdatePipeline: ViewUpdatePipeline {
         invalidateContentSize = invalidateContentSize || context.invalidateContentSize
         
         // When collection view in another collection cell, child cell size changed needs notify
-        // super collection cell to recaculate layout
+        // super collection cell to recalculate layout
         var resizeSuperPresenter: (() -> Void)? = nil
         if context.invalidateSuperPresenterContentSize && !context.isDryRun,
            let superPipeline,

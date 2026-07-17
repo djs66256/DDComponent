@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 extension UICollectionItemFlowLayoutInfo.LayoutType {
-    var sizeCaculatorLayoutType : SizeCaculator.LayoutType {
+    var sizeCalculatorLayoutType : SizeCalculator.LayoutType {
         if self == .autoLayout {
             return .autoLayout
         }
@@ -64,7 +64,7 @@ open class UICollectionViewFlowLayoutProxy: UICollectionViewDelegateProxy, UICol
     private func calculateItemSize(_ presenter: UICollectionItemFlowPresentable, containerSize: CGSize) -> CGSize {
         let info = presenter.layoutInfo
         if info.calculateSizeAutomatically {
-            return calculateItemSizeAutomatically(presenter, info.layoutType.sizeCaculatorLayoutType, containerSize)
+            return calculateItemSizeAutomatically(presenter, info.layoutType.sizeCalculatorLayoutType, containerSize)
         }
         else {
             return presenter.calculateSize(containerSize: containerSize)

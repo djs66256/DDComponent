@@ -11,7 +11,7 @@ import UIKit
 public enum NotifyScope {
     case global             // Notify from root.
     case reusable           // Notify from nearest reusable parent presenter
-    case children           // Notify to its chidren
+    case children           // Notify to its children
     case childrenAndSelf    // Notify to its children and itself
     case parents            // Notify to its parents, until to root presenter
 }

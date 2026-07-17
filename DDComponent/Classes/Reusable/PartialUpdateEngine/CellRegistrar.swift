@@ -50,11 +50,11 @@ extension Engine {
         }
         
         func dequeueReusableSupplementaryView(ofKind elementKind: String, withReuseClass reuseClass: AnyClass, for indexPath: IndexPath) -> UICollectionReusableView {
-            let identifer = SupplementaryIdentifier(kind: elementKind, identifier: "\(reuseClass)")
-            if !registered.contains(identifer) {
-                collectionView.register(reuseClass, forSupplementaryViewOfKind: elementKind, withReuseIdentifier: identifer.identifier)
+            let identifier = SupplementaryIdentifier(kind: elementKind, identifier: "\(reuseClass)")
+            if !registered.contains(identifier) {
+                collectionView.register(reuseClass, forSupplementaryViewOfKind: elementKind, withReuseIdentifier: identifier.identifier)
             }
-            return collectionView.dequeueReusableSupplementaryView(ofKind: elementKind, withReuseIdentifier: identifer.identifier, for: indexPath)
+            return collectionView.dequeueReusableSupplementaryView(ofKind: elementKind, withReuseIdentifier: identifier.identifier, for: indexPath)
         }
         
         mutating func dequeueReusablePresenter(presenter: CollectionItemReusablePresenterHoldable,

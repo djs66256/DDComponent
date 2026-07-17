@@ -33,7 +33,7 @@ struct ViewUpdatePipelineBuilder {
     
     static func buildTableViewPipeline(presenter: CollectionPresentable, tableView: UITableView) -> ListViewUpdatePipeline {
         if useNewPipeline {
-            return Engine.PartialTrasactionPipeline(root: presenter, tableView: tableView)
+            return Engine.PartialTransactionPipeline(root: presenter, tableView: tableView)
         }
         else {
             return Engine.ListUpdater(root: presenter, tableView: tableView)
@@ -42,7 +42,7 @@ struct ViewUpdatePipelineBuilder {
     
     static func buildCollectionViewPipeline(presenter: CollectionPresentable, collectionView: UICollectionView) -> ListViewUpdatePipeline {
         if useNewPipeline {
-            return Engine.PartialTrasactionPipeline(root: presenter, collectionView: collectionView)
+            return Engine.PartialTransactionPipeline(root: presenter, collectionView: collectionView)
         }
         else {
             return Engine.ListUpdater(root: presenter, collectionView: collectionView)

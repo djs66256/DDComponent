@@ -62,7 +62,7 @@ private func _listenTo<P>(_ type: P.Type) -> ServiceInstaller.NotifyInstaller {
 public struct ServiceInstaller<T>: PageInstaller {
     public let type: T.Type
     public let lazy: Bool
-    public let builer: ()->T
+    public let builder: ()->T
     fileprivate typealias NotifyInstaller = (ViewPresenterInstallable, AnyObject)->Void
     private let notifiers: [NotifyInstaller]
     
@@ -73,7 +73,7 @@ public struct ServiceInstaller<T>: PageInstaller {
     private init(_ type: T.Type, lazy: Bool = true, notifiers: [NotifyInstaller], _ builder: @escaping ()->T) {
         self.lazy = lazy
         self.type = type
-        self.builer = builder
+        self.builder = builder
         self.notifiers = notifiers
     }
     
@@ -167,7 +167,7 @@ public struct ServiceInstaller<T>: PageInstaller {
     }
     
     public func install(presenter: ViewPresenterInstallable) {
-        presenter.register(service: type, lazy: lazy, builer)
+        presenter.register(service: type, lazy: lazy, builder)
         
         if !notifiers.isEmpty, let service = presenter.getService(type) as? AnyObject {
             for notifier in notifiers {

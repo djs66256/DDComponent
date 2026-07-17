@@ -27,10 +27,10 @@ open class UICollectionViewDelegateProxy: NSObject, UpdatePipelineInvalidateCont
     weak var scrollDelegate: UIScrollViewDelegate?
     let updater: ListViewUpdatePipeline
     var registrar: Engine.UICollectionViewCellRegistrar
-    var sizeCalculator = SizeCaculator()
+    var sizeCalculator = SizeCalculator()
     var sizeCache = SizeCache()
     
-    var updatePipline: ViewUpdatePipeline {
+    var updatePipeline: ViewUpdatePipeline {
         updater
     }
     func reset() {
@@ -112,11 +112,11 @@ open class UICollectionViewDelegateProxy: NSObject, UpdatePipelineInvalidateCont
             root?.getService(type)
         }
     }
-    lazy var caculatorRootPresenter = CalculatorRootViewPresenter(root: updater.rootPresenter)
+    lazy var calculatorRootPresenter = CalculatorRootViewPresenter(root: updater.rootPresenter)
     
     let visiblePresenters: NSMapTable<UIView, AnyObject> = .weakToStrongObjects()
     
-    public func calculateItemSizeAutomatically(_ presenter: UICollectionItemFlowPresentable, _ layoutType: SizeCaculator.LayoutType, _ containerSize: CGSize) -> CGSize {
+    public func calculateItemSizeAutomatically(_ presenter: UICollectionItemFlowPresentable, _ layoutType: SizeCalculator.LayoutType, _ containerSize: CGSize) -> CGSize {
         var size: CGSize = .zero
         let viewClass = presenter.itemClass
         
@@ -127,27 +127,27 @@ open class UICollectionViewDelegateProxy: NSObject, UpdatePipelineInvalidateCont
             let presenterClass = holder.presenterClass
             let cellPresenter = sizeCalculator.dequeuePresenter(for: presenterClass)
             // If reused presenter is not automatical, just return it.
-            if let caculator = cellPresenter as? UICollectionItemSizeCaculatable {
-                if !caculator.layoutInfo.calculateSizeAutomatically {
-                    caculatorRootPresenter.bindReusablePresenter(cellPresenter)
+            if let calculator = cellPresenter as? UICollectionItemSizeCalculatable {
+                if !calculator.layoutInfo.calculateSizeAutomatically {
+                    calculatorRootPresenter.bindReusablePresenter(cellPresenter)
                     holder.dryRunUpdateReusablePresenter(cellPresenter)
-                    caculatorRootPresenter.updateViewIfNeeded()
-                    let size = caculator.calculateSize(containerSize: containerSize)
-                    caculatorRootPresenter.unbindReusablePresenter()
+                    calculatorRootPresenter.updateViewIfNeeded()
+                    let size = calculator.calculateSize(containerSize: containerSize)
+                    calculatorRootPresenter.unbindReusablePresenter()
                     return size
                 }
                 else {
-                    fitting = caculator.layoutInfo.autoLayoutSizeFitting.fitting(with: containerSize)
-                    layoutType = caculator.layoutInfo.layoutType.sizeCaculatorLayoutType
+                    fitting = calculator.layoutInfo.autoLayoutSizeFitting.fitting(with: containerSize)
+                    layoutType = calculator.layoutInfo.layoutType.sizeCalculatorLayoutType
                 }
             }
-            
+
             let cell = sizeCalculator.dequeueView(for: viewClass)
-            
-            caculatorRootPresenter.bindReusablePresenter(cellPresenter)
+
+            calculatorRootPresenter.bindReusablePresenter(cellPresenter)
             if holder.dryRunUpdateReusablePresenter(cellPresenter) {
                 if cellPresenter.tryBindView(cell) {
-                    caculatorRootPresenter.updateViewIfNeeded()
+                    calculatorRootPresenter.updateViewIfNeeded()
                     size = sizeCalculator.size(for: cell,
                                                layoutType: layoutType,
                                                fitting: fitting)
@@ -157,10 +157,10 @@ open class UICollectionViewDelegateProxy: NSObject, UpdatePipelineInvalidateCont
                     assert(false, "Reuse cell presenter \(cellPresenter) can not bind cell \(cell)")
                 }
             }
-            caculatorRootPresenter.unbindReusablePresenter()
+            calculatorRootPresenter.unbindReusablePresenter()
         }
         else {
-            assert(false, "Presenter \(presenter) do not support caculate size.")
+            assert(false, "Presenter \(presenter) do not support calculate size.")
         }
         
         return size

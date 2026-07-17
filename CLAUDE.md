@@ -4,6 +4,8 @@
 
 DDComponent is an iOS Swift framework (CocoaPod, `DDComponent.podspec`) that provides a **Presenter-based page decomposition architecture**. It decomposes complex `UIViewController`/`UIView` logic into smaller, composable, testable Presenter units organized in a tree structure (P-Tree), with a separate View tree (V-Tree) that can be swapped independently.
 
+Includes `DDComponentMacros` (Swift Macro, Package.swift) providing `@PresenterState` to auto-generate `setState`-wrapped computed properties.
+
 ## Build & development
 
 ```bash
@@ -20,7 +22,7 @@ xcodebuild test -project Example/DDComponent.xcodeproj -scheme DDComponent-Examp
 pod lib lint DDComponent.podspec
 ```
 
-The framework source lives in `DDComponent/Classes/**/*.swift`. The Example app (in `Example/DDComponent/`) demonstrates usage patterns.
+The framework source lives in `DDComponent/Classes/**/*.swift`. The Example app (in `Example/DDComponent/`) demonstrates usage patterns through 12 numbered demos in `Demos/`.
 
 ## Testing
 
@@ -60,10 +62,13 @@ Tests use `@testable import DDComponent` and run on the `DDComponent-Example` sc
 | `RootViewPresenter<View>` | `RootViewPresenter.swift` | Root node; owns pipeline, services, notifications |
 | `PageViewController<F, P>` | `PageViewController.swift` | UIKit bridge; forwards lifecycle via notify |
 | `IdentifierViewGroupPresenter<View>` | `ViewGroupPresenter.swift` | Children accessed by key (`typeBox`/`typeUnbox`) |
+| `ManagedViewPresenter<View>` | `ManagedViewPresenter.swift` | Presenter with its own Service scope |
+| `IsolatedViewPresenter` | `IsolatedViewPresenter.swift` | Standalone Presenter outside PageViewController |
 | `ReusableViewPresenter<View>` | `Reusable/ReusableViewPresenter.swift` | For list cell reuse; requires `init()` and `prepareForReuse()` |
 | `CollectionPresenter<View>` | `Reusable/CollectionPresenters/CollectionPresenter.swift` | Manages `sections` array |
 | `CollectionSectionPresenter` | `Reusable/CollectionPresenters/CollectionSectionPresenter.swift` | Manages `items` and `supplementaries` |
 | `CollectionItemPresenter<View>` | `Reusable/CollectionPresenters/CollectionItemPresenter.swift` | Single cell; uses Shadow Presenter pattern |
+| `ViewUpdateAnimator` | `ViewUpdateAnimators.swift` | Custom animation protocol; built-in `SpringAnimator`/`EaseAnimator` |
 
 ### Lifecycle order
 
@@ -71,33 +76,34 @@ Tests use `@testable import DDComponent` and run on the `DDComponent-Example` sc
 init() → onAttach(presenter:) → onAttachToRoot() → onBindView(_:) → onUpdate(view:context:) [×N] → onUnbindView() → onDetach() → onDetachFromRoot() → deinit
 ```
 
+Each method has clear responsibilities — see `docs/architecture.md` for the complete lifecycle responsibilities table.
+
 ### State-driven updates
 
 All UI updates go through `setState(updater:context:completion:)`. The `ViewUpdatePipeline` (owned by RootPresenter) batches and schedules updates. `ViewUpdateContext` controls animation, layout invalidation, and data-source reload behavior.
 
+```swift
+setState { self.count += 1 } context: {
+    $0.animated = true              // Animate
+    $0.invalidateLayout = true      // Trigger layout
+    $0.invalidateDataSource = true  // Diff + reload (lists)
+    $0.updateViewImmediately = true // Skip runloop batching
+}
+```
+
 ### use* API (React Hooks-like pattern)
 
-`ViewPresenter+Use.swift` provides `use*` methods that centralize state, side effects, and view updaters at initialization time, avoiding scattered state across lifecycle methods:
+`ViewPresenter+Use.swift` provides `useState`, `useEffect`, `useUpdate`, `useService` for centralized state/effect management at init time. See `docs/use-methods.md` for full details.
 
-- **`useState(_:)`** — Create a reactive `State<T>` container. Setting `state.value` triggers `setState` → `onUpdate`. Supports multiple variants:
-  - Basic: `useState(0)`, `useState(nil)` for optionals
-  - Equality flavors: `T: Equatable` (uses `==`), `T: AnyObject` (uses `===`), unconstrained (always triggers)
-  - With updater: `useState(0) { value, view, _ in view.label.text = "\(value)" }`
-  - With keyPath: `useState("", updateTo: \.titleLabel.text)` (requires `View: AnyObject`)
-  - With Publisher: `useState("", publisher: myPublisher)`
-  - With AsyncSequence: `useState(0, sequence: myStream)`
-  - With Service + Publisher/Sequence: `useState("", service: S.self, publisher: { $0.pub() })`
-  - With ObservableObject: `useState(MyViewModel())` — observes `objectWillChange`, auto-cancels on replace
-- **`useEffect(_:)`** — Register side effects tied to presenter lifecycle. Action runs on attach to root, cleanup runs on detach.
-- **`useUpdate(dependences:_:)`** — Register dependency-driven view updaters. Only runs when dependent states change.
-- **`useService(_:_:)`** — Convenience wrapper that resolves a service and passes it to an effect.
+Key constraints:
+- Must be called in `init()` or as property initializer
+- With Swift 6, use `lazy var` with explicit type annotation
+- Timer callbacks must use `MainActor.assumeIsolated` for `@MainActor` properties
+- Optional values: `useState(nil)` — type inferred from property declaration
 
-**Key rules:**
-- Must be called in `init()` or as property initializer (NOT in lifecycle callbacks)
-- Store returned `State`, `Effect`, or `Updater` as instance properties
-- With Swift 6, use `lazy var` with explicit type annotation for property initialization
-- Optional values use `useState(nil)` — type inferred from property declaration
-- ObservableObject: `state.value = newObject` auto-cancels old subscription and binds new one
+### @PresenterState macro
+
+`@PresenterState var count: Int = 0` expands to a computed property whose setter auto-wraps `setState`, plus a `setCount(_:context:completion:)` convenience method. Lives in `DDComponentMacros/`. See `docs/presenter-state-macro.md`.
 
 ### Communication
 
@@ -106,7 +112,7 @@ All UI updates go through `setState(updater:context:completion:)`. The `ViewUpda
 
 ### Reusable / list views
 
-`ReusableViewPresenter<View>` for cell reuse. `CollectionPresenter` → `CollectionSectionPresenter` → `CollectionItemPresenter` hierarchy. `PartialTrasactionPipeline` diffs data sources on a background queue, then applies batch updates via `ListViewUpdateResolver`.
+`ReusableViewPresenter<View>` for cell reuse. `CollectionPresenter` → `CollectionSectionPresenter` → `CollectionItemPresenter` hierarchy. `PartialTransactionPipeline` diffs data sources on a background queue, then applies batch updates via `ListViewUpdateResolver`.
 
 ### Dependency injection DSL
 
@@ -114,11 +120,21 @@ All UI updates go through `setState(updater:context:completion:)`. The `ViewUpda
 
 ## Documentation
 
-Detailed docs are in `docs/`: architecture, usage guide, reusable presenters.
+| Doc | Content |
+|---|---|
+| `docs/README.md` | Index with learning paths and quick-find table |
+| `docs/architecture.md` | P-Tree/V-Tree, full lifecycle reference, Service/Notify, type hierarchy |
+| `docs/usage-guide.md` | How to build pages, lists, use Service/Notify, assembly patterns |
+| `docs/reusable-presenter.md` | List cell reuse, CollectionPresenter system, layoutInfo, diff engine |
+| `docs/use-methods.md` | Complete useState/usEffect/useUpdate/useService reference |
+| `docs/presenter-state-macro.md` | @PresenterState macro usage guide |
+| `docs/swift6-patterns.md` | Swift 6 concurrency patterns (lazy var, MainActor.assumeIsolated) |
+| `docs/demo-index.md` | All 12 demos with concepts and difficulty |
 
 ## File conventions
 
 - All framework source in `DDComponent/Classes/`
 - `UpdatePipeline/` — view update scheduling and diffing
 - `Reusable/` — reusable presenters, collection abstractions, UITableView/UICollectionView bridges, partial update engine
+- Macro source in `DDComponentMacros/Sources/`
 - Example code in `Example/DDComponent/`

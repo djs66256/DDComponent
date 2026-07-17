@@ -43,7 +43,7 @@ public extension ViewPresenterIdentify where Self : ViewPresentable {
     }
     
     /// Get the presenter registered by the key.
-    /// - Returns: The key of the presenter registed.
+    /// - Returns: The key of the presenter registered.
     func getViewPresenter(_ key: AnyHashable) -> ViewPresentable? {
         if let p = presenterStore.presenters[key] {
             return p
@@ -84,7 +84,7 @@ public extension ViewPresenterIdentify where Self : ViewPresentable {
     }
     
     
-    /// Add child with type identifier. It's helpful when type is explict.
+    /// Add child with type identifier. It's helpful when type is explicit.
     /// ```swift
     /// // register lazy:
     /// typeBoxLazy({ MyViewPresenter() })
@@ -99,7 +99,7 @@ public extension ViewPresenterIdentify where Self : ViewPresentable {
     /// ```
     
     
-    /// Register presenter with its type by lazy. Presenter will create when fisrt time getting it.
+    /// Register presenter with its type by lazy. Presenter will create when first time getting it.
     func typeBoxLazy<P, V>(_ value: @escaping ()->P) where P: ViewPresenter<V> {
         setLazyViewPresenter(ObjectIdentifier(P.self), value)
     }

@@ -42,7 +42,7 @@ open class CollectionSectionPresenter: ViewPresenter<Void>, CollectionSectionPre
                 remove(child: old)
             }
         }
-        // Add new items to children, do nothing if already in chidren.
+        // Add new items to children, do nothing if already in children.
         for item in _items {
             // Only new item needs adding child.
             if item.superPresenter !== self {
@@ -86,7 +86,7 @@ open class CollectionSectionPresenter: ViewPresenter<Void>, CollectionSectionPre
                 }
             }
         }
-        // Add new supplementaries to children, do nothing if already in chidren.
+        // Add new supplementaries to children, do nothing if already in children.
         for supplementary in supplementaries {
             // Only new supplementary needs adding child.
             if supplementary.superPresenter !== self {

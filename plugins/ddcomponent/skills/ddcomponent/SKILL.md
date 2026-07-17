@@ -9,917 +9,211 @@ description: >
   through the framework's design philosophy and code patterns.
 ---
 
-# DDComponent 页面拆分框架使用指南
+# DDComponent 页面拆分框架
 
-你是一个 DDComponent 专家。你的任务是帮助用户使用 DDComponent 框架构建 iOS 页面。
+你是一个 DDComponent 专家。帮助用户使用 DDComponent 框架构建 iOS 页面。
 
-## 核心设计思想（先理解再编码）
+## 核心设计思想
 
-在写任何代码之前，先理解 DDComponent 的三个核心思想：
+在写代码之前，先理解这三个核心思想：
 
-1. **View 不是 UIView，是协议**。View 代表"数据消费的终点"，可以是 UI 按钮，也可以是埋点服务。正因如此，同一个 Presenter 可以绑定到完全不同的 View 实现（比如 Resso 和 TTM 两套 UI 共享同一套业务逻辑）。
+1. **View 是协议，不是 UIView**。View 代表"数据消费的终点"，可以是 UI 按钮，也可以是埋点服务。同一个 Presenter 可以绑定到完全不同的 View 实现（如 Resso 和 TTM 两套 UI 共享业务逻辑）。
 
-2. **所有 UI 更新走 setState**。View 被视为一个状态机，借鉴 React/SwiftUI 的思想。直接修改 View 虽然也能工作，但会导致父容器无法感知、数据不一致、列表复用时状态错乱等问题。`setState` 统一入口，由 Pipeline 在合适的时机批量执行 `onUpdate`。
+2. **所有 UI 更新走 setState**。View 是状态机，借鉴 React/SwiftUI 思想。直接修改 View 会导致父容器无法感知、数据不一致、列表复用时状态错乱。`setState` 统一入口，由 Pipeline 批量调度 `onUpdate`。
 
-3. **Presenter 是业务逻辑的复用单元**。一个 Presenter 应该只做一件事。如果 Presenter 变得臃肿、被多个功能耦合，说明需要继续拆分。当 View 类型是 `Void` 时，Presenter 退化为纯逻辑单元（如埋点上报）。
+3. **Presenter 是业务逻辑的复用单元**。一个 Presenter 只做一件事。臃肿时继续拆分。当 View 类型为实际 Service 类型时，Presenter 退化为纯逻辑单元（如埋点上报）。
 
-## 决策树：我要做什么？
-
-在开始编码前，先判断场景：
+## 决策树
 
 ```
 用户要做什么？
-├── 创建一个新页面
-│   ├── 固定布局（详情页、信息流单条）→ 固定视图模式
+├── 创建新页面
+│   ├── 固定布局（详情页、信息流）→ 固定视图模式
 │   └── 列表（TableView/CollectionView）→ 列表模式
-├── 在现有页面加一个功能模块 → 创建 Presenter，装配到父 Presenter
-├── 创建一个可复用的列表 Cell → 复用 Presenter 模式
-└── 在传统 VC 中嵌入一个组件 → IsolatedViewPresenter
+├── 在现有页面加功能模块 → 创建 Presenter，装配到父 Presenter
+├── 创建可复用的列表 Cell → 复用 Presenter 模式
+└── 在传统 VC 中嵌入组件 → IsolatedViewPresenter
 ```
 
-## 一、创建页面（从大到小）
+## 快速参考
 
-### 1.1 固定视图页面
+### 生命周期顺序
 
-这是最常用的模式。适用于详情页、固定布局页面。
+```
+init() → onAttach() → onAttachToRoot() → onBindView(_:) → onUpdate(view:context:) [×N] → onUnbindView() → onDetach() → onDetachFromRoot() → deinit
+```
 
-**步骤：**
-
-1. 定义 View 协议（页面需要展示什么）
-2. 创建各功能 Presenter（每个功能一个）
-3. 创建 RootPresenter（组装所有 Presenter）
-4. 创建 PageViewController（UIKit 桥接，注册 Service）
-
-**完整代码模板：**
+### 固定视图页面（最小骨架）
 
 ```swift
-// ===== Step 1: 定义 View 协议 =====
-protocol MyPageViewProtocol: AnyObject {
-    var likeButton: LikeViewProtocol { get }
-    var shareButton: ShareViewProtocol { get }
-    var commentList: CommentListViewProtocol { get }
-}
-
-// ===== Step 2: 创建各功能 Presenter =====
-// 每个 Presenter 独立一个文件，见下方「创建 Presenter」章节
-
-// ===== Step 3: 创建 RootPresenter =====
-class MyPageRootPresenter: RootViewPresenter<MyPageViewProtocol> {
-
+// RootPresenter
+class MyRootPresenter: RootViewPresenter<MyViewProtocol> {
     required init() {
         super.init()
-        // 注册子 Presenter
-        typeBox(LikePresenter())
-        typeBox(SharePresenter())
-        typeBox(CommentListPresenter())
+        typeBox(FeaturePresenter())
     }
-
-    override func onAttach() {
-        super.onAttach()
-        // P-Tree 挂载后的初始化
-    }
-
-    override func onBindView(_ view: MyPageViewProtocol) {
+    override func onBindView(_ view: MyViewProtocol) {
         super.onBindView(view)
-        // 绑定子 Presenter 到对应的 View
-        (typeUnbox() as LikePresenter?)?.bindView(view.likeButton)
-        (typeUnbox() as SharePresenter?)?.bindView(view.shareButton)
-        (typeUnbox() as CommentListPresenter?)?.bindView(view.commentList)
-    }
-
-    override func onUnbindView() {
-        super.onUnbindView()
-        // 解绑是可选的（框架会自动处理），但显式解绑更清晰
+        (typeUnbox() as FeaturePresenter?)?.bindView(view.featureView)
     }
 }
 
-// ===== Step 4: 创建 ViewController =====
-class MyPageViewController: PageViewController<MyPageRootView, MyPageRootPresenter> {
-
-    override func makeView() -> MyPageRootView {
-        MyPageRootView()
-    }
-
-    override func makePresenter() -> MyPageRootPresenter {
-        MyPageRootPresenter()
-    }
-
+// ViewController
+class MyViewController: PageViewController<MyRootView, MyRootPresenter> {
+    override func makeView() -> MyRootView { MyRootView() }
+    override func makePresenter() -> MyRootPresenter { MyRootPresenter() }
     @PageInstallerBuilder override var pageInstallers: PageInstaller {
-        ServiceInstaller(DataLoader.self, { DataLoaderImpl() })
-        ServiceInstaller(LikeService.self, { LikeServiceImpl() })
-        ServiceInstaller(RouterService.self, { RouterServiceImpl() })
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        presenter.loadData()
+        ServiceInstaller(DataService.self, { DataServiceImpl() })
     }
 }
 ```
 
-### 1.2 列表页面（TableView / CollectionView）
+📖 **完整模板见 `references/page-templates.md`**
 
-适用于需要 Cell 复用的长列表。
-
-**决策：Cell 是否需要 MVP 拆分？**
-- Cell 很简单 → 不需要复用 Presenter，直接用普通 ViewPresenter
-- Cell 内部还需要 MVP 拆分 → 需要复用 Presenter（继承 `ReusableViewPresenter`）
-
-**复用 Presenter 的完整模板：**
+### 列表页面（最小骨架）
 
 ```swift
-// ===== Item Presenter（可复用） =====
-class CommentItemPresenter: ReusableViewPresenter<CommentCellProtocol> {
+// Item Presenter（可复用）
+class ItemPresenter: ReusableViewPresenter<ItemCellProtocol> {
     required init() { super.init() }
-
-    var comment: Comment? {
-        didSet { setState {} }
-    }
-
-    override func prepareForReuse() {
-        comment = nil
-    }
-
-    override func onBindView(_ view: CommentCellProtocol) {
-        view.onAvatarTapped = { [weak self] in self?.openProfile() }
-    }
-
-    override func onUpdate(view: CommentCellProtocol, context: ViewUpdateContext) {
-        view.author = comment?.author
-        view.content = comment?.text
-    }
-
-    private func openProfile() {
-        getService(RouterService.self)?.openProfile(comment?.authorId)
+    var data: Data? { didSet { setState {} } }
+    override func prepareForReuse() { data = nil }
+    override func onUpdate(view: ItemCellProtocol, context: ViewUpdateContext) {
+        view.title = data?.title
     }
 }
 
-// ===== Section Presenter =====
-class CommentSectionPresenter: CollectionSectionPresenter {
-    var comments: [Comment] = [] {
-        didSet {
-            setItems(comments.map { CommentItemPresenter().apply { $0.comment = $0 } })
-        }
-    }
-}
-
-// ===== Root Presenter =====
-class CommentListRootPresenter: CollectionRootPresenter<CommentListViewProtocol> {
-    let section = CommentSectionPresenter()
-
+// Root Presenter
+class ListRootPresenter: CollectionRootPresenter<ListViewProtocol> {
+    let section = CollectionSectionPresenter()
     override func onAttach() {
         super.onAttach()
         add(child: section)
         sections = [section]
     }
-
-    func loadComments() {
-        getService(DataLoader.self)?.fetch { [weak self] comments in
-            self?.section.comments = comments
-        }
-    }
 }
 
-// ===== ViewController =====
-class CommentListViewController: UITablePageViewController<CommentItemPresenter> {
-    override func makePresenter() -> CommentListRootPresenter { CommentListRootPresenter() }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        presenter.loadComments()
-    }
+// ViewController
+class ListViewController: UITablePageViewController<ItemPresenter> {
+    override func makePresenter() -> ListRootPresenter { ListRootPresenter() }
 }
 ```
 
-## 二、创建 Presenter（功能单元）
+📖 **完整模板见 `references/page-templates.md`**
 
-每个 Presenter 是一个独立的业务逻辑单元。创建 Presenter 是日常开发中最频繁的操作。
-
-### 2.1 标准 Presenter（有 UI）
+### 标准 Presenter（最小骨架）
 
 ```swift
-// View 协议 — 定义这个 Presenter 需要消费什么数据
-protocol MyFeatureViewProtocol: AnyObject {
+protocol FeatureViewProtocol: AnyObject {
     var title: String { get set }
-    var isLoading: Bool { get set }
-    var onButtonTapped: (() -> Void)? { get set }
+    var onTap: (() -> Void)? { get set }
 }
 
-// Presenter — 业务逻辑
-class MyFeaturePresenter: ViewPresenter<MyFeatureViewProtocol> {
+class FeaturePresenter: ViewPresenter<FeatureViewProtocol> {
+    private var title = ""
 
-    // 状态 — 所有影响 UI 的数据
-    struct State {
-        var title = ""
-        var isLoading = false
-    }
-    private var state = State()
-
-    // 对外暴露只读状态
-    var currentTitle: String { state.title }
-
-    // 业务方法
-    func loadData() {
-        setState { state.isLoading = true }
+    func load() {
+        setState { title = "loading..." }
         getService(DataService.self)?.fetch { [weak self] result in
-            self?.setState {
-                self?.state.title = result.title
-                self?.state.isLoading = false
-            } context: {
-                $0.animated = true
-            }
+            self?.setState { self?.title = result.title }
         }
     }
 
-    // 生命周期：绑定 View 时设置回调
-    override func onBindView(_ view: MyFeatureViewProtocol) {
+    override func onBindView(_ view: FeatureViewProtocol) {
         super.onBindView(view)
-        view.onButtonTapped = { [weak self] in self?.loadData() }
+        view.onTap = { [weak self] in self?.load() }
     }
 
-    // 生命周期：解绑 View 时清理回调（防止循环引用）
     override func onUnbindView() {
         super.onUnbindView()
-        view?.onButtonTapped = nil
+        view?.onTap = nil
     }
 
-    // 生命周期：状态变更 → 同步到 View
-    override func onUpdate(view: MyFeatureViewProtocol, context: ViewUpdateContext) {
-        view.title = state.title
-        view.isLoading = state.isLoading
+    override func onUpdate(view: FeatureViewProtocol, context: ViewUpdateContext) {
+        view.title = title
     }
 }
 ```
 
-### 2.2 纯逻辑 Presenter（View = Void，无 UI）
+📖 **详细模式见 `references/presenter-patterns.md`**
 
-```swift
-// 不需要 UI，只需要能力（如埋点、生命周期监听）
-class LifecycleTracePresenter: ViewPresenter<TraceService>, PageLifecycle {
+### 通信方式
 
-    override func onAttach(presenter: ViewPresentable) {
-        super.onAttach(presenter: presenter)
-        bindView(getService(TraceService.self)!)  // View 就是 Service
-    }
-
-    func viewDidAppear(_ animated: Bool) {
-        view?.trace(["event": "page_appear"])
-    }
-
-    func viewDidDisappear(_ animated: Bool) {
-        view?.trace(["event": "page_disappear"])
-    }
-}
-```
-
-### 2.3 将 Presenter 装配到页面
-
-**关键规则：`PageViewController.makePresenter()` 已经创建了 RootPresenter，不要在 `pageInstallers` 中再次注册它。** `pageInstallers` 中的 `PresenterInstaller` 用于注册 RootPresenter 的**子 Presenter**，而不是 RootPresenter 本身。
-
-```swift
-// 方式一：在 RootPresenter 的 init 中注册子 Presenter（推荐）
-class MyRootPresenter: RootViewPresenter<MyViewProtocol> {
-    required init() {
-        super.init()
-        typeBox(MyFeaturePresenter())        // 常驻 Presenter
-        typeBoxLazy({ ExpensivePresenter() }) // 懒加载
-    }
-}
-
-// 方式二：在 pageInstallers 中注册子 Presenter
-// ⚠️ 注意：这里注册的是子 Presenter，不是 RootPresenter 本身
-@PageInstallerBuilder override var pageInstallers: PageInstaller {
-    PresenterInstaller(lazyLoad: true, { MyFeaturePresenter() })
-}
-```
-
-## 三、代码组织建议
-
-### 文件结构
-
-```
-Feature/
-├── Models/
-│   └── Comment.swift              # 数据模型
-├── Presenters/
-│   ├── CommentListRootPresenter.swift
-│   ├── CommentSectionPresenter.swift
-│   └── CommentItemPresenter.swift
-├── Views/
-│   ├── CommentCell.swift           # 实现 CommentCellProtocol
-│   └── CommentListView.swift       # 实现 CommentListViewProtocol
-├── Protocols/
-│   └── CommentViewProtocols.swift  # 所有 View 协议
-├── Services/
-│   ├── CommentDataService.swift    # 协议 + 实现
-│   └── CommentLikeService.swift
-└── CommentListViewController.swift
-```
-
-### Presenter 拆分原则
-
-判断一个 Presenter 是否应该继续拆分：
-
-- **单一职责**：一个 Presenter 只做一件事（Like、Share、Comment 各一个）
-- **独立复用**：如果某块逻辑可能在多个页面使用，就独立成 Presenter
-- **独立测试**：如果某块逻辑需要单独测试，就独立成 Presenter
-- **不要过度拆分**：如果两个功能总是同时出现且逻辑简单，可以放在一起
-
-### 何时用 Service vs 直接写在 Presenter 里
-
-- **Service**：可替换的能力（网络请求、路由跳转、埋点上报、数据持久化）
-- **Presenter 内部**：无法替换的业务逻辑（状态管理、业务流程编排、UI 交互逻辑）
-
-## 四、通信：Presenter 之间如何交互
-
-### 场景 1：子 Presenter 需要通知父 Presenter
-
-```swift
-// 定义监听协议
-protocol LikeListener: AnyObject {
-    func onLikeChanged(isLiked: Bool, count: Int)
-}
-
-// 发送方（子 Presenter）
-notify(listener: LikeListener.self) {
-    $0.onLikeChanged(isLiked: true, count: 10)
-}
-
-// 接收方（父 Presenter 实现协议即可）
-extension MyRootPresenter: LikeListener {
-    func onLikeChanged(isLiked: Bool, count: Int) {
-        // 更新页面级别的状态
-        updateTotalLikeCount()
-    }
-}
-```
-
-### 场景 2：父 Presenter 需要通知所有子 Presenter
-
-```swift
-// 向下广播到所有子 Presenter
-notifyChildren(listener: ThemeListener.self) {
-    $0.onThemeChanged(.dark)
-}
-```
-
-### 场景 3：需要外部能力（网络、路由、埋点等）
-
-```swift
-// 用 Service，不要直接依赖具体实现
-getService(DataLoader.self)?.fetch { ... }
-getService(RouterService.self)?.navigate(to: .profile)
-```
-
-### 通信方式选择
-
-| 场景 | 用 Notify | 用 Service |
+| 场景 | 方式 | 示例 |
 |---|---|---|
-| 父 ↔ 子 Presenter 通信 | ✅ | ❌ |
-| 网络请求 | ❌ | ✅ |
-| 页面跳转 | ❌ | ✅ |
-| 埋点上报 | ❌ | ✅ |
-| 全局事件（主题切换、登录状态） | ✅ | ❌ |
+| 子 → 父通知 | `notify(listener:)` | `notify(listener: LikeListener.self) { $0.onLikeChanged(...) }` |
+| 父 → 子广播 | `notifyChildren(listener:)` | `notifyChildren(listener: ThemeListener.self) { ... }` |
+| 外部能力（网络/路由/埋点） | `getService()` | `getService(RouterService.self)?.navigate(to: ...)` |
 
-## 四-A、use* API：声明式状态与副作用管理
+📖 **完整通信指南见 `references/communication.md`**
 
-`use*` 方法是框架提供的 React Hooks 风格 API，将状态、副作用和视图更新器集中声明在初始化阶段，替代分散在多个生命周期方法中的传统写法。
+### setState Context Flags
 
-### 为什么用 use* 而不是传统方式
+| Flag | 用途 |
+|---|---|
+| `animated = true` | 动画过渡（配合 `$0.animator = SpringAnimator.bouncy` 使用内置动画器） |
+| `invalidateLayout = true` | 布局变化 |
+| `invalidateDataSource = true` | 列表数据源变化（触发 Diff + reload） |
+| `invalidateContentSize = true` | Cell 尺寸变化 |
+| `updateViewImmediately = true` | 立即更新，不等批处理 |
 
-**传统方式的问题：**
-- 状态散落在 `onBindView`、`onUpdate`、`onAttach` 等不同方法中
-- 订阅创建和清理在不同位置，容易遗漏导致内存泄漏
-- 依赖关系隐式，调试困难
+📖 **setState 详解 + Animator 见 `references/setstate-guide.md`**
 
-**use* 方式：**
-- 所有状态和副作用在 `init()` 或属性初始化器中声明
-- 生命周期自动管理：订阅在 attach 时启动，detach 时自动清理
-- 显式依赖，清晰可读
+### use* API 速查
 
-### use* 方法总览
+React Hooks 风格声明式 API（`ViewPresenter+Use.swift`）。所有方法在 `init()` 或属性初始化器中调用，Swift 6 使用 `lazy var` + 显式类型标注。
 
-| 方法 | 用途 | 返回类型 |
+| 方法 | 返回类型 | 用途 |
 |---|---|---|
-| `useState(_:)` | 创建响应式状态容器 | `State<T>` |
-| `useState(_:updater:)` | 状态 + 自定义更新闭包 | `State<T>` |
-| `useState(_:updateTo:)` | 状态 + 直接写入 View keyPath | `State<T>` |
-| `useState(_:publisher:)` | 从 Combine Publisher 订阅 | `State<T>` |
-| `useState(_:sequence:)` | 从 AsyncSequence 订阅 | `State<T>` |
-| `useState(_:service:publisher:)` | 从 Service 获取 Publisher | `State<T>` |
-| `useState(_:service:sequence:)` | 从 Service 获取 AsyncSequence | `State<T>` |
-| `useState(ObservableObject)` | 观察 ObservableObject 的变化 | `State<O>` |
-| `useEffect(_:)` | 注册与生命周期绑定的副作用 | `Effect` |
-| `useUpdate(dependences:_:)` | 依赖驱动的视图更新器 | `Updater` |
-| `useService(_:_:)` | 解析 Service 并传给副作用 | `Effect` |
+| `useState(0)` | `State<Int>` | 响应式状态，`.value = new` 触发 `setState` |
+| `useState(0, updateTo: \.label.text)` | `State<Int>` | 状态 + 直接写入 View keyPath |
+| `useState(0, publisher: pub)` | `State<Int>` | 从 Combine Publisher 订阅 |
+| `useState(MyViewModel())` | `State<VM>` | 观察 ObservableObject |
+| `useEffect { ...; return cleanup }` | `Effect` | 生命周期绑定副作用 |
+| `useUpdate(dependences: s1, s2) { ... }` | `Updater` | 依赖驱动的视图更新器 |
+| `useService(S.self) { svc in ... }` | `Effect` | 懒解析 Service |
 
-### useState 的三种判等策略
+📖 **完整用法和 8 条关键规则见 [docs/use-methods.md](./docs/use-methods.md)**
 
-`useState` 通过泛型约束自动选择判等策略：
-
-| 泛型约束 | 判等方式 | 适用场景 |
-|---|---|---|
-| `T: Equatable` | `==` | Int、String、Struct 等值类型 |
-| `T: AnyObject` | `===` | 引用类型（class） |
-| 无约束 | 总是触发 | 非 Equatable 的值类型 |
-
-### useState 基本用法
-
-```swift
-class MyPresenter: ViewPresenter<MyViewProtocol> {
-
-    // 1. Equatable 值类型 — 使用 == 判等
-    lazy var counter: State<Int> = useState(0)
-    lazy var name = useState("Hello")
-
-    // 2. AnyObject 引用类型 — 使用 === 判等
-    lazy var selectedObject = useState(NSObject())
-
-    // 3. 无约束（如 Date 不是 Equatable）— 总是触发
-    lazy var timestamp = useState(Date())
-
-    // 4. Optional 类型 — 类型从属性声明推断
-    lazy var optionalCounter: State<Int?> = useState(nil)
-    lazy var optionalName: State<String?> = useState(nil)
-
-    // 在 onUpdate 中读取状态
-    override func onUpdate(view: MyViewProtocol, context: ViewUpdateContext) {
-        view.countLabel.text = "\(counter.value)"
-        view.nameLabel.text = name.value
-    }
-}
-```
-
-### useState 带 updater / keyPath
-
-```swift
-// updater: 每次状态变化时执行自定义闭包
-lazy var counterWithUpdater = useState(0, updater: { value, view, _ in
-    view.counterLabel.text = "count: \(value)"
-})
-
-// updateTo: 直接将值写入 View 的 keyPath（需要 View: AnyObject）
-lazy var title = useState("", updateTo: \.titleLabel.text)
-```
-
-### useState 订阅 Publisher
-
-```swift
-// 直接传入 Publisher
-lazy var pubValue = useState("(waiting)", publisher: myPublisher)
-
-// 从 Service 获取 Publisher（懒加载，attach 时才解析）
-lazy var svcPubValue = useState("(waiting)",
-    service: MyService.self,
-    publisher: { $0.tickPublisher() })
-
-// 带 updater 的 Publisher
-lazy var pubWithUpdater = useState("(waiting)",
-    updater: { value, view, _ in view.label.text = value },
-    publisher: myPublisher)
-```
-
-### useState 订阅 AsyncSequence
-
-```swift
-// 直接传入 AsyncSequence
-lazy var seqValue = useState(0, sequence: myAsyncStream)
-
-// 从 Service 获取 AsyncSequence
-lazy var svcSeqValue = useState(0,
-    service: MyService.self,
-    sequence: { $0.tickSequence() })
-```
-
-### useState 观察 ObservableObject
-
-```swift
-// 观察 ObservableObject，objectWillChange 时自动触发 setState → onUpdate
-lazy var viewModel = useState(CounterViewModel())
-
-// 可选 ObservableObject
-lazy var optionalVM: State<CounterViewModel?> = useState(nil)
-
-// 替换对象时自动取消旧订阅、绑定新订阅
-viewModel.value = CounterViewModel()  // old cancelled, new subscribed
-
-// 带 updater
-lazy var vmWithUpdater = useState(CounterViewModel(),
-    updater: { value, view, _ in view.label.text = value.label })
-
-// 带 keyPath
-lazy var vmWithKeyPath = useState(CounterViewModel(),
-    updateTo: \.headerViewModel)
-```
-
-### useEffect 管理副作用
-
-```swift
-// 副作用在 attach to root 时启动，detach from root 时自动清理
-lazy var timerEffect = useEffect { [weak self] in
-    let timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
-        MainActor.assumeIsolated { self?.timestamp.value = Date() }
-    }
-    return { timer.invalidate() }  // 清理闭包
-}
-
-// 无清理的副作用
-lazy var logEffect = useEffect { print("[MyPresenter] attached") }
-```
-
-### useUpdate 依赖驱动更新
-
-```swift
-// 只有当依赖的 State 变化时才执行 updater
-lazy var titleUpdate = useUpdate(dependences: title) { view, context in
-    view.titleLabel.text = title.value
-}
-
-// 多个依赖
-lazy var combinedUpdate = useUpdate(dependences: title, counter) { view, context in
-    view.titleLabel.text = title.value
-    view.countLabel.text = "\(counter.value)"
-}
-```
-
-### useService 懒加载 Service
-
-```swift
-// Service 在 attach to root 时才解析，避免 init 时 Service 还未注册
-lazy var svcEffect = useService(MyService.self) { service in
-    service.doSomething()
-    return { service.cleanup() }
-}
-```
-
-### 关键规则
-
-1. **必须在 `init()` 或属性初始化器中调用**，不要在 `onBindView` 等生命周期方法中调用
-2. **返回的 `State`、`Effect`、`Updater` 必须存储为实例属性**（`let` 或 `lazy var`）
-3. **Swift 6 下使用 `lazy var` + 显式类型标注**，因为 `useState` 重载多，Swift 无法推断类型
-4. **Optional 类型用 `useState(nil)`**，类型从属性声明推断，不需要显式泛型参数
-5. **ObservableObject 替换**：`state.value = newObject` 自动取消旧订阅、绑定新订阅
-6. **Timer 闭包中访问 `@MainActor` 属性**：使用 `MainActor.assumeIsolated { ... }`
-7. **`useState` 内部自动调用 `setState`**，不需要手动调用
-8. **`useEffect` 的清理闭包在 `onDetachFromRoot` 时自动调用**，无需手动管理
-
-### 完整示例
-
-参考 `Example/DDComponent/Demos/11-UseMethods/` 目录下的完整示例，涵盖了所有 12 种 use* 变体的用法。
-
-## 五、关键规则（必须遵守）
+## 关键规则
 
 ### ✅ DO
 
-- **View 必须定义为协议**，不能是具体 UIView 类型
-- **所有 UI 更新通过 `setState {}`**，不要直接 `view?.xxx = yyy`
+- **View 必须定义为协议**（`ViewPresenter<UIButton>` ❌，`ViewPresenter<MyProtocol>` ✅）
+- **所有 UI 更新通过 `setState {}`**，不直接 `view?.xxx = yyy`
 - **`onBindView` 中设置回调，`onUnbindView` 中清空回调**
 - **`onBindView` 中先调用 `super.onBindView(view)`**
-- **子 Presenter 必须 `add(child:)` 才能加入 P-Tree**，否则收不到生命周期
-- **Service 和子 Presenter 在 `pageInstallers` 中注册，或在 RootPresenter 的 `init()` 和 `presenterDidLoad()` 中注册**
+- **子 Presenter 必须 `add(child:)` 加入 P-Tree**，否则收不到生命周期
 - **异步回调中使用 `[weak self]`**
+- **Swift 6 下 use* 用 `lazy var` + 显式类型标注**
 
 ### ❌ DON'T
 
-- **不要用 UIView 作为 View 类型**（`ViewPresenter<UIButton>` ❌）
-- **不要在 `setState` 外部修改会影响 UI 的状态**
-- **不要在 `viewDidLoad` 之前注册 Service**（时机不对）
-- **不要忘记在 `onUnbindView` 中清理回调**
-- **不要在 `pageInstallers` 中注册 RootPresenter** — `PageViewController.makePresenter()` 已经创建了它。`pageInstallers` 中注册的是子 Presenter
+- **不用 UIView 作为 View 类型**
+- **不在 `setState` 外部修改影响 UI 的状态**
+- **不在 `pageInstallers` 中注册 RootPresenter** — `makePresenter()` 已创建
+- **不忘记在 `onUnbindView` 中清理回调**
+- **不在 `setState` 闭包内执行副作用**（网络请求、埋点等）
+- **不在生命周期方法中调用 use\*** — 只能在 `init()` 或属性初始化器中调用
 
-## 五-A、生命周期方法职责详解
+## Reference 文件索引
 
-每个生命周期方法都有明确的职责边界。以下是完整分析：
-
-### 生命周期顺序
-
-```
-init() → onAttach → onAttachToRoot → onBindView → onUpdate (×N) → onUnbindView → onDetach → onDetachFromRoot → deinit
-```
-
-### 1. `init()` — 创建
-
-**触发时机：** Presenter 初始化。
-
-| ✅ 应该做 | ❌ 不应该做 |
+| 文件 | 何时读取 |
 |---|---|
-| 初始化自身属性、设置默认值 | 访问 `view`（尚未绑定） |
-| RootPresenter 中通过 `typeBox()` 注册子 Presenter | 访问 `superPresenter` / `rootPresenter`（尚未挂载） |
-| | 调用 `getService()` / `notify()`（Pipeline 不存在） |
-
-### 2. `onAttach(presenter:)` / `onAttach()` — 挂载到 P-Tree
-
-**触发时机：** 被 `add(child:)` 加入父 Presenter。RootPresenter 使用无参版本 `onAttach()`。
-
-| ✅ 应该做 | ❌ 不应该做 |
-|---|---|
-| **`add(child:)` 注册子 Presenter**（组建 P-Tree 的核心时机） | 访问 `view`（View 可能尚未绑定） |
-| 初始化内部结构、创建子节点 | 依赖 `rootPresenter` 非空（父节点可能还没挂到 Root） |
-| | 做需要 Pipeline 的操作 |
-
-> **源码执行顺序：** `attachSuperPresenter()` 内部先调 `onAttach` → 再挂 Root → 最后 auto-bind View。所以 `onAttach` 被调用时，Root 和 View 都还没就位。
-
-### 3. `onAttachToRoot(rootPresenter:)` — 关联到 RootPresenter
-
-**触发时机：** 自身或祖先挂到 RootPresenter 上时，递归所有子 Presenter。
-
-| ✅ 应该做 | ❌ 不应该做 |
-|---|---|
-| **注册 Effect（副作用）** — 这是注册 Effect 的最佳时机（Pipeline 已可用） | 操作 View 的 UI（View 可能未绑定） |
-| 监听全局事件、注册全局 Notify listener | 假设 `view` 非空 |
-| 启动需要页面级别的定时器、监听 | |
-| 获取 Service 引用并缓存 | |
-
-> **Effect 机制：** `onAttachToRoot` 时启动 effect 的 `action()`，`onDetachFromRoot` 时自动调用返回的 cancel 函数。这是注册/清理配对资源的最佳方式。
-
-### 4. `onBindView(_ view: View)` — 绑定 View
-
-**触发时机：** `bindView(_:)` / `bindWeakView(_:)` / `tryBindView(_:)` 时。
-
-| ✅ 应该做 | ❌ 不应该做 |
-|---|---|
-| **先调用 `super.onBindView(view)`** | 直接修改 View 的属性值（应让 `onUpdate` 统一处理，`bindView` 会自动触发首次 `onUpdate`） |
-| **设置 View 的回调闭包**（`view.onButtonTapped = { ... }`） | 注册 Effect（应放在 `onAttachToRoot`） |
-| 绑定子 Presenter 到对应的子 View | 调用 `add(child:)`（应在 `onAttach` 中完成） |
-
-> **注意：** `bindView()` 内部会自动触发一次 `setState {} context: { $0.bindView() }` 来执行首次 `onUpdate`，所以初始数据不需要在这里手动赋值给 View。
-
-### 5. `onUpdate(view: View, context: ViewUpdateContext)` — 状态同步到 View
-
-**触发时机：** 每次 `setState {}` 后由 Pipeline 调用。可被多次调用。
-
-| ✅ 应该做 | ❌ 不应该做 |
-|---|---|
-| **将 Presenter 状态同步到 View**（这是它唯一正确的职责） | **修改 Presenter 的状态**（造成死循环） |
-| 读取 `context` flags 做条件判断（极少需要） | **执行业务逻辑**（网络请求、页面跳转等） |
-| | 修改 View 的布局约束（应通过 `context.invalidateLayout` 处理） |
-| | 做耗时操作（高频滚动时频繁调用） |
-
-> **核心原则：** `onUpdate` 是幂等的、无副作用的纯映射函数——"这是我的当前状态，请把 View 更新到这个状态"。**遗漏状态同步会导致 View 展示不一致的 bug**。
-
-### 6. `onUnbindView()` — 解绑 View
-
-**触发时机：** `unbindView()`、绑定新 View（先解绑旧 View）、`detachSuperPresenter()`（自动解绑）、页面销毁。
-
-| ✅ 应该做 | ❌ 不应该做 |
-|---|---|
-| **先调用 `super.onUnbindView()`** | 假设 `view` 非空（弱引用场景下可能已是 nil） |
-| **清理 View 的回调闭包**（设 `nil` 防循环引用） | 做业务逻辑清理（应在 `onDetach` 中做） |
-| 清理与 View 实例绑定的资源（定时器等） | 移除 Effect（应在 `onDetachFromRoot` 中清理） |
-
-> **注意：** `unbindView()` 会自动递归解绑所有子 Presenter，子 Presenter 的 `onUnbindView` 会被调用。
-
-### 7. `onDetach()` — 从 P-Tree 移除
-
-**触发时机：** `removeFromSuper()` / `remove(child:)` / `detachAllPresentersRecursive()`。
-
-| ✅ 应该做 | ❌ 不应该做 |
-|---|---|
-| 释放 P-Tree 维度的资源（移除子 Presenter） | 访问 `view`（此时已 unbind） |
-| 取消在此 Presenter 范围内注册的东西 | 访问 `superPresenter`（之后会被置 nil） |
-
-> **执行顺序：** `detachSuperPresenter()` 内部：先 `unbindView()` → 再 `onDetach()` → 最后 `detachRootPresenter()`。
-
-### 8. `onDetachFromRoot()` — 脱离 RootPresenter
-
-**触发时机：** 自身或祖先从 RootPresenter 脱离时。先递归子 Presenter，再调用自身。
-
-| ✅ 应该做 | ❌ 不应该做 |
-|---|---|
-| 清理全局 listener 注册 | 假设 `rootPresenter` 非空（调用时还未置 nil，但之后会） |
-| 释放通过 Service 获取的引用 | |
-
-> **Effect 自动清理：** 基类 `onDetachFromRoot()` 已调用 `effect.onDetach()`，若在 `onAttachToRoot` 中用 Effect 注册的副作用无需手动清理。
-
-### 9. `prepareForReuse()` — 列表 Cell 复用前重置
-
-**触发时机：** 列表 Cell 被复用时。仅 `ReusableViewPresenter` 有此方法。
-
-| ✅ 应该做 | ❌ 不应该做 |
-|---|---|
-| **重置 Presenter 的所有状态**（清空数据、取消请求、重置标记） | 操作 View（此时 View 可能还是旧的） |
-| 恢复到初始状态 | 调用 `setState`（重置后由外部配置数据时再触发） |
-
-### 职责速查表
-
-| 方法 | 核心职责 | 一句话 |
-|------|---------|--------|
-| `init()` | 初始化自身属性 | 设置默认值，不依赖外部 |
-| `onAttach` | 组装 P-Tree | `add(child:)`，创建子 Presenter |
-| `onAttachToRoot` | 注册全局依赖 | 注册 Effect、监听全局事件 |
-| `onBindView` | 连接 View | 设回调闭包，绑子 View，**不**直接改 View 值 |
-| `onUpdate` | 同步数据 | **仅**把状态写到 View，纯映射，无副作用 |
-| `onUnbindView` | 断开 View | 清回调闭包，防止循环引用 |
-| `onDetach` | 清理 P-Tree | 移除子 Presenter，清理内部引用 |
-| `onDetachFromRoot` | 注销全局依赖 | 框架自动清理 Effect |
-| `prepareForReuse` | 重置状态 | 清空数据，恢复到初始值 |
-
-## 六、setState 和 onUpdate 详解
-
-这是框架最核心的机制，必须正确理解：
-
-```swift
-// setState：标记"状态变了"，由 Pipeline 调度
-setState {
-    // 在这里修改状态
-    self.count += 1
-    self.title = "Updated"
-} context: {
-    // 配置这次更新的行为
-    $0.animated = true           // 在 UIView.animate 中执行
-    $0.invalidateLayout = true   // 更新后触发 layout
-    $0.updateViewImmediately = true // 立即更新，不等 RunLoop
-}
-
-// onUpdate：Pipeline 在合适时机调用，同步状态到 View
-override func onUpdate(view: MyViewProtocol, context: ViewUpdateContext) {
-    view.count = count
-    view.title = title
-}
-```
-
-**常用 Context 配置：**
-
-| Flag | 何时使用 |
-|---|---|
-| `animated = true` | 需要动画过渡 |
-| `invalidateLayout = true` | 数据变化影响了布局 |
-| `invalidateDataSource = true` | 列表数据源变了（触发 Diff + reload） |
-| `invalidateContentSize = true` | 只有 Cell 尺寸变了 |
-| `updateViewImmediately = true` | 需要立即更新，不等待批处理 |
-| `animator = SpringAnimator.bouncy` | 自定义动画器（内置 SpringAnimator/EaseAnimator） |
-
-**自定义 Animator：** 实现 `ViewUpdateAnimator` 协议即可替换默认动画。管道分两步执行——`updateView`（更新属性）和 `layoutViewIfNeeded`（应用约束布局）。第二步只在 `animated = true` 或 `layoutImmediately = true` 时进入动画块。因此使用自定义 `animator` 时必须同时设置 `animated = true`。
-
-框架内置了两种常用 Animator：
-
-| Animator | 用途 | 预设 |
-|---|---|---|
-| `SpringAnimator` | 弹簧动画 | `.default` / `.bouncy` / `.gentle` / `.snappy` |
-| `EaseAnimator` | 缓动动画 | `.default` / `.quick` / `.slow` / `.easeIn` / `.easeOut` |
-
-```swift
-// ViewUpdateAnimator 协议
-public protocol ViewUpdateAnimator {
-    func animate(with context: ViewUpdateContext, _ updater: @escaping () -> Void)
-}
-
-// 使用内置预设
-setState { self.size = newSize } context: {
-    $0.invalidateLayout = true
-    $0.animated = true
-    $0.animator = SpringAnimator.bouncy  // 弹簧弹跳
-}
-
-// 使用自定义参数
-setState { self.color = newColor } context: {
-    $0.animated = true
-    $0.animator = EaseAnimator(duration: 0.5, delay: 0.1, options: [.curveEaseOut])
-}
-
-// 实现自定义 Animator（实现协议即可）
-setState {
-    self.size = newSize
-} context: {
-    $0.invalidateLayout = true
-    $0.animated = true       // 必须：layoutIfNeeded 只在 animated=true 时进入动画块
-    $0.animator = MySpringAnimator()  // 优先级高于默认 0.3s UIView.animate
-}
-```
-
-
-
-## 七、layoutInfo：列表 Cell 和 Section 的布局配置
-
-列表场景中，Cell 的尺寸和 Section 的间距通过 `layoutInfo` 属性配置。每个 Item/Section Presenter 都持有自己的 `layoutInfo`，框架在运行时读取并应用到 `UICollectionViewLayout` 或 `UITableView` 的 delegate 方法。
-
-### UICollectionView Item 布局：`UICollectionItemFlowLayoutInfo`
-
-| Presenter 基类 | 自带 layoutInfo |
-|---|---|
-| `UICollectionViewFlowItemPresenter<View>` | ✅ |
-| `UICollectionViewFlowItemPresenterHolder<P, V>` | ✅ |
-| `CollectionItemPresenter<View>` | ❌ 需手动 conform `UICollectionItemFlowPresentable` |
-
-```swift
-public struct UICollectionItemFlowLayoutInfo {
-    public var calculateSizeAutomatically: Bool = true  // 自动计算（推荐）
-    public var layoutType: LayoutType = .autoLayout       // .autoLayout / .sizeThatFits / .intrinsicContentSize
-    public var autoLayoutSizeFitting: SizeFitting = .auto // .auto / .containerWidth / .containerHeight / .containerSize / .unlimited
-}
-```
-
-**自动计算（推荐）**：Cell 使用 Auto Layout 约束，框架自动推导高度：
-
-```swift
-class MyItemPresenter: UICollectionViewFlowItemPresenter<MyCell> {
-    override init() {
-        super.init()
-        layoutInfo.calculateSizeAutomatically = true  // 默认值，可不写
-    }
-}
-```
-
-**手动计算**：当 `calculateSizeAutomatically = false` 时，必须重写 `calculateSize(containerSize:)`：
-
-```swift
-class FixedSizeItem: UICollectionViewFlowItemPresenter<FixedCell> {
-    override init() {
-        super.init()
-        layoutInfo.calculateSizeAutomatically = false
-    }
-    override func calculateSize(containerSize: CGSize) -> CGSize {
-        CGSize(width: containerSize.width, height: 80)
-    }
-}
-```
-
-### UICollectionView Section 布局：`UICollectionViewFlowSectionLayoutInfo`
-
-```swift
-public struct UICollectionViewFlowSectionLayoutInfo {
-    public var inset: UIEdgeInsets = .zero   // section 内边距
-    public var lineSpacing: CGFloat = 0      // 行间距
-    public var itemSpacing: CGFloat = 0      // 列间距
-    public var columnCount: Int = 1          // 列数（>1 时均分宽度）
-}
-```
-
-```swift
-let section = UICollectionViewFlowSectionPresenter()
-section.layoutInfo.inset = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
-section.layoutInfo.lineSpacing = 12
-section.layoutInfo.columnCount = 2   // 两列布局
-```
-
-### UICollectionView Section Header/Footer 便捷 API
-
-`UICollectionViewFlowSectionPresenter` 提供 `.header` / `.footer` 属性，比 `setSupplementary(_:_:)` 更简洁：
-
-```swift
-public extension UICollectionViewFlowSectionPresenter {
-    var header: UICollectionViewItemPresentable?   // get/set，单元素便捷访问
-    var footer: UICollectionViewItemPresentable?   // get/set，单元素便捷访问
-}
-```
-
-**Header/Footer Presenter 必须继承 `UICollectionViewFlowItemPresenter<View>`（或实现 `UICollectionItemFlowPresentable`），不能用 `CollectionItemPresenter<View>`。**
-
-```swift
-// ✅ GOOD — 用 .header/.footer 便捷属性
-let section = UICollectionViewFlowSectionPresenter()
-let header = SectionHeaderPresenter()
-header.title = "评论"
-section.header = header
-
-let footer = SectionFooterPresenter(); footer.count = 10
-section.footer = footer
-
-// ❌ BAD — 避免直接操作 supplementaries 字典
-section.setSupplementary("UICollectionElementKindSectionHeader", [header])
-section.setSupplementary("UICollectionElementKindSectionFooter", [footer])
-```
-
-### UITableView Item 布局：`UITableViewCellLayoutInfo`
-
-| Presenter 基类 | 自带 layoutInfo |
-|---|---|
-| `UITableViewItemPresenter<V>` | ✅ |
-| `UITableViewItemPresenterHolder<P, V>` | ✅ |
-
-```swift
-public struct UITableViewCellLayoutInfo {
-    public var calculateSizeAutomatically: Bool = true
-    public var layoutType: LayoutType = .autoLayout  // .autoLayout / .sizeThatFits
-    public var estimatedHeight: CGFloat = UITableView.automaticDimension
-}
-```
-
-```swift
-class CommentItem: UITableViewItemPresenter<CommentCell> {
-    override init() {
-        super.init()
-        layoutInfo.estimatedHeight = 120  // 预估高度，优化滚动性能
-    }
-}
-```
-
-### 关键规则
-
-- ✅ **Section 的 inset/spacing 必须在 Section Presenter 的 `layoutInfo` 上设置**，不要在 UICollectionViewFlowLayout 上直接设置
-- ✅ **Item 的 `calculateSizeAutomatically = true`（默认）配合 Auto Layout 约束即可**，无需手动计算
-- ✅ **设置预估高度（`estimatedHeight`）可显著提升 TableView 滚动性能**
-- ✅ **Section Header/Footer 用 `section.header = ...` / `section.footer = ...`**，不要用 `setSupplementary(_:_:)`
-- ✅ **Header/Footer Presenter 必须继承 `UICollectionViewFlowItemPresenter<View>`**，不能用 `CollectionItemPresenter<View>`
-- ❌ **不要把布局信息放在 View 层**，`layoutInfo` 属于 Presenter 层
-
-## 八、新文件创建时的命名和模板
-
-当用户要求创建新功能时，按以下结构产出文件：
-
-- `XxxPresenter.swift` — 业务逻辑，继承 `ViewPresenter<XxxProtocol>`
-- `XxxViewController.swift` — 页面入口，继承 `PageViewController<...>` 或 `UITablePageViewController<...>`
-- `XxxService.swift` — 服务协议 + 默认实现
-- View 协议可以放在 Presenter 文件顶部，也可以单独放 `Protocols/` 目录
-
-详细代码示例参考 `references/examples.md`。当用户需要看具体例子时，引导他们阅读该文件。
+| `references/page-templates.md` | 创建新页面（固定视图/列表/IsolatedView）时需要完整模板 |
+| `references/presenter-patterns.md` | 创建 Presenter、拆分 Presenter、文件结构、命名规范 |
+| `references/communication.md` | 设计 Presenter 间通信、Service 注册方式、Notify 作用域 |
+| `references/setstate-guide.md` | setState/onUpdate 机制、Context flags、Animator 动画器 |
+| `references/examples.md` | 完整端到端示例（Like、列表、纯逻辑、use* API 等 8 个） |
+
+## 更多文档
+
+| 主题 | 文档 |
+|------|------|
+| 架构原理、生命周期详解 | [docs/architecture.md](./docs/architecture.md) |
+| Service/Notify/AutoBind/@StateChecker | [docs/usage-guide.md](./docs/usage-guide.md) |
+| 列表 Cell 复用、layoutInfo | [docs/reusable-presenter.md](./docs/reusable-presenter.md) |
+| use* API 完整用法 | [docs/use-methods.md](./docs/use-methods.md) |
+| @PresenterState 宏 | [docs/presenter-state-macro.md](./docs/presenter-state-macro.md) |
+| Swift 6 并发模式 | [docs/swift6-patterns.md](./docs/swift6-patterns.md) |
+| Demo 索引 | [docs/demo-index.md](./docs/demo-index.md) |

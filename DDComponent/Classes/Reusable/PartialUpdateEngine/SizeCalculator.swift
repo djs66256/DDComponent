@@ -1,5 +1,5 @@
 //
-//  SizeCaculator.swift
+//  SizeCalculator.swift
 //  DDComponent
 //
 //  Created by daniel on 2022/9/26.
@@ -30,14 +30,14 @@ public enum Fitting {
     }
 }
 
-public protocol SizeCaculatable {
+public protocol SizeCalculatable {
     func size(for view: UIView, fitting: Fitting) -> CGSize
     
     func size(for cell: UICollectionViewCell, fitting: Fitting) -> CGSize
     func size(for cell: UITableViewCell, fitting: Fitting) -> CGSize
 }
 
-public extension SizeCaculatable {
+public extension SizeCalculatable {
     func size(for cell: UICollectionViewCell, fitting: Fitting) -> CGSize {
         size(for: cell as UIView, fitting: fitting)
     }
@@ -47,34 +47,34 @@ public extension SizeCaculatable {
 }
 
 @MainActor
-public class SizeCaculator {
+public class SizeCalculator {
     public enum LayoutType: Int {
         case autoLayout, sizeThatFits, intrinsicContentSize
     }
     
-    var caculators: [LayoutType: SizeCaculatable] = [:]
+    var calculators: [LayoutType: SizeCalculatable] = [:]
     
     init() {
-        caculators[.autoLayout] = AutoLayoutCaculator()
-        caculators[.sizeThatFits] = SizeToFitCaculator()
-        caculators[.intrinsicContentSize] = IntrinsicContentSizeCaculator()
+        calculators[.autoLayout] = AutoLayoutCalculator()
+        calculators[.sizeThatFits] = SizeToFitCalculator()
+        calculators[.intrinsicContentSize] = IntrinsicContentSizeCalculator()
     }
     
-    func caculator(for layoutType: LayoutType) -> SizeCaculatable? {
-        caculators[layoutType]
+    func calculator(for layoutType: LayoutType) -> SizeCalculatable? {
+        calculators[layoutType]
     }
     
     public func size(for view: UIView, layoutType: LayoutType, fitting: Fitting) -> CGSize {
         var size: CGSize = .zero
-        if let caculator = self.caculator(for: .autoLayout) {
+        if let calculator = self.calculator(for: .autoLayout) {
             if let cell = view as? UICollectionViewCell {
-                size = caculator.size(for: cell, fitting: fitting)
+                size = calculator.size(for: cell, fitting: fitting)
             }
             else if let cell = view as? UITableViewCell {
-                size = caculator.size(for: cell, fitting: fitting)
+                size = calculator.size(for: cell, fitting: fitting)
             }
             else {
-                size = caculator.size(for: view, fitting: fitting)
+                size = calculator.size(for: view, fitting: fitting)
             }
         }
         else {
@@ -122,7 +122,7 @@ public class SizeCaculator {
     }
 }
 
-class SizeToFitCaculator: SizeCaculatable {
+class SizeToFitCalculator: SizeCalculatable {
     func size(for view: UIView, fitting: Fitting) -> CGSize {
         var size: CGSize
         switch fitting {
@@ -138,7 +138,7 @@ class SizeToFitCaculator: SizeCaculatable {
     }
 }
 
-class IntrinsicContentSizeCaculator: SizeCaculatable {
+class IntrinsicContentSizeCalculator: SizeCalculatable {
     func size(for view: UIView, fitting: Fitting) -> CGSize {
         var size: CGSize = view.intrinsicContentSize
         switch fitting {
@@ -155,7 +155,7 @@ class IntrinsicContentSizeCaculator: SizeCaculatable {
     }
 }
 
-class AutoLayoutCaculator: SizeCaculatable {
+class AutoLayoutCalculator: SizeCalculatable {
     func size(for view: UIView, fitting: Fitting) -> CGSize {
         var activeConstraints: [NSLayoutConstraint] = []
         switch fitting {
@@ -239,7 +239,7 @@ private extension UIView {
                 }
             }
             else {
-                return constraint(for: view, key: &Self.equalToWidthKey)
+                return constraint(for: view, key: &Self.equalToHeightKey)
             }
         }
         func lessThanWidth() -> NSLayoutConstraint {

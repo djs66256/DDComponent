@@ -156,7 +156,7 @@ open class ReusableViewPresenterHolder<P, V>: ViewPresenter<()>, ReusableViewPre
     
     public override func notify<T>(listener: T.Type, scope: NotifyScope, from: AnyObject?, _ closure: (T) -> Void) {
         if scope == .reusable {
-            // Notify scope in reuseable presenter, just notify bound presenter of it.
+            // Notify scope in reusable presenter, just notify bound presenter of it.
             self.notify(listener: listener, scope: .childrenAndSelf, from: from, closure)
         }
         else {

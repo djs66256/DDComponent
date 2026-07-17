@@ -1,5 +1,5 @@
 //
-//  PartialCompositeTrasaction.swift
+//  PartialCompositeTransaction.swift
 //  DDComponent
 //
 //  Created by daniel on 2024/1/6.
@@ -22,7 +22,7 @@ extension ViewPresentable {
 }
 
 @MainActor
-final class PartialCompositeTrasaction: CompositeTransaction, @unchecked Sendable {
+final class PartialCompositeTransaction: CompositeTransaction, @unchecked Sendable {
     
     private struct PresenterStore: Hashable {
         var presenter: CollectionItemPresentable
@@ -58,7 +58,7 @@ final class PartialCompositeTrasaction: CompositeTransaction, @unchecked Sendabl
     private var invalidateContentSizePresenters = Set<PresenterStore>()
     private var invalidateContentSizeSectionPresenters = Set<SectionPresenterStore>()
     
-    func merge(_ other: PartialCompositeTrasaction) {
+    func merge(_ other: PartialCompositeTransaction) {
         merge(other as CompositeTransaction)
         invalidateContentSizePresenters.formUnion(other.invalidateContentSizePresenters)
         invalidateContentSizeSectionPresenters.formUnion(other.invalidateContentSizeSectionPresenters)

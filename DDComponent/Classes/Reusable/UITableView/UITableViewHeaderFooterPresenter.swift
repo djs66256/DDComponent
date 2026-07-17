@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-open class UITableViewHeaderFooterPresenter<V: UIView>: CollectionItemPresenter<V>, UITableViewItemPresentable, UITableViewItemSizeCaculatable {
+open class UITableViewHeaderFooterPresenter<V: UIView>: CollectionItemPresenter<V>, UITableViewItemPresentable, UITableViewItemSizeCalculatable {
     public var layoutInfo = UITableViewCellLayoutInfo()
     open func calculateHeight(containerSize: CGSize) -> CGFloat { 0 }
     

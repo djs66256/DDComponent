@@ -10,7 +10,7 @@ import UIKit
 
 extension Engine {
     
-    class PartialTrasactionPipeline: ListViewUpdatePipeline, @unchecked Sendable {
+    class PartialTransactionPipeline: ListViewUpdatePipeline, @unchecked Sendable {
         @MainActor weak var superPipeline: ViewUpdatePipeline?
         @MainActor private lazy var globalPipeline = GlobalViewUpdatePipeline.shared
         
@@ -20,7 +20,7 @@ extension Engine {
         @MainActor weak var rootView: UIView?
         @MainActor weak var invalidation: UpdatePipelineInvalidateContentSizeProtocol?
         
-        @MainActor private var transaction = PartialCompositeTrasaction()
+        @MainActor private var transaction = PartialCompositeTransaction()
         private var lock = NSLock()
         private var dirtyVersion: Int = 0
         @MainActor private var isUpdating = false
@@ -68,7 +68,7 @@ extension Engine {
             
             transaction.markDirty(presenter: presenter, context: context, completion)
             
-            Logger.log("<PartialCompositeTrasaction> mark dirty: \(presenter), updating: \(isUpdating), invalidate data source: \(context.invalidateDataSource), invalidate content size: \(context.invalidateContentSize)")
+            Logger.log("<PartialCompositeTransaction> mark dirty: \(presenter), updating: \(isUpdating), invalidate data source: \(context.invalidateDataSource), invalidate content size: \(context.invalidateContentSize)")
             
             // We use dirtyVersion to figure out whether dirty during async updating.
             if context.invalidateDataSource {
@@ -123,37 +123,37 @@ extension Engine {
                 let oldData = dataSource
                 
                 if oldData.sections.isEmpty || newData.sections.isEmpty {
-                    Logger.log("<PartialCompositeTrasaction> update view: reload data without differ")
+                    Logger.log("<PartialCompositeTransaction> update view: reload data without differ")
                     doReloadDataSourceWithoutDiff(oldData: oldData, newData: newData, synchronize: synchronize)
                 }
                 else {
-                    Logger.log("<PartialCompositeTrasaction> update view: reload data with differ")
+                    Logger.log("<PartialCompositeTransaction> update view: reload data with differ")
                     doReloadDataSourceWithDiff(oldData: oldData, newData: newData, synchronize: synchronize) { finished in
                         // Do nothing
                     }
                 }
             }
             else if transaction.invalidateContentSize {
-                Logger.log("<PartialCompositeTrasaction> update view: invalidate content size")
+                Logger.log("<PartialCompositeTransaction> update view: invalidate content size")
                 doUpdateListViewLayout(synchronize: synchronize)
             }
             else {
-                Logger.log("<PartialCompositeTrasaction> update view: update item")
+                Logger.log("<PartialCompositeTransaction> update view: update item")
                 doUpdateItemView(synchronize: synchronize)
             }
         }
         
         @MainActor
-        private func doUpdateViewRecursively() -> PartialCompositeTrasaction {
+        private func doUpdateViewRecursively() -> PartialCompositeTransaction {
             isUpdating = true
             defer {
                 isUpdating = false
             }
             
-            var finalTransaction = PartialCompositeTrasaction()
+            var finalTransaction = PartialCompositeTransaction()
             
             var transaction = self.transaction
-            self.transaction = PartialCompositeTrasaction()
+            self.transaction = PartialCompositeTransaction()
             
             while transaction.isDirty {
                 finalTransaction.merge(transaction)
@@ -163,7 +163,7 @@ extension Engine {
                     break;
                 }
                 transaction = self.transaction
-                self.transaction = PartialCompositeTrasaction()
+                self.transaction = PartialCompositeTransaction()
             }
             
             let presenters = finalTransaction.collectInvalidatedContentSizeItemPresenter()
@@ -246,7 +246,7 @@ extension Engine {
                 let originDirtyVersion = withLock { dirtyVersion }
                 queue.async { [weak self] in
                     guard let self, self.withLock({ self.dirtyVersion == originDirtyVersion }) else {
-                        Logger.log("<PartialCompositeTrasaction> cancel update view: reload data with differ")
+                        Logger.log("<PartialCompositeTransaction> cancel update view: reload data with differ")
                         completion(false)
                         return
                     }
@@ -256,7 +256,7 @@ extension Engine {
                     DispatchQueue.main.async { [weak self] in
                         guard let self else { return }
                         guard self.withLock({ self.dirtyVersion == originDirtyVersion }) else {
-                            Logger.log("<PartialCompositeTrasaction> cancel update view: reload data with differ")
+                            Logger.log("<PartialCompositeTransaction> cancel update view: reload data with differ")
                             completion(false)
                             return
                         }
