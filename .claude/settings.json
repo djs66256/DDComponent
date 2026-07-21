@@ -6,7 +6,8 @@
     "skill-creator@claude-plugins-official": true,
     "github@claude-plugins-official": true,
     "swift-lsp@claude-plugins-official": true,
-    "ddcomponent@ddcomponent": true
+    "ddcomponent@ddcomponent": true,
+    "commit-commands@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "ddcomponent": {
@@ -14,6 +15,16 @@
         "source": "directory",
         "path": "."
       }
+    }
+  },
+  "mcpServers": {
+    "xcode": {
+      "type": "stdio",
+      "command": "xcrun",
+      "args": [
+        "mcpbridge"
+      ],
+      "env": {}
     }
   }
 }
